@@ -6,6 +6,7 @@ pluginManagement {
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
     }
 }
 dependencyResolutionManagement {
@@ -16,7 +17,8 @@ dependencyResolutionManagement {
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/public' }
-    }
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
+  }
 }
 rootProject.name = "Traclock"
 include ':app'
