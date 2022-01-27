@@ -70,10 +70,8 @@ class EditRecordActivity : AppCompatActivity() {
                 getRecord(intent)
             )
         }
-        showDialog.value = viewModel.showDialog.value
-        showDialog.observe(this) {
-            viewModel.setShowDialog(it)
-        }
+        isModified = viewModel.isModified()
+
         setContent {
             TraclockTheme {
                 ProvideWindowInsets {
@@ -86,7 +84,7 @@ class EditRecordActivity : AppCompatActivity() {
                     val endTime by viewModel.endTime.observeAsState(0L)
 
                     val showMenu = mutableStateOf(false)
-                    val show by showDialog.observeAsState(false)
+                    val showDialogState by showDialog.observeAsState(false)
 
                     val builder = CardDatePickerDialog.builder(this).showBackNow(false)
                         .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
@@ -266,7 +264,7 @@ class EditRecordActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if (show) {
+                    if (showDialogState) {
                         AlertDialog(onDismissRequest = { showDialog.value = false },
                             title = { Text(stringResource(R.string.discard_changes)) },
                             confirmButton = {

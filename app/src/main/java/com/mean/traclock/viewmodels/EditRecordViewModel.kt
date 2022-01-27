@@ -13,7 +13,6 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
     private val _project = MutableLiveData(record.project)
     private val _startTime = MutableLiveData(record.startTime)
     private val _endTime = MutableLiveData(record.endTime)
-    private val _showDialog = MutableLiveData(false)
 
     val project: LiveData<String>
         get() = _project
@@ -21,12 +20,6 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
         get() = _startTime
     val endTime: LiveData<Long>
         get() = _endTime
-    val showDialog: LiveData<Boolean>
-        get() = _showDialog
-
-    fun setShowDialog(showDialog: Boolean) {
-        _showDialog.value = showDialog
-    }
 
     fun isModified(): Boolean {
         return _project.value != record.project || _startTime.value != record.startTime || _endTime.value != record.endTime
