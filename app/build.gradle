@@ -53,7 +53,7 @@ dependencies {
     //查看数据库
     debugImplementation 'com.guolindev.glance:glance:1.1.0'
     //查看内存泄漏
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
     //lottie动画
     implementation 'com.airbnb.android:lottie-compose:4.2.2'
     //日期时间选择器
