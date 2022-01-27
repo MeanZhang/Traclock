@@ -16,30 +16,35 @@
         android:theme="@style/Theme.Traclock"
         tools:targetApi="31">
         <activity
+            android:name=".ui.AboutActivity"
+            android:exported="false"
+            android:label="@string/title_activity_about"
+            android:theme="@style/Theme.Traclock" />
+        <activity
             android:name=".ui.ProjectActivity"
             android:exported="true"
             android:label="@string/title_activity_project"
-            android:theme="@style/Theme.Traclock"/>
+            android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".ui.BackupRestoreActivity"
             android:exported="true"
             android:label="@string/title_activity_backup_restore"
-            android:theme="@style/Theme.Traclock"/>
+            android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".test.TestActivity"
             android:exported="true"
             android:label="@string/title_activity_test"
-            android:theme="@style/Theme.Traclock"/>
+            android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".ui.EditRecordActivity"
             android:exported="true"
             android:label="@string/title_activity_edit_record"
-            android:theme="@style/Theme.Traclock.NoActionBar"/>
+            android:theme="@style/Theme.Traclock.NoActionBar" />
         <activity
             android:name=".ui.EditProjectActivity"
             android:exported="true"
             android:label="@string/title_activity_edit_project"
-            android:theme="@style/Theme.Traclock"/>
+            android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

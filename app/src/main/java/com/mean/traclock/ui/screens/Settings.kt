@@ -9,13 +9,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Feedback
+import androidx.compose.material.icons.outlined.Help
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.mean.traclock.R
+import com.mean.traclock.ui.AboutActivity
 import com.mean.traclock.ui.BackupRestoreActivity
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
@@ -41,8 +44,11 @@ fun Settings(context: Context, contentPadding: PaddingValues) {
         SettingGroupTitle(stringResource(R.string.others))
         SettingItem(
             Icons.Outlined.Info,
-            stringResource(R.string.about),
-            stringResource(R.string.settings_description_about)
+            stringResource(R.string.title_activity_about),
+            stringResource(R.string.settings_description_about),
+            onClick = {
+                context.startActivity(Intent(context,AboutActivity::class.java))
+            }
         )
         SettingItem(
             Icons.Outlined.Help,

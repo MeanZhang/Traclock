@@ -54,4 +54,6 @@
     <string name="others">Others</string>
     <string name="app_name">Traclock</string>
     <string name="title_activity_main">Traclock</string>
+    <string name="title_activity_about">About</string>
+    <string name="version">"Version: "</string>
 </resources>
