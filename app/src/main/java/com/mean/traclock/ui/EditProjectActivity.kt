@@ -36,7 +36,7 @@ import com.mean.traclock.ui.components.ColorPicker
 import com.mean.traclock.ui.theme.TraclockTheme
 
 class EditProjectActivity : ComponentActivity() {
-    private var showDialog = MutableLiveData(false)
+    private val showDialog = MutableLiveData(false)
     private var isModified = false
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +49,7 @@ class EditProjectActivity : ComponentActivity() {
                 intent.getIntExtra("color", Color.Red.toArgb())
             )
         }
+        isModified = viewModel.isModified()
 
         setContent {
             TraclockTheme {
@@ -60,7 +61,8 @@ class EditProjectActivity : ComponentActivity() {
 
                     val name by viewModel.name.observeAsState("")
                     val color by viewModel.color.observeAsState(0)
-                    var showDialog by remember { mutableStateOf(false) }
+
+                    val showDialogState by showDialog.observeAsState(false)
 
                     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                     Scaffold(
@@ -113,13 +115,13 @@ class EditProjectActivity : ComponentActivity() {
                                 })
                         }
                     }
-                    if (showDialog) {
-                        AlertDialog(onDismissRequest = { showDialog = false },
+                    if (showDialogState) {
+                        AlertDialog(onDismissRequest = { showDialog.value = false },
                             title = { Text(stringResource(R.string.discard_changes)) },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
-                                        showDialog = false
+                                        showDialog.value = false
                                     }
                                 ) {
                                     Text(
