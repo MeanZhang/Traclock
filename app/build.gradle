@@ -48,8 +48,7 @@ android {
 }
 
 dependencies {
-    def room_version = "2.4.1"
-    def accompanist_version = "0.22.0-rc"
+    implementation "androidx.compose.material:material:$compose_version"
 
     //查看数据库
     debugImplementation 'com.guolindev.glance:glance:1.1.0'
