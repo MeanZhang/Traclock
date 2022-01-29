@@ -1,0 +1,45 @@
+name: Android CI
+
+on:
+  push:
+    branches: [main, dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Gradle clean
+        run: ./gradlew clean && rm -rf ./app/build/
+      - name: build
+        run: ./gradlew assembleRelease
+
+      - name: APK签名
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: ./app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEY_BASE64 }}
+          alias: "traclock"
+          keyStorePassword: "DjneQ3yVMsd$ydtj"
+          keyPassword: "DjneQ3yVMsd$ydtj"
+        env:
+          BUILD_TOOLS_VERSION: "30.0.2"
+          
+      - name: 重命名APK
+        run: mv ${{ env.SIGNED_RELEASE_FILE }} '${{ secrets.APP_NAME }}.apk'
+      - name: 发送到企业微信
+        uses: MeanZhang/wecom-group-robot@v1
+        with:
+          key: ${{ secrets.KEY }}
+          msgtype: "file"
+          content: '${{ secrets.APP_NAME }}.apk'
