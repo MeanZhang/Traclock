@@ -34,7 +34,7 @@ jobs:
           keyPassword: "DjneQ3yVMsd$ydtj"
         env:
           BUILD_TOOLS_VERSION: "30.0.2"
-          
+
       - name: 重命名APK
         run: mv ${{ env.SIGNED_RELEASE_FILE }} '${{ secrets.APP_NAME }}.apk'
       - name: 发送到企业微信
@@ -42,4 +42,4 @@ jobs:
         with:
           key: ${{ secrets.KEY }}
           msgtype: "file"
-          content: '${{ secrets.APP_NAME }}.apk'
+          content: "${{ secrets.APP_NAME }}.apk"
