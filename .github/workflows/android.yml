@@ -38,7 +38,7 @@ jobs:
       - name: 重命名APK
         run: mv ${{ env.SIGNED_RELEASE_FILE }} '${{ secrets.APP_NAME }}.apk'
       - name: 发送到企业微信
-        uses: MeanZhang/wecom-group-robot@v1
+        uses: MeanZhang/wecom-group-robot@v1.0.1
         with:
           key: ${{ secrets.KEY }}
           msgtype: "file"
