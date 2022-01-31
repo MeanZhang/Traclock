@@ -9,8 +9,10 @@ updates:
     directory: /
     schedule:
       interval: daily
+    target-branch: "dev"
 
   - package-ecosystem: gradle
     directory: /
     schedule:
       interval: daily
+    target-branch: "dev"
