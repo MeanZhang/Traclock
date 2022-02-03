@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -71,9 +71,6 @@ fun Test() {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        Divider(
-            color = MaterialTheme.colorScheme.inverseOnSurface,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
+        Divider(Modifier.padding(vertical = 16.dp))
     }
 }

@@ -11,7 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -90,7 +90,7 @@ class BackupRestoreActivity : ComponentActivity() {
                                 onClick = { backup() }
                             )
 
-                            Divider(color = MaterialTheme.colorScheme.inverseOnSurface)
+                            Divider()
 
                             SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
                             SettingItemWinthoutIcon(
