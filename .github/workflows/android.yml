@@ -17,26 +17,26 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Gradle clean
-        run: ./gradlew clean && rm -rf ./app/build/
       - name: build
-        run: ./gradlew assembleRelease
+        run: |
+          chmod +x gradlew
+          ./gradlew clean && rm -rf ./app/build/
+          ./gradlew assembleRelease
 
       - name: APK签名
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: ./app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.KEY_BASE64 }}
-          alias: "traclock"
-          keyStorePassword: "DjneQ3yVMsd$ydtj"
-          keyPassword: "DjneQ3yVMsd$ydtj"
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
         env:
           BUILD_TOOLS_VERSION: "30.0.2"
 
       - name: 重命名APK
         run: mv ${{ env.SIGNED_RELEASE_FILE }} '${{ secrets.APP_NAME }}.apk'
+
       - name: 发送到企业微信
         uses: MeanZhang/wecom-group-robot@v1.0.1
         with:
