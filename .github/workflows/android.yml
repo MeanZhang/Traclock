@@ -19,9 +19,7 @@ jobs:
 
       - name: build
         run: |
-          chmod +x gradlew
-          ./gradlew clean && rm -rf ./app/build/
-          ./gradlew assembleRelease
+          chmod +x gradlew && ./gradlew assembleRelease
 
       - name: APK签名
         uses: r0adkll/sign-android-release@v1
