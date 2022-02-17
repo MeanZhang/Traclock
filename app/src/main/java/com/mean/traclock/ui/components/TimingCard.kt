@@ -6,10 +6,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +22,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun TimingCard(
@@ -54,14 +52,12 @@ fun TimingCard(
                 stringResource(R.string.tracking),
                 style = MaterialTheme.typography.headlineMedium
             )
-            Surface(
+            Card(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                shadowElevation = 4.dp,
-                tonalElevation = 4.dp,
-                color = MaterialTheme.colorScheme.surface
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(

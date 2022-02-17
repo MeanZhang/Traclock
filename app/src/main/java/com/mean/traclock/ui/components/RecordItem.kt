@@ -78,7 +78,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
                 )
                 Column {
                     Text(
-                        projectName, style = MaterialTheme.typography.titleMedium
+                        projectName, style = MaterialTheme.typography.bodyLarge
                     )
                     if (detailView) {
                         Text(
@@ -117,7 +117,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
 fun RecordItemWithoutProject(context: Context, record: Record) {
     val startTime = getTimeString(record.startTime)
     val endTime = getTimeString(record.endTime)
-    var showMenu = mutableStateOf(false)
+    val showMenu = mutableStateOf(false)
     Row(
         modifier = Modifier
             .fillMaxWidth()
