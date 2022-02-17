@@ -1,6 +1,7 @@
 package com.mean.traclock.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,11 +50,11 @@ fun SmallOutlinedButton(text: String, onClick: () -> Unit = {}) {
             //边框颜色
             color = MaterialTheme.colorScheme.outline.copy(0.2f)
         ),
-        onClick = onClick,
+        modifier = Modifier.clickable(onClick = onClick),
         //图标和文字颜色
         contentColor = MaterialTheme.colorScheme.secondary.copy(0.8f),
         //按钮背景颜色
-        color = MaterialTheme.colorScheme.inverseOnSurface.copy(0.6f)
+        color = MaterialTheme.colorScheme.inverseOnSurface.copy(0.6f),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
