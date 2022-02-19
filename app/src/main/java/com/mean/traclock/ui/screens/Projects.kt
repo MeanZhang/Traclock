@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.ProjectActivity
@@ -34,9 +34,9 @@ fun Projects(
     projectTime: LiveData<List<Record>>,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    val projects by TraclockApplication.projects.observeAsState(listOf())
+    val projects by App.projects.observeAsState(listOf())
     val time by projectTime.observeAsState(listOf())
-    val isTiming: Boolean by TraclockApplication.isTiming.observeAsState(false)
+    val isTiming: Boolean by App.isTiming.observeAsState(false)
 
     LazyColumn(contentPadding = contentPadding) {
         item {
@@ -70,7 +70,7 @@ fun ProjectItem(context: Context, project: Project, time: String) {
                 intent.putExtra("projectName", project.name)
                 context.startActivity(intent)
             }
-            .padding(vertical = 8.dp, horizontal = TraclockApplication.horizontalMargin),
+            .padding(vertical = 8.dp, horizontal = App.horizontalMargin),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(

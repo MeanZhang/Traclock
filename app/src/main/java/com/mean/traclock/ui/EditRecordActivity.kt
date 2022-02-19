@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -45,7 +44,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.loper7.date_time_picker.dialog.CardDatePickerDialog
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.theme.TraclockTheme
@@ -130,7 +129,7 @@ class EditRecordActivity : AppCompatActivity() {
                             sheetState = state,
                             sheetContent = {
                                 Surface {
-                                    val projects by TraclockApplication.projects.observeAsState(
+                                    val projects by App.projects.observeAsState(
                                         listOf()
                                     )
                                     Column(

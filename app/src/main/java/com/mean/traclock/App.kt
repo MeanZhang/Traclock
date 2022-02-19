@@ -17,7 +17,7 @@ import com.mean.traclock.util.startNotify
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 
-class TraclockApplication : Application() {
+class App : Application() {
     companion object {
         fun addProject(projectName: String) {
             TODO("Not yet implemented")

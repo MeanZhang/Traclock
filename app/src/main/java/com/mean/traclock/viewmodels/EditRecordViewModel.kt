@@ -3,7 +3,7 @@ package com.mean.traclock.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.util.getIntDate
@@ -31,13 +31,13 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
             if (_project.value.isNullOrBlank()) {
                 return -1//项目名为空
             } else {
-                return if (_project.value in TraclockApplication.projectsList) {
+                return if (_project.value in App.projectsList) {
                     record.project = _project.value ?: ""
                     record.startTime = startTime.value ?: 0L
                     record.endTime = endTime.value ?: 0L
                     record.date = getIntDate(record.startTime)
                     thread {
-                        AppDatabase.getDatabase(TraclockApplication.context)
+                        AppDatabase.getDatabase(App.context)
                             .recordDao().update(record)
                     }
                     1

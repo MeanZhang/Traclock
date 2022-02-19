@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 
 @Composable
 fun SettingGroupTitle(title: String) {
@@ -15,7 +15,7 @@ fun SettingGroupTitle(title: String) {
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
-            .padding(vertical = TraclockApplication.horizontalMargin, horizontal = 16.dp)
+            .padding(vertical = App.horizontalMargin, horizontal = 16.dp)
             .padding(start = 52.dp)
     )
 }
@@ -27,7 +27,7 @@ fun SettingGroupTitleWithoutIcon(title: String) {
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(
-            horizontal = TraclockApplication.horizontalMargin,
+            horizontal = App.horizontalMargin,
             vertical = 12.dp
         )
     )

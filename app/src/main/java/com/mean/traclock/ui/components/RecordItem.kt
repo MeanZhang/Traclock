@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
@@ -55,7 +55,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
                         { showMenu = true }
                     } else null
                 )
-                .padding(vertical = 8.dp, horizontal = TraclockApplication.horizontalMargin),
+                .padding(vertical = 8.dp, horizontal = App.horizontalMargin),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -118,7 +118,7 @@ fun RecordItemWithoutProject(context: Context, record: Record) {
                 },
                 onLongClick = { showMenu = true }
             )
-            .padding(vertical = 24.dp, horizontal = TraclockApplication.horizontalMargin),
+            .padding(vertical = 24.dp, horizontal = App.horizontalMargin),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -149,7 +149,7 @@ fun putRecord(intent: Intent, record: Record) {
 
 fun deleteRecord(record: Record) {
     thread {
-        AppDatabase.getDatabase(TraclockApplication.context).recordDao()
+        AppDatabase.getDatabase(App.context).recordDao()
             .delete(record)
     }
 }

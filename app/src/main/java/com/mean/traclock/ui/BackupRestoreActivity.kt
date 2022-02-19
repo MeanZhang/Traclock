@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
@@ -20,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.LocalWindowInsets
@@ -28,7 +26,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.R
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
@@ -169,8 +167,8 @@ class BackupRestoreActivity : ComponentActivity() {
         } catch (e: DateTimeParseException) {
             return -4
         }
-        if (projectName !in TraclockApplication.projectsList) {
-            TraclockApplication.addProject(projectName)
+        if (projectName !in App.projectsList) {
+            App.addProject(projectName)
             Log.d(getString(R.string.debug_tag), projectName)
             thread { AppDatabase.getDatabase(this).projectDao().insert(Project(projectName)) }
         }

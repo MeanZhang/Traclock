@@ -3,15 +3,15 @@ package com.mean.traclock.util
 import android.app.Notification
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.mean.traclock.TraclockApplication
-import com.mean.traclock.TraclockApplication.Companion.context
+import com.mean.traclock.App
+import com.mean.traclock.App.Companion.context
 import com.mean.traclock.R
 import kotlinx.coroutines.*
 
 @DelicateCoroutinesApi
 fun startNotify(projectName: String, startTime: Long) {
     GlobalScope.launch {
-        while (TraclockApplication.isTiming.value==true) {
+        while (App.isTiming.value==true) {
             notify(projectName, startTime, true)
             delay(1000)
         }

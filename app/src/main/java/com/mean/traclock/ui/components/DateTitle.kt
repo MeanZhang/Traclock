@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.util.getDurationString
 
 @Composable
@@ -18,7 +18,7 @@ fun DateTitle(date: String, duration: Long) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = TraclockApplication.horizontalMargin),
+            .padding(vertical = 16.dp, horizontal = App.horizontalMargin),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

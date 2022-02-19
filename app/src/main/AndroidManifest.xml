@@ -4,7 +4,7 @@
     package="com.mean.traclock">
 
     <application
-        android:name=".TraclockApplication"
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

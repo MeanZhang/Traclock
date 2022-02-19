@@ -6,13 +6,12 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.database.Record
 import com.mean.traclock.database.TimeByDate
 import com.mean.traclock.ui.components.*
@@ -31,7 +30,7 @@ fun TimeLine(
 ) {
     val records by recordsLiveData.observeAsState(listOf())
     val time by projectTime.observeAsState(listOf())
-    val isTiming by TraclockApplication.isTiming.observeAsState(false)
+    val isTiming by App.isTiming.observeAsState(false)
     if (!detailView) {
         Log.d("Boost-Mean", records.toString())
     }
@@ -50,7 +49,7 @@ fun TimeLine(
         items(records.size) { i ->
             val record = records[i]
 
-            val color = Color(TraclockApplication.projectsList[record.project] ?: 0)
+            val color = Color(App.projectsList[record.project] ?: 0)
             if (i == 0 || (i > 0 && record.date != records[i - 1].date)) {
                 DateTitle(
                     date = getDataString(record.date),

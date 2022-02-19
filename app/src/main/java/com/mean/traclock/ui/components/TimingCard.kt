@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.util.*
 import com.mean.traclock.util.TimingControl
 import kotlinx.coroutines.cancel
@@ -46,7 +46,7 @@ fun TimingCard(
                 delay(1000)
             }
         }
-        Column(modifier = Modifier.padding(horizontal = TraclockApplication.horizontalMargin)) {
+        Column(modifier = Modifier.padding(horizontal = App.horizontalMargin)) {
             //记录中
             Text(
                 stringResource(R.string.tracking),

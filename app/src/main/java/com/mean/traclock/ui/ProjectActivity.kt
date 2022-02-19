@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -20,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +28,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.R
-import com.mean.traclock.TraclockApplication
+import com.mean.traclock.App
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.*
 import com.mean.traclock.ui.theme.TraclockTheme
@@ -103,7 +101,7 @@ class ProjectActivity : ComponentActivity() {
                                                 intent.putExtra("name", viewModel.projectName)
                                                 intent.putExtra(
                                                     "color",
-                                                    TraclockApplication.projectsList[viewModel.projectName]
+                                                    App.projectsList[viewModel.projectName]
                                                 )
                                                 startActivity(intent)
                                             })
