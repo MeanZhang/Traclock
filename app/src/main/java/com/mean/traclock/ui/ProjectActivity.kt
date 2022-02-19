@@ -87,6 +87,33 @@ class ProjectActivity : ComponentActivity() {
                                     IconButton(onClick = { showMenu.value = true }) {
                                         Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
                                     }
+                                    DropdownMenu(
+                                        expanded = showMenu.value,
+                                        onDismissRequest = { showMenu.value = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(R.string.edit)) },
+                                            onClick = {
+                                                showMenu.value = false
+                                                val intent =
+                                                    Intent(
+                                                        this@ProjectActivity,
+                                                        EditProjectActivity::class.java
+                                                    )
+                                                intent.putExtra("name", viewModel.projectName)
+                                                intent.putExtra(
+                                                    "color",
+                                                    TraclockApplication.projectsList[viewModel.projectName]
+                                                )
+                                                startActivity(intent)
+                                            })
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(R.string.delete)) },
+                                            onClick = {
+                                                showMenu.value = false
+                                                showDialog = true
+                                            })
+                                    }
                                 },
                                 scrollBehavior = scrollBehavior
                             )
@@ -115,33 +142,7 @@ class ProjectActivity : ComponentActivity() {
                                 DividerWithPadding()
                             }
                         }
-                        TopbarMenu(
-                            showMenu = showMenu,
-                            contentPadding = contentPadding
-                        ) {
-                            MenuItem(onClick = {
-                                showMenu.value = false
-                                val intent =
-                                    Intent(
-                                        this@ProjectActivity,
-                                        EditProjectActivity::class.java
-                                    )
-                                intent.putExtra("name", viewModel.projectName)
-                                intent.putExtra(
-                                    "color",
-                                    TraclockApplication.projectsList[viewModel.projectName]
-                                )
-                                startActivity(intent)
-                            }) {
-                                Text(stringResource(R.string.edit))
-                            }
-                            MenuItem(onClick = {
-                                showMenu.value = false
-                                showDialog = true
-                            }) {
-                                Text(stringResource(R.string.delete))
-                            }
-                        }
+
 
                         if (showDialog) {
                             AlertDialog(onDismissRequest = { showDialog = false },

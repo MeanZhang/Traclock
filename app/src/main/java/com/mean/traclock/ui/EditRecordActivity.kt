@@ -10,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -47,8 +49,6 @@ import com.loper7.date_time_picker.dialog.CardDatePickerDialog
 import com.mean.traclock.TraclockApplication
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
-import com.mean.traclock.ui.components.TopbarMenu
-import com.mean.traclock.ui.components.MenuItem
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.Database
 import com.mean.traclock.util.getDateTimeString
@@ -61,7 +61,10 @@ class EditRecordActivity : AppCompatActivity() {
     private var isModified = false
 
     @SuppressLint("UnrememberedMutableState")
-    @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(
+        ExperimentalMaterial3Api::class,
+        androidx.compose.material.ExperimentalMaterialApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -106,6 +109,17 @@ class EditRecordActivity : AppCompatActivity() {
                                 actions = {
                                     IconButton(onClick = { showMenu.value = true }) {
                                         Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
+                                    }
+                                    DropdownMenu(
+                                        expanded = showMenu.value,
+                                        onDismissRequest = { showMenu.value = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(R.string.delete)) },
+                                            onClick = {
+                                                Database.deleteRecord(viewModel.record)
+                                                super.finish()
+                                            })
                                     }
                                 },
                                 scrollBehavior = scrollBehavior
@@ -253,14 +267,7 @@ class EditRecordActivity : AppCompatActivity() {
                                         Text(stringResource(R.string.save))
                                     }
                                 }
-                                TopbarMenu(showMenu = showMenu, contentPadding = contentPadding) {
-                                    MenuItem(onClick = {
-                                        Database.deleteRecord(viewModel.record)
-                                        super.finish()
-                                    }) {
-                                        Text(stringResource(R.string.delete))
-                                    }
-                                }
+
                             }
                         }
                     }
