@@ -64,8 +64,8 @@ class BackupRestoreActivity : ComponentActivity() {
             TraclockTheme {
                 ProvideWindowInsets {
                     val systemUiController = rememberSystemUiController()
-                    systemUiController.setSystemBarsColor(Color.Transparent)
-                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+//                    systemUiController.setSystemBarsColor(Color.Transparent)
+//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
                     var showDialog by remember { mutableStateOf(false) }
 

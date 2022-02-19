@@ -59,8 +59,8 @@ class ProjectActivity : ComponentActivity() {
             TraclockTheme {
                 ProvideWindowInsets {
                     val systemUiController = rememberSystemUiController()
-                    systemUiController.setSystemBarsColor(Color.Transparent)
-                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+//                    systemUiController.setSystemBarsColor(Color.Transparent)
+//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
                     val showMenu = mutableStateOf(false)
 

@@ -78,8 +78,8 @@ class EditRecordActivity : AppCompatActivity() {
             TraclockTheme {
                 ProvideWindowInsets {
                     val systemUiController = rememberSystemUiController()
-                    systemUiController.setSystemBarsColor(Color.Transparent)
-                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+//                    systemUiController.setSystemBarsColor(Color.Transparent)
+//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
                     val project by viewModel.project.observeAsState("")
                     val startTime by viewModel.startTime.observeAsState(0L)

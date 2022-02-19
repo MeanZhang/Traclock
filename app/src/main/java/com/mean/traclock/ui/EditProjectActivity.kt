@@ -55,9 +55,9 @@ class EditProjectActivity : ComponentActivity() {
             TraclockTheme {
                 ProvideWindowInsets {
                     val systemUiController = rememberSystemUiController()
-                    systemUiController.setSystemBarsColor(Color.Transparent)
-                    systemUiController.systemBarsDarkContentEnabled =
-                        androidx.compose.material.MaterialTheme.colors.isLight
+//                    systemUiController.setSystemBarsColor(Color.Transparent)
+//                    systemUiController.systemBarsDarkContentEnabled =
+//                        androidx.compose.material.MaterialTheme.colors.isLight
 
                     val name by viewModel.name.observeAsState("")
                     val color by viewModel.color.observeAsState(0)

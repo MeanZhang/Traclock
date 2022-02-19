@@ -58,8 +58,8 @@ class MainActivity : ComponentActivity() {
             TraclockTheme {
                 ProvideWindowInsets {
                     val systemUiController = rememberSystemUiController()
-                    systemUiController.setSystemBarsColor(Color.Transparent)
-                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+//                    systemUiController.setSystemBarsColor(Color.Transparent)
+//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
                     val homeScreenState by viewModel.homeScreenState.observeAsState(TIMELINE)
 
