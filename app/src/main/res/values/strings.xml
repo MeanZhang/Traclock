@@ -58,4 +58,6 @@
     <string name="title_activity_main">时迹</string>
     <string name="title_activity_about">关于</string>
     <string name="version">版本：</string>
+    <string name="developer_avatar">开发者头像</string>
+    <string name="developer_introduction">一个业余开发者。</string>
 </resources>
