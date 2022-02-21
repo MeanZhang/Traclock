@@ -57,11 +57,12 @@ class AboutActivity : ComponentActivity() {
 fun Content() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Image(
-            painterResource(R.drawable.ic_launcher_foreground),
+            painterResource(R.drawable.ic_logo),
             stringResource(R.string.app_name),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .size(120.dp)
+                .padding(vertical = 24.dp)
+                .size(72.dp)
                 .fillMaxWidth()
         )
         Text(
@@ -77,7 +78,7 @@ fun Content() {
         )
         Divider(Modifier.padding(vertical = 16.dp))
         Text(
-            "开发者",
+            stringResource(R.string.developer),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(horizontal = App.horizontalMargin)
         )
@@ -91,7 +92,7 @@ fun Content() {
                     .clip(CircleShape)
             )
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text("Mean",style = MaterialTheme.typography.titleMedium,)
+                Text("Mean", style = MaterialTheme.typography.titleMedium)
                 Text(
                     stringResource(R.string.developer_introduction),
                     style = MaterialTheme.typography.bodyMedium,

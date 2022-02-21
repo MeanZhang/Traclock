@@ -60,4 +60,5 @@
     <string name="version">版本：</string>
     <string name="developer_avatar">开发者头像</string>
     <string name="developer_introduction">一个业余开发者。</string>
+    <string name="developer">开发者</string>
 </resources>
