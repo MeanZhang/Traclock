@@ -10,10 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Feedback
-import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +20,7 @@ import com.mean.traclock.ui.AboutActivity
 import com.mean.traclock.ui.BackupRestoreActivity
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
+import com.mean.traclock.ui.settings.FeedbackActivity
 
 @Composable
 fun Settings(context: Context, contentPadding: PaddingValues) {
@@ -43,22 +42,20 @@ fun Settings(context: Context, contentPadding: PaddingValues) {
         Divider()
         SettingGroupTitle(stringResource(R.string.others))
         SettingItem(
+            Icons.Outlined.Feedback,
+            stringResource(R.string.title_activity_feedback),
+            stringResource(R.string.settings_description_feedback),
+            onClick = {
+                context.startActivity(Intent(context, FeedbackActivity::class.java))
+            }
+        )
+        SettingItem(
             Icons.Outlined.Info,
             stringResource(R.string.title_activity_about),
             stringResource(R.string.settings_description_about),
             onClick = {
-                context.startActivity(Intent(context,AboutActivity::class.java))
+                context.startActivity(Intent(context, AboutActivity::class.java))
             }
-        )
-        SettingItem(
-            Icons.Outlined.Help,
-            stringResource(R.string.help),
-            stringResource(R.string.settings_description_help)
-        )
-        SettingItem(
-            Icons.Outlined.Feedback,
-            stringResource(R.string.feedback),
-            stringResource(R.string.settings_description_feedback)
         )
     }
 }

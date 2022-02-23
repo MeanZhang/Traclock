@@ -72,7 +72,6 @@ class MainActivity : ComponentActivity() {
 //                    val timelineListState = rememberLazyListState()
 
                     Scaffold(
-                        containerColor = MaterialTheme.colorScheme.surface,
                         modifier = Modifier
                             .padding(rememberInsetsPaddingValues(LocalWindowInsets.current.systemBars))
                             .nestedScroll(scrollBehavior.nestedScrollConnection),

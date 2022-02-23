@@ -16,6 +16,11 @@
         android:theme="@style/Theme.Traclock"
         tools:targetApi="31">
         <activity
+            android:name=".ui.settings.FeedbackActivity"
+            android:exported="false"
+            android:label="@string/title_activity_feedback"
+            android:theme="@style/Theme.Traclock" />
+        <activity
             android:name=".ui.AboutActivity"
             android:exported="false"
             android:label="@string/title_activity_about"
@@ -48,7 +53,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Traclock">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

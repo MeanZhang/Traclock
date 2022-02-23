@@ -42,7 +42,7 @@
     <string name="help">Help</string>
     <string name="settings_description_help">View use help</string>
     <string name="feedback">Feedback</string>
-    <string name="settings_description_feedback">Feedback problems encountered and suggestions</string>
+    <string name="settings_description_feedback">Get help or feedback problems</string>
     <string name="restore_from_file">Restore From File</string>
     <string name="settings_description_restore_from_file">Restore data from a CSV file</string>
     <string name="backup">Backup</string>
@@ -59,4 +59,5 @@
     <string name="developer_avatar">developer\'s avatar</string>
     <string name="developer_introduction">An amateur developer.</string>
     <string name="developer">Developer</string>
+    <string name="title_activity_feedback">Help &amp; Feedback</string>
 </resources>
