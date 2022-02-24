@@ -16,3 +16,4 @@ local.properties
 node_modules
 .temp
 .cache
+dist
