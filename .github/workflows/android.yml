@@ -5,6 +5,9 @@ on:
     branches: [main, dev]
     paths-ignore:
       - '.github/**'
+      - 'docs/**'
+      - 'package.json'
+      - 'yarn.lock'
 
 jobs:
   build:

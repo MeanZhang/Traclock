@@ -9,10 +9,19 @@ updates:
     directory: /
     schedule:
       interval: daily
+      timezone: "Asia/Shanghai"
     target-branch: "dev"
 
   - package-ecosystem: gradle
     directory: /
     schedule:
       interval: daily
+      timezone: "Asia/Shanghai"
+    target-branch: "dev"
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+      timezone: "Asia/Shanghai"
     target-branch: "dev"

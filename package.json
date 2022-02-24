@@ -1,0 +1,14 @@
+{
+  "name": "traclock-doc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mean <390602272@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^2.0.0-beta.35"
+  },
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  }
+}

@@ -1,9 +1,13 @@
-name: Build Check
+name: Android Build Check
 
 on:
   pull_request:
     types: [opened, reopened]
-
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'package.json'
+      - 'yarn.lock'
 jobs:
   build:
     runs-on: ubuntu-latest
