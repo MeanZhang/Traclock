@@ -25,9 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.MutableLiveData
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.R
 import com.mean.traclock.viewmodels.EditProjectViewModel
@@ -53,98 +50,96 @@ class EditProjectActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                ProvideWindowInsets {
-                    val systemUiController = rememberSystemUiController()
+                val systemUiController = rememberSystemUiController()
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled =
 //                        androidx.compose.material.MaterialTheme.colors.isLight
 
-                    val name by viewModel.name.observeAsState("")
-                    val color by viewModel.color.observeAsState(0)
+                val name by viewModel.name.observeAsState("")
+                val color by viewModel.color.observeAsState(0)
 
-                    val showDialogState by showDialog.observeAsState(false)
+                val showDialogState by showDialog.observeAsState(false)
 
-                    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
-                    Scaffold(
-                        modifier = Modifier
-                            .padding(rememberInsetsPaddingValues(LocalWindowInsets.current.systemBars))
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        topBar = {
-                            SmallTopAppBar(
-                                navigationIcon = {
-                                    IconButton(onClick = { finish() }) {
-                                        Icon(Icons.Filled.ArrowBack, getString(R.string.back))
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                Scaffold(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    topBar = {
+                        SmallTopAppBar(
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(Icons.Filled.ArrowBack, getString(R.string.back))
+                                }
+                            },
+                            title = { Text(getString(R.string.edit)) },
+                            actions = {
+                                if (name.isNotBlank()) {
+                                    IconButton(onClick = { save(viewModel) }) {
+                                        Icon(Icons.Filled.Check, stringResource(R.string.save))
                                     }
-                                },
-                                title = { Text(getString(R.string.edit)) },
-                                actions = {
-                                    if (name.isNotBlank()) {
-                                        IconButton(onClick = { save(viewModel) }) {
-                                            Icon(Icons.Filled.Check, stringResource(R.string.save))
-                                        }
-                                    }
-                                })
-                        }) { contentPadding ->
-                        Column {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .padding(contentPadding)
-                                    .fillMaxWidth()
-                                    .height(240.dp)
-                                    .background(
-                                        Brush.verticalGradient(
-                                            listOf(
-                                                Color(color),
-                                                Color.Black
-                                            )
+                                }
+                            })
+                    }) { contentPadding ->
+                    Column {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .padding(contentPadding)
+                                .fillMaxWidth()
+                                .height(240.dp)
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            Color(color),
+                                            Color.Black
                                         )
                                     )
-                            ) {
-                                TextField(
-                                    value = name,
-                                    onValueChange = {
-                                        viewModel.setName(it)
-                                        isModified = viewModel.isModified()
-                                    })
-                            }
-                            ColorPicker(
-                                onColorSelected = {
-                                    viewModel.setColor(it.toArgb())
+                                )
+                        ) {
+                            TextField(
+                                value = name,
+                                onValueChange = {
+                                    viewModel.setName(it)
                                     isModified = viewModel.isModified()
                                 })
                         }
+                        ColorPicker(
+                            onColorSelected = {
+                                viewModel.setColor(it.toArgb())
+                                isModified = viewModel.isModified()
+                            })
                     }
-                    if (showDialogState) {
-                        AlertDialog(onDismissRequest = { showDialog.value = false },
-                            title = { Text(stringResource(R.string.discard_changes)) },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        showDialog.value = false
-                                    }
-                                ) {
-                                    Text(
-                                        stringResource(R.string.keep_editing),
-                                        fontWeight = FontWeight.Bold
-                                    )
+                }
+                if (showDialogState) {
+                    AlertDialog(onDismissRequest = { showDialog.value = false },
+                        title = { Text(stringResource(R.string.discard_changes)) },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showDialog.value = false
                                 }
-                            },
-                            dismissButton = {
-                                TextButton(
-                                    onClick = {
-                                        super.finish()
-                                    }
-                                ) {
-                                    Text(
-                                        stringResource(R.string.discard),
-                                        fontWeight = FontWeight.Bold
-                                    )
+                            ) {
+                                Text(
+                                    stringResource(R.string.keep_editing),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    super.finish()
                                 }
-                            },
-                            text = { Text(stringResource(R.string.discard_text)) }
-                        )
-                    }
+                            ) {
+                                Text(
+                                    stringResource(R.string.discard),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        },
+                        text = { Text(stringResource(R.string.discard_text)) }
+                    )
                 }
             }
         }

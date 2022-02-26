@@ -7,8 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -21,13 +21,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.test.TestActivity
 import com.mean.traclock.ui.BottomNavType
@@ -56,60 +52,58 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                ProvideWindowInsets {
-                    val systemUiController = rememberSystemUiController()
+                val systemUiController = rememberSystemUiController()
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
-                    val homeScreenState by viewModel.homeScreenState.observeAsState(TIMELINE)
+                val homeScreenState by viewModel.homeScreenState.observeAsState(TIMELINE)
 
-                    val detailView = mutableStateOf(true)
+                val detailView = mutableStateOf(true)
 
-                    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
 
 //                    val coroutineScope = rememberCoroutineScope()
 
 //                    val timelineListState = rememberLazyListState()
 
-                    Scaffold(
-                        modifier = Modifier
-                            .padding(rememberInsetsPaddingValues(LocalWindowInsets.current.systemBars))
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        topBar = {
-                            TopBar(
-                                homeScreenState,
-                                detailView,
-                                scrollBehavior,
+                Scaffold(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    topBar = {
+                        TopBar(
+                            homeScreenState,
+                            detailView,
+                            scrollBehavior,
 //                                coroutineScope,
 //                                timelineListState
-                            )
-                        },
-                        bottomBar = { BottomBar(homeScreenState) }
-                    ) { contentPadding ->
+                        )
+                    },
+                    bottomBar = { BottomBar(homeScreenState) }
+                ) { contentPadding ->
 
-                        when (homeScreenState) {
-                            TIMELINE -> if (detailView.value) TimeLine(
-                                this,
-                                viewModel.records,
-                                viewModel.timeByDate,
-                                true,
-                                contentPadding = contentPadding
-                            )
-                            else TimeLine(
-                                this,
-                                viewModel.projectsTimeByDate,
-                                viewModel.timeByDate,
-                                false,
-                                contentPadding = contentPadding
-                            )
-                            PROJECTS -> Projects(
-                                this,
-                                viewModel.projectsTime,
-                                contentPadding = contentPadding
-                            )
-                            SETTINGS -> Settings(this, contentPadding)
-                            else -> ComingSoon()
-                        }
+                    when (homeScreenState) {
+                        TIMELINE -> if (detailView.value) TimeLine(
+                            this,
+                            viewModel.records,
+                            viewModel.timeByDate,
+                            true,
+                            contentPadding = contentPadding
+                        )
+                        else TimeLine(
+                            this,
+                            viewModel.projectsTimeByDate,
+                            viewModel.timeByDate,
+                            false,
+                            contentPadding = contentPadding
+                        )
+                        PROJECTS -> Projects(
+                            this,
+                            viewModel.projectsTime,
+                            contentPadding = contentPadding
+                        )
+                        SETTINGS -> Settings(this, contentPadding)
+                        else -> ComingSoon()
                     }
                 }
             }

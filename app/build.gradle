@@ -60,17 +60,15 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.github.loperSeven:DateTimePicker:0.5.3'
     //accompanist
-    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
     //Room数据库
     implementation("androidx.room:room-runtime:$room_version")
     ksp "androidx.room:room-compiler:$room_version"
-
+    //WorkManager
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     implementation "androidx.fragment:fragment-ktx:1.4.1"
-    
+
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
