@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mean.traclock.database.Record
 
-class EditRecordViewModelFactory(private val record:Record) :ViewModelProvider.Factory{
+@Suppress("UNCHECKED_CAST")
+class EditRecordViewModelFactory(private val record: Record) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return  EditRecordViewModel(record) as T
+        return EditRecordViewModel(record) as T
     }
 }
