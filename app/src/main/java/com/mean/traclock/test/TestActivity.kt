@@ -4,105 +4,82 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.CardTravel
-import androidx.compose.material.icons.filled.Fastfood
-import androidx.compose.material.icons.filled.HolidayVillage
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.WindowCompat
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mean.traclock.App
+import com.mean.traclock.R
 import com.mean.traclock.ui.theme.TraclockTheme
+import kotlinx.coroutines.*
 
 class TestActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val builder = NotificationCompat.Builder(
+            App.context, App.context.getString(
+                R.string.notice_channel_id
+            )
+        ).setSmallIcon(R.drawable.ic_logo)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setContentTitle("测试")
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
+        val manager = NotificationManagerCompat.from(this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            val scope = rememberCoroutineScope()
+            var isTiming = false
+            var time = 0
             val systemUiController = rememberSystemUiController()
             systemUiController.setSystemBarsColor(Color.Transparent)
             systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
             TraclockTheme {
-                ProvideWindowInsets {
-                    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
-                    Scaffold(
-                        modifier = Modifier
-                            .padding(rememberInsetsPaddingValues(LocalWindowInsets.current.systemBars))
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        topBar = {
-                            SmallTopAppBar(
-                                title = { Text("Test") },
-                                scrollBehavior = scrollBehavior
-                            )
-                        },
-                        bottomBar = {
-                            var selected by remember { mutableStateOf(0) }
-
-                            NavigationBar {
-                                NavigationBarItem(
-                                    selected = selected == 0,
-                                    onClick = { selected = 0 },
-                                    icon = {
-                                        Icon(
-                                            Icons.Default.Fastfood,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    label = { Text(text = "1") },
-                                    alwaysShowLabel = false
-                                )
-                                NavigationBarItem(
-                                    selected = selected == 1,
-                                    onClick = { selected = 1 },
-                                    icon = {
-                                        Icon(
-                                            Icons.Default.CardTravel,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    label = { Text(text = "2") },
-                                    alwaysShowLabel = false
-                                )
-                                NavigationBarItem(
-                                    selected = selected == 2,
-                                    onClick = { selected = 2 },
-                                    icon = {
-                                        Icon(
-                                            Icons.Default.HolidayVillage,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    label = { Text(text = "3") },
-                                    alwaysShowLabel = false
-                                )
-                                NavigationBarItem(
-                                    selected = selected == 3,
-                                    onClick = { selected = 3 },
-                                    icon = { Icon(Icons.Default.Alarm, contentDescription = null) },
-                                    label = { Text(text = "4") },
-                                    alwaysShowLabel = false
-                                )
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                Scaffold(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    topBar = {
+                        SmallTopAppBar(
+                            title = { Text("Test") },
+                            scrollBehavior = scrollBehavior
+                        )
+                    }
+                ) { contentPadding ->
+                    Column {
+                        Button(onClick = {
+                            isTiming = true
+                            scope.launch {
+                                while (isTiming) {
+                                    builder.setContentText(time++.toString())
+                                    manager.notify(1, builder.build())
+                                    delay(1000)
+                                }
+                                cancel()
                             }
+                        }) {
+                            Text("开始")
                         }
-                    ) { contentPadding ->
-                        Box {
-                            Test(contentPadding = contentPadding)
+                        Button(onClick = {
+                            isTiming = false
+                            builder.setOngoing(false)
+                            manager.notify(1, builder.build())
+                        }) {
+                            Text("停止")
                         }
+                        Test(contentPadding = contentPadding)
                     }
                 }
             }
@@ -165,10 +142,4 @@ fun Test(contentPadding: PaddingValues) {
             Text(text = it.toString(), Modifier.padding(vertical = 16.dp))
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun Preview() {
-    Test(PaddingValues(16.dp))
 }
