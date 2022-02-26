@@ -3,7 +3,9 @@ package com.mean.traclock.util
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import androidx.compose.ui.res.stringResource
 import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.mean.traclock.App
@@ -66,7 +68,12 @@ object TimingControl {
         val request =
             OneTimeWorkRequest.Builder(NotificationWorker::class.java).setInputData(data)
                 .build()
-        WorkManager.getInstance(context).enqueue(request)
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                context.getString(R.string.unique_work_name),
+                ExistingWorkPolicy.KEEP,
+                request
+            )
     }
 
     fun getIsTiming() = sharedPref.getBoolean("isTiming", false)
