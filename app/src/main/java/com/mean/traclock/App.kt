@@ -5,6 +5,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.unit.dp
@@ -13,7 +14,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.util.TimingControl
-import com.mean.traclock.util.startNotify
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 
@@ -53,10 +53,7 @@ class App : Application() {
     @DelicateCoroutinesApi
     private fun initNotification() {
         if (isTiming.value == true) {
-            startNotify(
-                TimingControl.getProjectName(),
-                TimingControl.getStartTime()
-            )
+            TimingControl.startNotify()
         }
     }
 

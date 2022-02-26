@@ -1,7 +1,11 @@
 package com.mean.traclock.util
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.mean.traclock.App
 import com.mean.traclock.App.Companion.context
 import com.mean.traclock.R
@@ -24,13 +28,15 @@ object TimingControl {
                 .show()
         } else {
             App.isTiming.value = true
+            val startTime = System.currentTimeMillis()
             with(sharedPref.edit()) {
                 putBoolean("isTiming", true)
-                putString("project", project)
-                putLong("startTime", System.currentTimeMillis())
+                putString("projectName", project)
+                putLong("startTime", startTime)
                 apply()
             }
-            startNotify(project, System.currentTimeMillis())
+            startNotify(project)
+
         }
     }
 
@@ -49,13 +55,23 @@ object TimingControl {
             thread {
                 AppDatabase.getDatabase(context).recordDao().insert(record)
             }
-            stopNotify(record.project, record.startTime)
         }
+    }
+
+    fun startNotify(projectName: String? = null, startTime: Long? = null) {
+        val data =
+            Data.Builder().putString("projectName", projectName ?: getProjectName())
+                .putLong("startTime", startTime ?: getStartTime())
+                .build()
+        val request =
+            OneTimeWorkRequest.Builder(NotificationWorker::class.java).setInputData(data)
+                .build()
+        WorkManager.getInstance(context).enqueue(request)
     }
 
     fun getIsTiming() = sharedPref.getBoolean("isTiming", false)
 
-    fun getProjectName() = sharedPref.getString("project", "") ?: ""
+    fun getProjectName() = sharedPref.getString("projectName", "") ?: ""
 
-    fun getStartTime() = sharedPref.getLong("startTime", 0L)
+    fun getStartTime() = sharedPref.getLong("startTime", System.currentTimeMillis())
 }
