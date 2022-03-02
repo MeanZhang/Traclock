@@ -4,7 +4,6 @@ on:
   push:
     branches: [main, dev]
     paths-ignore:
-      - '.github/**'
       - 'docs/**'
       - 'package.json'
       - 'yarn.lock'
@@ -47,7 +46,7 @@ jobs:
           path: ${{ secrets.APP_NAME }}.apk
 
       - name: 发送APK到企业微信
-        uses: MeanZhang/wecom-group-robot@v1.0.1
+        uses: MeanZhang/wecom-group-robot@v1.1
         with:
           key: ${{ secrets.KEY }}
           msgtype: "file"
