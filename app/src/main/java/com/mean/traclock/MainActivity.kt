@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                val systemUiController = rememberSystemUiController()
+//                val systemUiController = rememberSystemUiController()
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 

@@ -1,9 +1,8 @@
-val composeVersion = rootProject.extra.get("compose_version") as String
+val composeVersion by extra("1.2.0-alpha04")
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-//    id("kotlin-kapt")
     id("com.google.devtools.ksp") version "1.6.10-1.0.4"
 }
 
@@ -38,7 +37,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
     }
     buildFeatures {
         compose = true
@@ -68,7 +67,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:5.0.2")
     //日期时间选择器
     implementation("com.google.android.material:material:1.5.0")
-    implementation("com.github.loperSeven:DateTimePicker:0.5.3")
+    implementation("com.github.loperSeven:DateTimePicker:0.5.4")
     //accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     //Room数据库

@@ -40,7 +40,7 @@ class TestActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val scope = rememberCoroutineScope()
-            var isTiming = false
+            var isTiming: Boolean
             var time = 0
             val systemUiController = rememberSystemUiController()
             systemUiController.setSystemBarsColor(Color.Transparent)

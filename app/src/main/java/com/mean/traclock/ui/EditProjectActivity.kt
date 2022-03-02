@@ -50,7 +50,7 @@ class EditProjectActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                val systemUiController = rememberSystemUiController()
+//                val systemUiController = rememberSystemUiController()
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled =
 //                        androidx.compose.material.MaterialTheme.colors.isLight

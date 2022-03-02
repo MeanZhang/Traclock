@@ -1,13 +1,5 @@
-buildscript {
-    extra.apply{
-        set("compose_version", "1.2.0-alpha04")
-    }
-}
-
-//allprojects {
-//    ext {
-//        set("compose_version", "1.2.0-alpha04")
-//    }
+//buildscript {
+//    val composeVersion by extra("1.2.0-alpha04")
 //}
 
 plugins {

@@ -19,10 +19,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 
 class App : Application() {
     companion object {
-        fun addProject(projectName: String) {
-            TODO("Not yet implemented")
-        }
-
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         lateinit var projects: LiveData<List<Project>>

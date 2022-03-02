@@ -56,7 +56,7 @@ class BackupRestoreActivity : ComponentActivity() {
             }
         setContent {
             TraclockTheme {
-                val systemUiController = rememberSystemUiController()
+//                val systemUiController = rememberSystemUiController()
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
@@ -161,7 +161,6 @@ class BackupRestoreActivity : ComponentActivity() {
             return -4
         }
         if (projectName !in App.projectsList) {
-            App.addProject(projectName)
             Log.d(getString(R.string.debug_tag), projectName)
             thread { AppDatabase.getDatabase(this).projectDao().insert(Project(projectName)) }
         }
