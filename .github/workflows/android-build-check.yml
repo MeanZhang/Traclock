@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [opened, reopened]
     paths-ignore:
+      - '**.md'
       - 'docs/**'
       - 'package.json'
       - 'yarn.lock'
