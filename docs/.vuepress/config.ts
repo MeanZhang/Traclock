@@ -20,8 +20,10 @@ export default defineUserConfig<DefaultThemeOptions>({
         logo: '/images/logo.png',
         repo: 'MeanZhang/Traclock',
         docsBranch: "main",
-        docsDir:"docs",
-        editLinkText: "编辑此页面"
+        docsDir: "docs",
+        editLinkText: "编辑此页面",
+        lastUpdatedText: "上次更新于",
+        contributorsText:"贡献者"
     },
 
     // plugins: [

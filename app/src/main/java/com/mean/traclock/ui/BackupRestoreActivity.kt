@@ -10,7 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -21,12 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.mean.traclock.R
 import com.mean.traclock.App
+import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
@@ -36,7 +33,6 @@ import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.getIntDate
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.time.format.DateTimeParseException
 import kotlin.concurrent.thread
 
 class BackupRestoreActivity : ComponentActivity() {
@@ -60,64 +56,61 @@ class BackupRestoreActivity : ComponentActivity() {
             }
         setContent {
             TraclockTheme {
-                ProvideWindowInsets {
-                    val systemUiController = rememberSystemUiController()
+//                val systemUiController = rememberSystemUiController()
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
-                    var showDialog by remember { mutableStateOf(false) }
+                var showDialog by remember { mutableStateOf(false) }
 
-                    Scaffold(
-                        modifier = Modifier
-                            .padding(rememberInsetsPaddingValues(LocalWindowInsets.current.systemBars)),
-                        topBar = {
-                            SmallTopAppBar(
-                                navigationIcon = {
-                                    IconButton(onClick = { finish() }) {
-                                        Icon(Icons.Filled.ArrowBack, getString(R.string.back))
-                                    }
-                                },
-                                title = { Text(getString(R.string.title_activity_backup_restore)) }
-                            )
-                        }) { contentPadding ->
-                        Column(modifier = Modifier.padding(contentPadding)) {
-                            SettingGroupTitleWithoutIcon(stringResource(R.string.backup))
-                            SettingItemWinthoutIcon(
-                                title = stringResource(R.string.backup),
-                                description = stringResource(R.string.backup_locally),
-                                onClick = { backup() }
-                            )
-
-                            Divider()
-
-                            SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
-                            SettingItemWinthoutIcon(
-                                title = stringResource(R.string.restore_from_file),
-                                description = stringResource(R.string.settings_description_restore_from_file),
-                                onClick = { showDialog = true }
-                            )
-                        }
-                    }
-                    if (showDialog) {
-                        AlertDialog(
-                            onDismissRequest = { showDialog = false },
-                            title = { Text(stringResource(R.string.confirm_restore)) },
-                            text = { Text(stringResource(R.string.confirm_restore_text)) },
-                            confirmButton = {
-                                TextButton(onClick = {
-                                    getContentAndRestore.launch("text/csv")
-                                    showDialog = false
-                                }) {
-                                    Text(stringResource(R.string.restore).uppercase())
+                Scaffold(
+                    modifier = Modifier.systemBarsPadding(),
+                    topBar = {
+                        SmallTopAppBar(
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            dismissButton = {
-                                TextButton(onClick = { showDialog = false }) {
-                                    Text(stringResource(R.string.cancel).uppercase())
-                                }
-                            }
+                            title = { Text(getString(R.string.title_activity_backup_restore)) }
+                        )
+                    }) { contentPadding ->
+                    Column(modifier = Modifier.padding(contentPadding)) {
+                        SettingGroupTitleWithoutIcon(stringResource(R.string.backup))
+                        SettingItemWinthoutIcon(
+                            title = stringResource(R.string.backup),
+                            description = stringResource(R.string.backup_locally),
+                            onClick = { backup() }
+                        )
+
+                        Divider()
+
+                        SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
+                        SettingItemWinthoutIcon(
+                            title = stringResource(R.string.restore_from_file),
+                            description = stringResource(R.string.settings_description_restore_from_file),
+                            onClick = { showDialog = true }
                         )
                     }
+                }
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        title = { Text(stringResource(R.string.confirm_restore)) },
+                        text = { Text(stringResource(R.string.confirm_restore_text)) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                getContentAndRestore.launch("text/csv")
+                                showDialog = false
+                            }) {
+                                Text(stringResource(R.string.restore).uppercase())
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showDialog = false }) {
+                                Text(stringResource(R.string.cancel).uppercase())
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -157,18 +150,17 @@ class BackupRestoreActivity : ComponentActivity() {
         }
         val startTime = try {
             columns[1].toLong()
-        } catch (e: DateTimeParseException) {
+        } catch (e: Exception) {
             Log.d(getString(R.string.debug_tag), e.toString())
             return -3
         }
         val date = getIntDate(startTime)
         val endTime = try {
             columns[2].toLong()
-        } catch (e: DateTimeParseException) {
+        } catch (e: Exception) {
             return -4
         }
         if (projectName !in App.projectsList) {
-            App.addProject(projectName)
             Log.d(getString(R.string.debug_tag), projectName)
             thread { AppDatabase.getDatabase(this).projectDao().insert(Project(projectName)) }
         }
