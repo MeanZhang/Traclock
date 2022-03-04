@@ -37,4 +37,10 @@ interface RecordDao {
 
     @Query("SELECT project, 0 AS startTime, SUM(endTime - startTime)/1000 AS endTime, date, rowid FROM Record GROUP BY project, date ORDER BY date DESC")
     fun getProjectsTimeByDate(): LiveData<List<Record>>
+
+    @Query("SELECT *,rowid FROM Record WHERE date=:date")
+    fun getRecordsOfDate(date: Int): LiveData<List<Record>>
+
+    @Query("SELECT project, 0 AS startTime, SUM(endTime - startTime)/1000 AS endTime, 0 AS date ,rowid FROM Record WHERE date=:date GROUP BY project")
+    fun getProjectsTimeOfDate(date: Int): LiveData<List<Record>>
 }

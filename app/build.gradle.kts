@@ -59,6 +59,8 @@ dependencies {
 
     implementation("androidx.compose.material:material:$composeVersion")
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     //查看数据库
     debugImplementation("com.guolindev.glance:glance:1.1.0")
     //查看内存泄漏

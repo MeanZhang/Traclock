@@ -12,36 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.WindowCompat
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.mean.traclock.App
-import com.mean.traclock.R
 import com.mean.traclock.ui.theme.TraclockTheme
-import kotlinx.coroutines.*
+import com.mean.traclock.ui.components.charts.LineChart
 
 class TestActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val builder = NotificationCompat.Builder(
-            App.context, App.context.getString(
-                R.string.notice_channel_id
-            )
-        ).setSmallIcon(R.drawable.ic_logo)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .setContentTitle("测试")
-            .setOnlyAlertOnce(true)
-            .setOngoing(true)
-        val manager = NotificationManagerCompat.from(this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            val scope = rememberCoroutineScope()
-            var isTiming: Boolean
-            var time = 0
             val systemUiController = rememberSystemUiController()
             systemUiController.setSystemBarsColor(Color.Transparent)
             systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
@@ -59,32 +44,21 @@ class TestActivity : ComponentActivity() {
                     }
                 ) { contentPadding ->
                     Column {
-                        Button(onClick = {
-                            isTiming = true
-                            scope.launch {
-                                while (isTiming) {
-                                    builder.setContentText(time++.toString())
-                                    manager.notify(1, builder.build())
-                                    delay(1000)
-                                }
-                                cancel()
-                            }
-                        }) {
-                            Text("开始")
-                        }
-                        Button(onClick = {
-                            isTiming = false
-                            builder.setOngoing(false)
-                            manager.notify(1, builder.build())
-                        }) {
-                            Text("停止")
-                        }
+                        LineChart(lineData = getLineData())
                         Test(contentPadding = contentPadding)
                     }
                 }
             }
         }
     }
+}
+
+fun getLineData(): LineData {
+    val list = mutableListOf<Entry>()
+    for (i in 0..10) {
+        list.add(Entry(i.toFloat(), (2 * i + 1).toFloat()))
+    }
+    return LineData(LineDataSet(list, "test"))
 }
 
 @Composable

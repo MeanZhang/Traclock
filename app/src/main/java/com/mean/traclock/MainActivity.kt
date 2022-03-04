@@ -32,6 +32,7 @@ import com.mean.traclock.ui.EditProjectActivity
 import com.mean.traclock.ui.components.ComingSoon
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
+import com.mean.traclock.ui.screens.Statistics
 import com.mean.traclock.ui.screens.TimeLine
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.viewmodels.MainViewModel
@@ -103,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             contentPadding = contentPadding
                         )
                         SETTINGS -> Settings(this, contentPadding)
-                        else -> ComingSoon()
+                        STATISTICS-> Statistics()
                     }
                 }
             }
@@ -139,10 +140,7 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                     }) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(R.string.new_project)
-                        )
+                        Icon(Icons.Default.Add, stringResource(R.string.new_project))
                     }
                     TIMELINE -> IconButton(onClick = { detailView.value = !detailView.value }) {
                         Icon(Icons.Default.SwapHoriz, stringResource(R.string.change_view))
@@ -157,10 +155,7 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                     }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreHoriz,
-                            contentDescription = "test"
-                        )
+                        Icon(Icons.Default.MoreHoriz, "test")
                     }
                 }
             }
@@ -173,48 +168,28 @@ class MainActivity : ComponentActivity() {
             NavigationBarItem(
                 selected = homeScreenState == TIMELINE,
                 onClick = { viewModel.setHomeScreenState(TIMELINE) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Timeline,
-                        contentDescription = getTitle(TIMELINE)
-                    )
-                },
+                icon = { Icon(Icons.Outlined.Timeline, getTitle(TIMELINE)) },
                 label = { Text(getTitle(TIMELINE)) },
                 alwaysShowLabel = false
             )
             NavigationBarItem(
                 selected = homeScreenState == PROJECTS,
                 onClick = { viewModel.setHomeScreenState(PROJECTS) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Assignment,
-                        contentDescription = getTitle(PROJECTS)
-                    )
-                },
+                icon = { Icon(Icons.Outlined.Assignment, getTitle(PROJECTS)) },
                 label = { Text(getTitle(PROJECTS)) },
                 alwaysShowLabel = false
             )
             NavigationBarItem(
                 selected = homeScreenState == STATISTICS,
                 onClick = { viewModel.setHomeScreenState(STATISTICS) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Analytics,
-                        contentDescription = getTitle(STATISTICS)
-                    )
-                },
+                icon = { Icon(Icons.Outlined.Analytics, getTitle(STATISTICS)) },
                 label = { Text(getTitle(STATISTICS)) },
                 alwaysShowLabel = false
             )
             NavigationBarItem(
                 selected = homeScreenState == SETTINGS,
                 onClick = { viewModel.setHomeScreenState(SETTINGS) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        contentDescription = getTitle(SETTINGS)
-                    )
-                },
+                icon = { Icon(Icons.Outlined.Settings, getTitle(SETTINGS)) },
                 label = { Text(getTitle(SETTINGS)) },
                 alwaysShowLabel = false
             )
