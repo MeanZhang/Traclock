@@ -23,13 +23,12 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
 
     fun isModified(): Boolean {
         return _project.value != record.project || _startTime.value != record.startTime || _endTime.value != record.endTime
-
     }
 
     fun updateRecord(): Int {
         if (isModified()) {
             if (_project.value.isBlank()) {
-                return -1//项目名为空
+                return -1 // 项目名为空
             } else {
                 return if (_project.value in App.projectsList) {
                     record.project = _project.value
@@ -42,11 +41,11 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
                     }
                     1
                 } else {
-                    -2//项目不存在
+                    -2 // 项目不存在
                 }
             }
         } else {
-            return 2//没有变化
+            return 2 // 没有变化
         }
     }
 

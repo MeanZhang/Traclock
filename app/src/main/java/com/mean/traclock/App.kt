@@ -11,9 +11,12 @@ import androidx.compose.ui.unit.dp
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.util.TimingControl
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class App : Application() {
     companion object {

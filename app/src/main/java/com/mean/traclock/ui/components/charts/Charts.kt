@@ -23,7 +23,8 @@ fun LineChart(lineData: LineData) {
             LineChart(context).apply {
                 this.data = lineData
             }
-        })
+        }
+    )
 }
 
 @Composable
@@ -44,5 +45,6 @@ fun PieChart(pieData: List<ChartData>, modifier: Modifier = Modifier) {
             val dataset = PieDataSet(list, "test")
             dataset.colors = pieData.map { it.color }
             it.data = PieData(dataset)
-        })
+        }
+    )
 }

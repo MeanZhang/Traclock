@@ -33,9 +33,9 @@ class EditProjectViewModel(private val initialName: String, private val initialC
     fun updateProject(): Int {
         return when {
             _name.value != initialName && _name.value in App.projectsList -> {
-                -1//项目已存在
+                -1 // 项目已存在
             }
-            _name.value != initialName -> {//项目名发生变化
+            _name.value != initialName -> { // 项目名发生变化
                 thread {
                     AppDatabase.getDatabase(App.context).projectDao().let {
                         it.insert(Project(_name.value, _color.value))
@@ -50,7 +50,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
                 }
                 1
             }
-            _color.value != initialColor -> {//项目名没变，颜色变化
+            _color.value != initialColor -> { // 项目名没变，颜色变化
                 thread {
                     AppDatabase.getDatabase(App.context).projectDao()
                         .update(Project(initialName, _color.value))
@@ -58,7 +58,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
                 1
             }
             else -> {
-                0//项目信息没有变化
+                0 // 项目信息没有变化
             }
         }
     }

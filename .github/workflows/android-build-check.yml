@@ -4,10 +4,10 @@ on:
   pull_request:
     types: [opened, reopened]
     paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - 'package.json'
-      - 'yarn.lock'
+      - "**.md"
+      - "docs/**"
+      - "package.json"
+      - "yarn.lock"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,6 +21,5 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - name: build
-        run: |
-          chmod +x gradlew && ./gradlew assembleRelease
+      - name: Check
+        run: chmod +x gradlew && ./gradlew spotlessCheck assembleDebug

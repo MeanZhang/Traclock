@@ -6,12 +6,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -79,8 +92,10 @@ class EditProjectActivity : ComponentActivity() {
                                         Icon(Icons.Filled.Check, stringResource(R.string.save))
                                     }
                                 }
-                            })
-                    }) { contentPadding ->
+                            }
+                        )
+                    }
+                ) { contentPadding ->
                     Column {
                         Box(
                             contentAlignment = Alignment.Center,
@@ -102,17 +117,20 @@ class EditProjectActivity : ComponentActivity() {
                                 onValueChange = {
                                     viewModel.setName(it)
                                     isModified = viewModel.isModified()
-                                })
+                                }
+                            )
                         }
                         ColorPicker(
                             onColorSelected = {
                                 viewModel.setColor(it.toArgb())
                                 isModified = viewModel.isModified()
-                            })
+                            }
+                        )
                     }
                 }
                 if (showDialogState) {
-                    AlertDialog(onDismissRequest = { showDialog.value = false },
+                    AlertDialog(
+                        onDismissRequest = { showDialog.value = false },
                         title = { Text(stringResource(R.string.discard_changes)) },
                         confirmButton = {
                             TextButton(
@@ -161,7 +179,7 @@ class EditProjectActivity : ComponentActivity() {
                 getString((R.string.project_exists)),
                 Toast.LENGTH_SHORT
             ).show()
-            0 -> super.finish()//项目信息没变
+            0 -> super.finish() // 项目信息没变
         }
     }
 }

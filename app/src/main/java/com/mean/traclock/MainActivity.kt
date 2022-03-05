@@ -16,15 +16,28 @@ import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Assignment
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Timeline
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import com.mean.traclock.test.TestActivity
 import com.mean.traclock.ui.BottomNavType
-import com.mean.traclock.ui.BottomNavType.*
 import com.mean.traclock.ui.EditProjectActivity
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
@@ -53,7 +66,7 @@ class MainActivity : ComponentActivity() {
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
-                val homeScreenState by viewModel.homeScreenState.collectAsState(TIMELINE)
+                val homeScreenState by viewModel.homeScreenState.collectAsState(BottomNavType.TIMELINE)
 
                 val detailView = mutableStateOf(true)
 
@@ -80,7 +93,7 @@ class MainActivity : ComponentActivity() {
                 ) { contentPadding ->
 
                     when (homeScreenState) {
-                        TIMELINE -> if (detailView.value) TimeLine(
+                        BottomNavType.TIMELINE -> if (detailView.value) TimeLine(
                             this,
                             viewModel.records,
                             viewModel.timeByDate,
@@ -94,13 +107,13 @@ class MainActivity : ComponentActivity() {
                             false,
                             contentPadding = contentPadding
                         )
-                        PROJECTS -> Projects(
+                        BottomNavType.PROJECTS -> Projects(
                             this,
                             viewModel.projectsTime,
                             contentPadding = contentPadding
                         )
-                        SETTINGS -> Settings(this, contentPadding)
-                        STATISTICS-> Statistics()
+                        BottomNavType.SETTINGS -> Settings(this, contentPadding)
+                        BottomNavType.STATISTICS -> Statistics()
                     }
                 }
             }
@@ -128,7 +141,7 @@ class MainActivity : ComponentActivity() {
             scrollBehavior = scrollBehavior,
             actions = {
                 when (homeScreenState) {
-                    PROJECTS -> IconButton(onClick = {
+                    BottomNavType.PROJECTS -> IconButton(onClick = {
                         startActivity(
                             Intent(
                                 this@MainActivity,
@@ -138,12 +151,12 @@ class MainActivity : ComponentActivity() {
                     }) {
                         Icon(Icons.Default.Add, stringResource(R.string.new_project))
                     }
-                    TIMELINE -> IconButton(onClick = { detailView.value = !detailView.value }) {
+                    BottomNavType.TIMELINE -> IconButton(onClick = { detailView.value = !detailView.value }) {
                         Icon(Icons.Default.SwapHoriz, stringResource(R.string.change_view))
                     }
-                    STATISTICS -> {
+                    BottomNavType.STATISTICS -> {
                     }
-                    SETTINGS -> IconButton(onClick = {
+                    BottomNavType.SETTINGS -> IconButton(onClick = {
                         startActivity(
                             Intent(
                                 this@MainActivity,
@@ -162,40 +175,40 @@ class MainActivity : ComponentActivity() {
     fun BottomBar(homeScreenState: BottomNavType) {
         NavigationBar {
             NavigationBarItem(
-                selected = homeScreenState == TIMELINE,
-                onClick = { viewModel.setHomeScreenState(TIMELINE) },
-                icon = { Icon(Icons.Outlined.Timeline, getTitle(TIMELINE)) },
-                label = { Text(getTitle(TIMELINE)) },
+                selected = homeScreenState == BottomNavType.TIMELINE,
+                onClick = { viewModel.setHomeScreenState(BottomNavType.TIMELINE) },
+                icon = { Icon(Icons.Outlined.Timeline, getTitle(BottomNavType.TIMELINE)) },
+                label = { Text(getTitle(BottomNavType.TIMELINE)) },
                 alwaysShowLabel = false
             )
             NavigationBarItem(
-                selected = homeScreenState == PROJECTS,
-                onClick = { viewModel.setHomeScreenState(PROJECTS) },
-                icon = { Icon(Icons.Outlined.Assignment, getTitle(PROJECTS)) },
-                label = { Text(getTitle(PROJECTS)) },
+                selected = homeScreenState == BottomNavType.PROJECTS,
+                onClick = { viewModel.setHomeScreenState(BottomNavType.PROJECTS) },
+                icon = { Icon(Icons.Outlined.Assignment, getTitle(BottomNavType.PROJECTS)) },
+                label = { Text(getTitle(BottomNavType.PROJECTS)) },
                 alwaysShowLabel = false
             )
             NavigationBarItem(
-                selected = homeScreenState == STATISTICS,
-                onClick = { viewModel.setHomeScreenState(STATISTICS) },
-                icon = { Icon(Icons.Outlined.Analytics, getTitle(STATISTICS)) },
-                label = { Text(getTitle(STATISTICS)) },
+                selected = homeScreenState == BottomNavType.STATISTICS,
+                onClick = { viewModel.setHomeScreenState(BottomNavType.STATISTICS) },
+                icon = { Icon(Icons.Outlined.Analytics, getTitle(BottomNavType.STATISTICS)) },
+                label = { Text(getTitle(BottomNavType.STATISTICS)) },
                 alwaysShowLabel = false
             )
             NavigationBarItem(
-                selected = homeScreenState == SETTINGS,
-                onClick = { viewModel.setHomeScreenState(SETTINGS) },
-                icon = { Icon(Icons.Outlined.Settings, getTitle(SETTINGS)) },
-                label = { Text(getTitle(SETTINGS)) },
+                selected = homeScreenState == BottomNavType.SETTINGS,
+                onClick = { viewModel.setHomeScreenState(BottomNavType.SETTINGS) },
+                icon = { Icon(Icons.Outlined.Settings, getTitle(BottomNavType.SETTINGS)) },
+                label = { Text(getTitle(BottomNavType.SETTINGS)) },
                 alwaysShowLabel = false
             )
         }
     }
 
     private fun getTitle(homeScreenState: BottomNavType) = when (homeScreenState) {
-        TIMELINE -> this.getString(R.string.timeline)
-        PROJECTS -> this.getString(R.string.projects)
-        STATISTICS -> this.getString(R.string.statistics)
-        SETTINGS -> this.getString(R.string.settings)
+        BottomNavType.TIMELINE -> this.getString(R.string.timeline)
+        BottomNavType.PROJECTS -> this.getString(R.string.projects)
+        BottomNavType.STATISTICS -> this.getString(R.string.statistics)
+        BottomNavType.SETTINGS -> this.getString(R.string.settings)
     }
 }
