@@ -8,12 +8,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.TextField
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.material3.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -24,16 +25,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.MutableLiveData
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.R
-import com.mean.traclock.viewmodels.EditProjectViewModel
-import com.mean.traclock.viewmodels.EditProjectViewModelFactory
 import com.mean.traclock.ui.components.ColorPicker
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.viewmodels.EditProjectViewModel
+import com.mean.traclock.viewmodels.EditProjectViewModelFactory
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class EditProjectActivity : ComponentActivity() {
-    private val showDialog = MutableLiveData(false)
+    private val showDialog = MutableStateFlow(false)
     private var isModified = false
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -55,10 +55,10 @@ class EditProjectActivity : ComponentActivity() {
 //                    systemUiController.systemBarsDarkContentEnabled =
 //                        androidx.compose.material.MaterialTheme.colors.isLight
 
-                val name by viewModel.name.observeAsState("")
-                val color by viewModel.color.observeAsState(0)
+                val name by viewModel.name.collectAsState("")
+                val color by viewModel.color.collectAsState(0)
 
-                val showDialogState by showDialog.observeAsState(false)
+                val showDialogState by showDialog.collectAsState(false)
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(

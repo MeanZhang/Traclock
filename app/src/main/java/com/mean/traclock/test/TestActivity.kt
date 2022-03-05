@@ -7,18 +7,19 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.components.charts.LineChart
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 
 class TestActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -27,6 +28,8 @@ class TestActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            val a by test().collectAsState(0)
+
             val systemUiController = rememberSystemUiController()
             systemUiController.setSystemBarsColor(Color.Transparent)
             systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
@@ -44,7 +47,7 @@ class TestActivity : ComponentActivity() {
                     }
                 ) { contentPadding ->
                     Column {
-                        LineChart(lineData = getLineData())
+                        Text(a.toString())
                         Test(contentPadding = contentPadding)
                     }
                 }
@@ -53,12 +56,11 @@ class TestActivity : ComponentActivity() {
     }
 }
 
-fun getLineData(): LineData {
-    val list = mutableListOf<Entry>()
-    for (i in 0..10) {
-        list.add(Entry(i.toFloat(), (2 * i + 1).toFloat()))
+fun test() = flow {
+    for (i in 1..100) {
+        delay(1000)
+        emit(i)
     }
-    return LineData(LineDataSet(list, "test"))
 }
 
 @Composable

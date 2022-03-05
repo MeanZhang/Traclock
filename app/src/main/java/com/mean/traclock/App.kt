@@ -5,26 +5,23 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.util.TimingControl
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 
 class App : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
-        lateinit var projects: LiveData<List<Project>>
+        lateinit var projects: Flow<List<Project>>
         val projectsList = mutableMapOf<String, Int>()
-        val isTiming = MutableLiveData(false)
+        val isTiming = MutableStateFlow(false)
         val horizontalMargin = 16.dp
     }
 
@@ -37,19 +34,22 @@ class App : Application() {
         isTiming.value = TimingControl.getIsTiming()
 
         projects = AppDatabase.getDatabase(context).projectDao().getAll()
-        projects.observeForever {
-            projectsList.clear()
-            for (project in it) {
-                projectsList[project.name] = project.color
+        GlobalScope.launch {
+            projects.collect {
+                projectsList.clear()
+                for (project in it) {
+                    projectsList[project.name] = project.color
+                }
             }
         }
+
         createNotificationChannel()
         initNotification()
     }
 
     @DelicateCoroutinesApi
     private fun initNotification() {
-        if (isTiming.value == true) {
+        if (isTiming.value) {
             TimingControl.startNotify()
         }
     }

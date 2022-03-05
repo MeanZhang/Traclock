@@ -1,21 +1,21 @@
 package com.mean.traclock.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.concurrent.thread
 
 class EditProjectViewModel(private val initialName: String, private val initialColor: Int) :
     ViewModel() {
-    private val _name = MutableLiveData(initialName)
-    private val _color = MutableLiveData(initialColor)
+    private val _name = MutableStateFlow(initialName)
+    private val _color = MutableStateFlow(initialColor)
 
-    val name: LiveData<String>
+    val name: StateFlow<String>
         get() = _name
-    val color: LiveData<Int>
+    val color: StateFlow<Int>
         get() = _color
 
     fun setName(name: String) {
@@ -38,10 +38,10 @@ class EditProjectViewModel(private val initialName: String, private val initialC
             _name.value != initialName -> {//项目名发生变化
                 thread {
                     AppDatabase.getDatabase(App.context).projectDao().let {
-                        it.insert(Project(_name.value ?: "", _color.value ?: 0))
+                        it.insert(Project(_name.value, _color.value))
                         it.delete(Project(initialName, initialColor))
                     }
-                    _name.value?.let {
+                    _name.value.let {
                         AppDatabase.getDatabase(App.context).recordDao().updateProject(
                             initialName,
                             it
@@ -53,7 +53,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
             _color.value != initialColor -> {//项目名没变，颜色变化
                 thread {
                     AppDatabase.getDatabase(App.context).projectDao()
-                        .update(Project(initialName, _color.value ?: 0))
+                        .update(Project(initialName, _color.value))
                 }
                 1
             }

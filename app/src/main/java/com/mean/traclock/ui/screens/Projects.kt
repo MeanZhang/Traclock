@@ -5,17 +5,18 @@ import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import com.mean.traclock.App
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
@@ -23,20 +24,21 @@ import com.mean.traclock.ui.ProjectActivity
 import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.SmallOutlinedButton
 import com.mean.traclock.ui.components.TimingCard
-import com.mean.traclock.util.*
 import com.mean.traclock.util.TimingControl
+import com.mean.traclock.util.getDurationString
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 
 @DelicateCoroutinesApi
 @Composable
 fun Projects(
     context: Context,
-    projectTime: LiveData<List<Record>>,
+    projectTime: Flow<List<Record>>,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    val projects by App.projects.observeAsState(listOf())
-    val time by projectTime.observeAsState(listOf())
-    val isTiming: Boolean by App.isTiming.observeAsState(false)
+    val projects by App.projects.collectAsState(listOf())
+    val time by projectTime.collectAsState(listOf())
+    val isTiming: Boolean by App.isTiming.collectAsState(false)
 
     LazyColumn(contentPadding = contentPadding) {
         item {

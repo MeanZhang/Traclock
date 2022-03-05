@@ -4,8 +4,8 @@ import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.mean.traclock.App
@@ -21,8 +21,7 @@ import com.mean.traclock.util.getIntDate
 fun Statistics() {
     val date = getIntDate(System.currentTimeMillis())
     val projectsTime by AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDate(date)
-        .observeAsState(listOf())
-    val duration = projectsTime.sumOf { (it.endTime - it.startTime) / 1000 }
+        .collectAsState(listOf())
     Column {
         Row(
             Modifier
@@ -30,6 +29,7 @@ fun Statistics() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            val duration = projectsTime.sumOf { (it.endTime - it.startTime) / 1000 }
             Text(stringResource(R.string.records_duration))
             Text(getDurationString(duration))
         }

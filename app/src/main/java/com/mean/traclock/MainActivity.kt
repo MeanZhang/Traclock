@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,17 +18,14 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.test.TestActivity
 import com.mean.traclock.ui.BottomNavType
 import com.mean.traclock.ui.BottomNavType.*
 import com.mean.traclock.ui.EditProjectActivity
-import com.mean.traclock.ui.components.ComingSoon
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
 import com.mean.traclock.ui.screens.Statistics
@@ -57,7 +53,7 @@ class MainActivity : ComponentActivity() {
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
-                val homeScreenState by viewModel.homeScreenState.observeAsState(TIMELINE)
+                val homeScreenState by viewModel.homeScreenState.collectAsState(TIMELINE)
 
                 val detailView = mutableStateOf(true)
 

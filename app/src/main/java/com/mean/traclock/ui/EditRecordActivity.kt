@@ -11,23 +11,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,8 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.MutableLiveData
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.loper7.date_time_picker.dialog.CardDatePickerDialog
 import com.mean.traclock.App
 import com.mean.traclock.R
@@ -48,10 +36,11 @@ import com.mean.traclock.util.Database
 import com.mean.traclock.util.getDateTimeString
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.EditRecordViewModelFactory
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class EditRecordActivity : AppCompatActivity() {
-    private var showDialog = MutableLiveData(false)
+    private var showDialog = MutableStateFlow(false)
     private var isModified = false
 
     @SuppressLint("UnrememberedMutableState")
@@ -75,12 +64,12 @@ class EditRecordActivity : AppCompatActivity() {
 //                    systemUiController.setSystemBarsColor(Color.Transparent)
 //                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
 
-                val project by viewModel.project.observeAsState("")
-                val startTime by viewModel.startTime.observeAsState(0L)
-                val endTime by viewModel.endTime.observeAsState(0L)
+                val project by viewModel.project.collectAsState("")
+                val startTime by viewModel.startTime.collectAsState(0L)
+                val endTime by viewModel.endTime.collectAsState(0L)
 
                 val showMenu = mutableStateOf(false)
-                val showDialogState by showDialog.observeAsState(false)
+                val showDialogState by showDialog.collectAsState(false)
 
                 val builder = CardDatePickerDialog.builder(this).showBackNow(false)
                     .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
@@ -124,9 +113,7 @@ class EditRecordActivity : AppCompatActivity() {
                         sheetState = state,
                         sheetContent = {
                             Surface {
-                                val projects by App.projects.observeAsState(
-                                    listOf()
-                                )
+                                val projects by App.projects.collectAsState(listOf())
                                 Column(
                                     modifier = Modifier
                                         .navigationBarsPadding()

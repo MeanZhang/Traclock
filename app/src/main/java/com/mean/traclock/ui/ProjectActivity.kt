@@ -7,28 +7,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.mean.traclock.R
 import com.mean.traclock.App
+import com.mean.traclock.R
 import com.mean.traclock.database.Project
-import com.mean.traclock.ui.components.*
+import com.mean.traclock.ui.components.DateTitle
+import com.mean.traclock.ui.components.DividerWithPadding
+import com.mean.traclock.ui.components.RecordItemWithoutProject
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.Database
 import com.mean.traclock.util.getDataString
@@ -66,8 +62,8 @@ class ProjectActivity : ComponentActivity() {
 //                    val coroutineScope = rememberCoroutineScope()
 
 //                    val projectsListState = rememberLazyListState()
-                val records by viewModel.records.observeAsState(listOf())
-                val time by viewModel.timeByDate.observeAsState(listOf())
+                val records by viewModel.records.collectAsState(listOf())
+                val time by viewModel.timeByDate.collectAsState(listOf())
 
                 Scaffold(
                     topBar = {
