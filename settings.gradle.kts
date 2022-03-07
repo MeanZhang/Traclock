@@ -15,7 +15,7 @@ dependencyResolutionManagement {
         maven { setUrl("https://jitpack.io") }
         maven { setUrl("https://maven.aliyun.com/repository/google") }
         maven { setUrl("https://maven.aliyun.com/repository/public") }
-  }
+    }
 }
 rootProject.name = "Traclock"
 include(":app")

@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
 
-//@Composable
-//fun SmallOutlinedButton(text:String,onClick:()->Unit){
+// @Composable
+// fun SmallOutlinedButton(text:String,onClick:()->Unit){
 //    OutlinedButton(
 //        onClick = onClick,
 //        modifier = Modifier.height(28.dp)
@@ -31,15 +31,15 @@ import com.mean.traclock.R
 //            Icon(
 //                imageVector = Icons.Default.PlayArrow,
 //                contentDescription = stringResource(R.string.start),
-////                modifier = Modifier.size(16.dp)
+// //                modifier = Modifier.size(16.dp)
 //            )
 //            Text(
 //                text,
-////                style = MaterialTheme.typography.labelMedium
+// //                style = MaterialTheme.typography.labelMedium
 //            )
 //        }
 //    }
-//}
+// }
 
 @Composable
 fun SmallOutlinedButton(text: String, onClick: () -> Unit = {}) {
@@ -47,13 +47,13 @@ fun SmallOutlinedButton(text: String, onClick: () -> Unit = {}) {
         shape = CircleShape,
         border = BorderStroke(
             width = 1.dp,
-            //边框颜色
+            // 边框颜色
             color = MaterialTheme.colorScheme.outline.copy(0.2f)
         ),
         modifier = Modifier.clickable(onClick = onClick),
-        //图标和文字颜色
+        // 图标和文字颜色
         contentColor = MaterialTheme.colorScheme.secondary.copy(0.8f),
-        //按钮背景颜色
+        // 按钮背景颜色
         color = MaterialTheme.colorScheme.inverseOnSurface.copy(0.6f),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {

@@ -22,11 +22,11 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - name: build
+      - name: 构建
         run: |
           chmod +x gradlew && ./gradlew assembleRelease
 
-      - name: APK签名
+      - name: APK 签名
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: ./app/build/outputs/apk/release
@@ -37,16 +37,16 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "30.0.2"
 
-      - name: 重命名APK
+      - name: 重命名 APK
         run: mv ${{ env.SIGNED_RELEASE_FILE }} '${{ secrets.APP_NAME }}.apk'
 
-      - name: 上传APK
+      - name: 上传 APK
         uses: actions/upload-artifact@v2
         with:
           name: APK
           path: ${{ secrets.APP_NAME }}.apk
 
-      - name: 发送APK到企业微信
+      - name: 发送 APK 到企业微信
         uses: MeanZhang/wecom-group-robot@v1.1
         with:
           key: ${{ secrets.KEY }}

@@ -1,9 +1,7 @@
 package com.mean.traclock.util
 
 import android.content.Context
-import android.content.Intent
 import android.widget.Toast
-import androidx.compose.ui.res.stringResource
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -15,7 +13,6 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlin.concurrent.thread
-
 
 object TimingControl {
     private val sharedPref = context.getSharedPreferences(
@@ -38,7 +35,6 @@ object TimingControl {
                 apply()
             }
             startNotify(project)
-
         }
     }
 

@@ -59,6 +59,8 @@ dependencies {
 
     implementation("androidx.compose.material:material:$composeVersion")
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     //查看数据库
     debugImplementation("com.guolindev.glance:glance:1.1.0")
     //查看内存泄漏
@@ -72,6 +74,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     //Room数据库
     implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     //WorkManager
     implementation("androidx.work:work-runtime-ktx:$workVersion")
@@ -79,7 +82,6 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.4.1")
 
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 

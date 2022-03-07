@@ -13,7 +13,7 @@ data class Record(
     var startTime: Long,
     var endTime: Long,
     var date: Int = getIntDate(startTime)
-){
+) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")
     var id: Int = 0

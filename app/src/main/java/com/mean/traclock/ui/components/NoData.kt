@@ -1,20 +1,26 @@
 package com.mean.traclock.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.mean.traclock.R
 
 @Composable
-fun ComingSoon() {
+fun NoData() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -22,11 +28,9 @@ fun ComingSoon() {
     ) {
         LottieWorkingLoadingView()
         Text(
-            text = "Coming Soon",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
+            text = stringResource(R.string.no_record),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
     }
@@ -34,7 +38,7 @@ fun ComingSoon() {
 
 @Composable
 fun LottieWorkingLoadingView() {
-    val composition by rememberLottieComposition(LottieCompositionSpec.Asset("working.json"))
+    val composition by rememberLottieComposition(LottieCompositionSpec.Asset("nodata.json"))
     LottieAnimation(
         composition,
         modifier = Modifier
@@ -44,4 +48,3 @@ fun LottieWorkingLoadingView() {
         iterations = 10
     )
 }
-

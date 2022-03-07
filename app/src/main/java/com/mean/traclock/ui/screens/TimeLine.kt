@@ -1,36 +1,39 @@
 package com.mean.traclock.ui.screens
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import com.mean.traclock.App
 import com.mean.traclock.database.Record
 import com.mean.traclock.database.TimeByDate
-import com.mean.traclock.ui.components.*
+import com.mean.traclock.ui.components.DateTitle
+import com.mean.traclock.ui.components.DividerWithPadding
+import com.mean.traclock.ui.components.RecordItem
+import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.util.TimingControl
 import com.mean.traclock.util.getDataString
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TimeLine(
     context: Context,
-    recordsLiveData: LiveData<List<Record>>,
-    projectTime: LiveData<List<TimeByDate>>,
+    recordsFlow: Flow<List<Record>>,
+    projectTime: Flow<List<TimeByDate>>,
     detailView: Boolean,
 //    listState: LazyListState,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    val records by recordsLiveData.observeAsState(listOf())
-    val time by projectTime.observeAsState(listOf())
-    val isTiming by App.isTiming.observeAsState(false)
+    val records by recordsFlow.collectAsState(listOf())
+    val time by projectTime.collectAsState(listOf())
+    val isTiming by App.isTiming.collectAsState(false)
     if (!detailView) {
         Log.d("Boost-Mean", records.toString())
     }
@@ -61,12 +64,4 @@ fun TimeLine(
             DividerWithPadding()
         }
     }
-}
-
-fun putRecord(intent: Intent, record: Record) {
-    intent.putExtra("id", record.id)
-    intent.putExtra("project", record.project)
-    intent.putExtra("startTime", record.startTime)
-    intent.putExtra("endTime", record.endTime)
-    intent.putExtra("date", record.date)
 }

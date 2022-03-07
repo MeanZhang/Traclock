@@ -1,89 +1,67 @@
 package com.mean.traclock.test
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.mean.traclock.App
-import com.mean.traclock.R
 import com.mean.traclock.ui.theme.TraclockTheme
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 
 class TestActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val builder = NotificationCompat.Builder(
-            App.context, App.context.getString(
-                R.string.notice_channel_id
-            )
-        ).setSmallIcon(R.drawable.ic_logo)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .setContentTitle("测试")
-            .setOnlyAlertOnce(true)
-            .setOngoing(true)
-        val manager = NotificationManagerCompat.from(this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            val scope = rememberCoroutineScope()
-            var isTiming: Boolean
-            var time = 0
-            val systemUiController = rememberSystemUiController()
-            systemUiController.setSystemBarsColor(Color.Transparent)
-            systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
             TraclockTheme {
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    topBar = {
-                        SmallTopAppBar(
-                            title = { Text("Test") },
-                            scrollBehavior = scrollBehavior
-                        )
-                    }
+                    modifier = Modifier.systemBarsPadding(),
+                    topBar = { SmallTopAppBar({ Text("Test") }) }
                 ) { contentPadding ->
                     Column {
-                        Button(onClick = {
-                            isTiming = true
-                            scope.launch {
-                                while (isTiming) {
-                                    builder.setContentText(time++.toString())
-                                    manager.notify(1, builder.build())
-                                    delay(1000)
+                        val s by test().collectAsState(0)
+                        AndroidView(
+                            factory = { context ->
+                                TextView(context).apply {
+                                    this.text = ""
                                 }
-                                cancel()
+                            },
+                            update = {
+                                it.text = s.toString()
                             }
-                        }) {
-                            Text("开始")
-                        }
-                        Button(onClick = {
-                            isTiming = false
-                            builder.setOngoing(false)
-                            manager.notify(1, builder.build())
-                        }) {
-                            Text("停止")
-                        }
+                        )
                         Test(contentPadding = contentPadding)
                     }
                 }
             }
         }
+    }
+}
+
+fun test() = flow {
+    for (i in 1..100) {
+        delay(1000)
+        emit(i)
     }
 }
 

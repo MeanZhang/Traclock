@@ -1,7 +1,11 @@
 package com.mean.traclock.database
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProjectDao {
@@ -15,7 +19,7 @@ interface ProjectDao {
     fun update(project: Project)
 
     @Query("SELECT * FROM Project")
-    fun getAll(): LiveData<List<Project>>
+    fun getAll(): Flow<List<Project>>
 
     @Query("SELECT * FROM Project WHERE name LIKE :name")
     fun findByName(name: String): Project

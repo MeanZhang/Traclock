@@ -60,4 +60,6 @@
     <string name="developer_introduction">An amateur developer.</string>
     <string name="developer">Developer</string>
     <string name="title_activity_feedback">Help &amp; Feedback</string>
+    <string name="records_duration">Recorded Duration</string>
+    <string name="no_record">No Record</string>
 </resources>

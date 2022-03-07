@@ -13,7 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
@@ -73,7 +80,8 @@ class BackupRestoreActivity : ComponentActivity() {
                             },
                             title = { Text(getString(R.string.title_activity_backup_restore)) }
                         )
-                    }) { contentPadding ->
+                    }
+                ) { contentPadding ->
                     Column(modifier = Modifier.padding(contentPadding)) {
                         SettingGroupTitleWithoutIcon(stringResource(R.string.backup))
                         SettingItemWinthoutIcon(
@@ -117,14 +125,14 @@ class BackupRestoreActivity : ComponentActivity() {
     }
 
     private fun backup() {
-        //TODO
+        // TODO
     }
 
     private fun restore(uri: Uri) {
         val contentResolver = this.contentResolver
         contentResolver.openInputStream(uri)?.use { inputStream ->
             BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                reader.readLine()//去掉第一行
+                reader.readLine() // 去掉第一行
                 var line = reader.readLine()
                 while (line != null) {
                     val res = restore(line)
@@ -140,7 +148,7 @@ class BackupRestoreActivity : ComponentActivity() {
 
     private fun restore(line: String): Int {
         val columns = line.split(",")
-        //项目 开始时间（2000-01-01 00:00:00） 结束时间
+        // 项目 开始时间（2000-01-01 00:00:00） 结束时间
         if (columns.size < 3) {
             return -1
         }
