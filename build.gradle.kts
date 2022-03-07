@@ -14,14 +14,15 @@ plugins {
 // }
 
 configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+    val ktlintVersion = "0.44.0"
+
     kotlin {
         target("**/*.kt")
         targetExclude("$buildDir/**/*.kt", "bin/**/*.kt")
-        ktlint("0.43.2")
-//        licenseHeader("/* (C)\$YEAR */")
+        ktlint(ktlintVersion)
     }
     kotlinGradle {
         target("*.gradle.kts")
-        ktlint("0.43.2")
+        ktlint(ktlintVersion)
     }
 }

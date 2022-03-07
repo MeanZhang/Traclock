@@ -66,4 +66,5 @@
     <string name="doc_url" translatable="false">https://traclock.meancoder.xyz</string>
     <string name="unique_work_name" translatable="false">notification</string>
     <string name="records_duration">记录时长</string>
+    <string name="no_record">暂无记录</string>
 </resources>

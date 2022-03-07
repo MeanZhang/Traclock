@@ -1,9 +1,9 @@
 package com.mean.traclock.test
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,17 +15,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mean.traclock.ui.theme.TraclockTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -37,26 +33,23 @@ class TestActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            val a by test().collectAsState(0)
-
-            val systemUiController = rememberSystemUiController()
-            systemUiController.setSystemBarsColor(Color.Transparent)
-            systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
             TraclockTheme {
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    topBar = {
-                        SmallTopAppBar(
-                            title = { Text("Test") },
-                            scrollBehavior = scrollBehavior
-                        )
-                    }
+                    modifier = Modifier.systemBarsPadding(),
+                    topBar = { SmallTopAppBar({ Text("Test") }) }
                 ) { contentPadding ->
                     Column {
-                        Text(a.toString())
+                        val s by test().collectAsState(0)
+                        AndroidView(
+                            factory = { context ->
+                                TextView(context).apply {
+                                    this.text = ""
+                                }
+                            },
+                            update = {
+                                it.text = s.toString()
+                            }
+                        )
                         Test(contentPadding = contentPadding)
                     }
                 }

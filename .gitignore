@@ -17,3 +17,4 @@ node_modules
 .temp
 .cache
 dist
+app/release
