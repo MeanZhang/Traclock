@@ -25,7 +25,7 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         val projectName = inputData.getString("projectName") ?: TimingControl.getProjectName()
         val startTime = inputData.getLong("startTime", TimingControl.getStartTime())
         builder.setContentTitle(projectName)
-        while (App.isTiming.value == true) {
+        while (App.isTiming.value) {
             builder.setContentText(getDurationString(startTime, System.currentTimeMillis()))
             manager.notify(NOTIFICATION_ID, builder.build())
             SystemClock.sleep(1000L)

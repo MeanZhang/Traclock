@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.App
 import com.mean.traclock.R
+import com.mean.traclock.util.HORIZONTAL_MARGIN
 
 @Composable
 fun SettingItem(
@@ -29,7 +29,7 @@ fun SettingItem(
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = App.horizontalMargin, vertical = 8.dp)
+            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -62,7 +62,7 @@ fun SettingItemWinthoutIcon(
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = App.horizontalMargin, vertical = 8.dp)
+            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {

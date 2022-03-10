@@ -71,6 +71,7 @@ dependencies {
     implementation("com.github.loperSeven:DateTimePicker:0.5.7")
     //accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     //Room数据库
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")

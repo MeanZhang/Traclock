@@ -2,6 +2,7 @@ package com.mean.traclock.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -9,11 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -25,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,87 +47,105 @@ import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.NoData
+import com.mean.traclock.ui.components.TopBar
+import com.mean.traclock.util.HORIZONTAL_MARGIN
 import com.mean.traclock.util.getDurationString
 import com.mean.traclock.util.getIntDate
 import com.mean.traclock.util.log
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Statistics() {
+fun Statistics(contentPadding: PaddingValues) {
     val date = getIntDate(System.currentTimeMillis())
     val projectsTime by AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDate(date)
         .collectAsState(listOf())
     val duration = projectsTime.sumOf { (it.endTime - it.startTime) / 1000 }
     val selected = remember { mutableStateOf(-1) }
-    if (duration > 0) {
-        Column(
-            Modifier.verticalScroll(rememberScrollState())
-        ) {
-            Row(
-                Modifier
-                    .padding(horizontal = App.horizontalMargin)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(stringResource(R.string.records_duration))
-                Text(getDurationString(duration))
-            }
-            AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .padding(horizontal = App.horizontalMargin),
-                factory = { context ->
-                    PieChart(context).apply {
-                        setPieChart(this, projectsTime, duration, selected)
-                    }
-                },
-                update = { chart -> setPieChart(chart, projectsTime, duration, selected) }
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    Scaffold(
+        topBar = {
+            TopBar(
+                title = stringResource(R.string.statistics),
+                scrollBehavior = scrollBehavior
             )
-            for ((index, project) in projectsTime.withIndex()) {
-                var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
-                var color by remember { mutableStateOf(Color.Black) }
-                if (index == selected.value) {
-                    fontWeight = FontWeight.Bold
-                    color = MaterialTheme.colorScheme.onSurface
-                } else {
-                    fontWeight = FontWeight.Normal
-                    color = MaterialTheme.colorScheme.outline
-                }
+        },
+        modifier = Modifier
+            .padding(contentPadding)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { innerPadding ->
+        if (duration > 0) {
+            Column(
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(innerPadding)
+            ) {
                 Row(
                     Modifier
-                        .padding(horizontal = App.horizontalMargin, vertical = 8.dp)
+                        .padding(horizontal = HORIZONTAL_MARGIN)
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    Text(stringResource(R.string.records_duration))
+                    Text(getDurationString(duration))
+                }
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(horizontal = HORIZONTAL_MARGIN),
+                    factory = { context ->
+                        PieChart(context).apply {
+                            setPieChart(this, projectsTime, duration, selected)
+                        }
+                    },
+                    update = { chart -> setPieChart(chart, projectsTime, duration, selected) }
+                )
+                for ((index, project) in projectsTime.withIndex()) {
+                    var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
+                    var color by remember { mutableStateOf(Color.Black) }
+                    if (index == selected.value) {
+                        fontWeight = FontWeight.Bold
+                        color = MaterialTheme.colorScheme.onSurface
+                    } else {
+                        fontWeight = FontWeight.Normal
+                        color = MaterialTheme.colorScheme.outline
+                    }
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        Modifier
+                            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Circle,
-                            contentDescription = null,
-                            tint = Color(App.projectsList[project.project] ?: 0),
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(horizontal = 4.dp)
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Circle,
+                                contentDescription = null,
+                                tint = Color(App.projectsList[project.project] ?: 0),
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .padding(horizontal = 4.dp)
+                            )
+                            Text(
+                                project.project,
+                                fontWeight = fontWeight,
+                                color = color
+                            )
+                        }
                         Text(
-                            project.project,
+                            getDurationString(project.startTime, project.endTime),
                             fontWeight = fontWeight,
                             color = color
                         )
                     }
-                    Text(
-                        getDurationString(project.startTime, project.endTime),
-                        fontWeight = fontWeight,
-                        color = color
-                    )
                 }
             }
+        } else {
+            NoData(Modifier.padding(innerPadding))
         }
-    } else {
-        NoData()
     }
 }
 

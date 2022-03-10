@@ -1,49 +1,40 @@
 package com.mean.traclock
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.SwapHoriz
-import androidx.compose.material.icons.outlined.Analytics
-import androidx.compose.material.icons.outlined.Assignment
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.mean.traclock.test.TestActivity
-import com.mean.traclock.ui.BottomNavType
-import com.mean.traclock.ui.EditProjectActivity
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.mean.traclock.ui.components.BottomBar
 import com.mean.traclock.ui.components.SetSystemBar
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
 import com.mean.traclock.ui.screens.Statistics
 import com.mean.traclock.ui.screens.TimeLine
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.ui.util.Destinations
+import com.mean.traclock.ui.util.Destinations.PROJECTS
+import com.mean.traclock.ui.util.Destinations.SETTINGS
+import com.mean.traclock.ui.util.Destinations.STATISTICS
+import com.mean.traclock.ui.util.Destinations.TIMELINE
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -53,7 +44,8 @@ class MainActivity : ComponentActivity() {
     @OptIn(
         ExperimentalFoundationApi::class,
         ExperimentalMaterial3Api::class,
-        DelicateCoroutinesApi::class
+        DelicateCoroutinesApi::class,
+        ExperimentalAnimationApi::class
     )
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,134 +55,57 @@ class MainActivity : ComponentActivity() {
         setContent {
             TraclockTheme {
                 SetSystemBar()
-
-                val homeScreenState by viewModel.homeScreenState.collectAsState(BottomNavType.TIMELINE)
-
-                val detailView = mutableStateOf(true)
-
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
-
-                Scaffold(
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                    topBar = {
-                        HomeTopBar(
-                            homeScreenState,
-                            detailView,
-                            scrollBehavior,
-                        )
-                    },
-                    bottomBar = { HomeBottomBar(homeScreenState) }
-                ) { contentPadding ->
-                    when (homeScreenState) {
-                        BottomNavType.TIMELINE -> if (detailView.value) TimeLine(
-                            this,
-                            viewModel.records,
-                            viewModel.timeByDate,
-                            true,
-                            contentPadding = contentPadding
-                        )
-                        else TimeLine(
-                            this,
-                            viewModel.projectsTimeByDate,
-                            viewModel.timeByDate,
-                            false,
-                            contentPadding = contentPadding
-                        )
-                        BottomNavType.PROJECTS -> Projects(
-                            this,
-                            viewModel.projectsTime,
-                            contentPadding = contentPadding
-                        )
-                        BottomNavType.SETTINGS -> Settings(this, contentPadding)
-                        BottomNavType.STATISTICS -> Statistics()
+                val navController = rememberAnimatedNavController()
+                Scaffold(bottomBar = { HomeBottomBar(navController) }) { contentPadding ->
+                    AnimatedNavHost(navController, TIMELINE.route) {
+                        composable(TIMELINE.route) {
+                            TimeLine(
+                                this@MainActivity,
+                                viewModel,
+                                contentPadding = contentPadding
+                            )
+                        }
+                        composable(PROJECTS.route) {
+                            Projects(
+                                this@MainActivity,
+                                viewModel.projectsTime,
+                                contentPadding
+                            )
+                        }
+                        composable(STATISTICS.route) {
+                            Statistics(contentPadding)
+                        }
+                        composable(SETTINGS.route) {
+                            Settings(this@MainActivity, contentPadding)
+                        }
                     }
                 }
             }
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun HomeTopBar(
-        homeScreenState: BottomNavType,
-        detailView: MutableState<Boolean>,
-        scrollBehavior: TopAppBarScrollBehavior
-    ) {
-        TopBar(
-            title = getTitle(homeScreenState),
-            scrollBehavior = scrollBehavior,
-            actions = {
-                when (homeScreenState) {
-                    BottomNavType.PROJECTS -> IconButton(onClick = {
-                        startActivity(
-                            Intent(
-                                this@MainActivity,
-                                EditProjectActivity::class.java
-                            )
-                        )
-                    }) {
-                        Icon(Icons.Default.Add, stringResource(R.string.new_project))
-                    }
-                    BottomNavType.TIMELINE -> IconButton(onClick = {
-                        detailView.value = !detailView.value
-                    }) {
-                        Icon(Icons.Default.SwapHoriz, stringResource(R.string.change_view))
-                    }
-                    BottomNavType.STATISTICS -> {
-                    }
-                    BottomNavType.SETTINGS -> IconButton(onClick = {
-                        startActivity(
-                            Intent(
-                                this@MainActivity,
-                                TestActivity::class.java
-                            )
-                        )
-                    }) {
-                        Icon(Icons.Default.MoreHoriz, "test")
-                    }
-                }
-            }
-        )
-    }
-
-    @Composable
-    fun HomeBottomBar(homeScreenState: BottomNavType) {
+    fun HomeBottomBar(navController: NavHostController) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
         BottomBar {
-            NavigationBarItem(
-                selected = homeScreenState == BottomNavType.TIMELINE,
-                onClick = { viewModel.setHomeScreenState(BottomNavType.TIMELINE) },
-                icon = { Icon(Icons.Outlined.Timeline, getTitle(BottomNavType.TIMELINE)) },
-                label = { Text(getTitle(BottomNavType.TIMELINE)) },
-                alwaysShowLabel = false
-            )
-            NavigationBarItem(
-                selected = homeScreenState == BottomNavType.PROJECTS,
-                onClick = { viewModel.setHomeScreenState(BottomNavType.PROJECTS) },
-                icon = { Icon(Icons.Outlined.Assignment, getTitle(BottomNavType.PROJECTS)) },
-                label = { Text(getTitle(BottomNavType.PROJECTS)) },
-                alwaysShowLabel = false
-            )
-            NavigationBarItem(
-                selected = homeScreenState == BottomNavType.STATISTICS,
-                onClick = { viewModel.setHomeScreenState(BottomNavType.STATISTICS) },
-                icon = { Icon(Icons.Outlined.Analytics, getTitle(BottomNavType.STATISTICS)) },
-                label = { Text(getTitle(BottomNavType.STATISTICS)) },
-                alwaysShowLabel = false
-            )
-            NavigationBarItem(
-                selected = homeScreenState == BottomNavType.SETTINGS,
-                onClick = { viewModel.setHomeScreenState(BottomNavType.SETTINGS) },
-                icon = { Icon(Icons.Outlined.Settings, getTitle(BottomNavType.SETTINGS)) },
-                label = { Text(getTitle(BottomNavType.SETTINGS)) },
-                alwaysShowLabel = false
-            )
+            Destinations.values().forEach { destination ->
+                NavigationBarItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true,
+                    onClick = {
+                        navController.navigate(destination.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    icon = { Icon(destination.icon, stringResource(destination.titleId)) },
+                    label = { Text(stringResource(destination.titleId)) },
+                    alwaysShowLabel = false
+                )
+            }
         }
-    }
-
-    private fun getTitle(homeScreenState: BottomNavType) = when (homeScreenState) {
-        BottomNavType.TIMELINE -> this.getString(R.string.timeline)
-        BottomNavType.PROJECTS -> this.getString(R.string.projects)
-        BottomNavType.STATISTICS -> this.getString(R.string.statistics)
-        BottomNavType.SETTINGS -> this.getString(R.string.settings)
     }
 }

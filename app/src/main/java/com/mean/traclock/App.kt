@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.ui.unit.dp
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.util.TimingControl
@@ -25,7 +24,6 @@ class App : Application() {
         lateinit var projects: Flow<List<Project>>
         val projectsList = mutableMapOf<String, Int>()
         val isTiming = MutableStateFlow(false)
-        val horizontalMargin = 16.dp
     }
 
     @OptIn(ExperimentalFoundationApi::class, DelicateCoroutinesApi::class)

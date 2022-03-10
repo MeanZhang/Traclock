@@ -20,7 +20,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.mean.traclock.R
 
 @Composable
-fun NoData() {
+fun NoData(modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
             .fillMaxSize()

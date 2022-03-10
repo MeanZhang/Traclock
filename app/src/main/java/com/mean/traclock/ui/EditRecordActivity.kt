@@ -106,7 +106,7 @@ class EditRecordActivity : AppCompatActivity() {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title =getString(R.string.edit_record),
+                            title = getString(R.string.edit_record),
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))

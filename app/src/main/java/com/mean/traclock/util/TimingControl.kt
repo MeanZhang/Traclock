@@ -22,7 +22,7 @@ object TimingControl {
 
     @DelicateCoroutinesApi
     fun startRecord(project: String) {
-        if (App.isTiming.value == true) {
+        if (App.isTiming.value) {
             Toast.makeText(context, context.getString(R.string.is_tracking), Toast.LENGTH_SHORT)
                 .show()
         } else {
@@ -39,7 +39,7 @@ object TimingControl {
     }
 
     fun stopRecord() {
-        if (App.isTiming.value == true) {
+        if (App.isTiming.value) {
             App.isTiming.value = false
             with(sharedPref.edit()) {
                 putBoolean("isTiming", false)

@@ -34,6 +34,7 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.EditRecordActivity
 import com.mean.traclock.ui.ProjectActivity
+import com.mean.traclock.util.HORIZONTAL_MARGIN
 import com.mean.traclock.util.TimingControl
 import com.mean.traclock.util.getDurationString
 import com.mean.traclock.util.getTimeString
@@ -68,7 +69,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
                         { showMenu = true }
                     } else null
                 )
-                .padding(vertical = 8.dp, horizontal = App.horizontalMargin),
+                .padding(vertical = 8.dp, horizontal = HORIZONTAL_MARGIN),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -131,7 +132,7 @@ fun RecordItemWithoutProject(context: Context, record: Record) {
                 },
                 onLongClick = { showMenu = true }
             )
-            .padding(vertical = 24.dp, horizontal = App.horizontalMargin),
+            .padding(vertical = 24.dp, horizontal = HORIZONTAL_MARGIN),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
