@@ -28,7 +28,6 @@ fun TimeLine(
     recordsFlow: Flow<List<Record>>,
     projectTime: Flow<List<TimeByDate>>,
     detailView: Boolean,
-//    listState: LazyListState,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val records by recordsFlow.collectAsState(listOf())
@@ -38,7 +37,6 @@ fun TimeLine(
         Log.d("Boost-Mean", records.toString())
     }
     LazyColumn(
-//        state = listState,
         contentPadding = contentPadding
     ) {
         item {

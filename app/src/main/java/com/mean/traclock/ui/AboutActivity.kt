@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,35 +31,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import com.mean.traclock.App
 import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
+import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 
 class AboutActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
+                SetSystemBar()
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
-                Scaffold(topBar = {
-                    SmallTopAppBar(
-                        navigationIcon = {
-                            IconButton(onClick = { finish() }) {
-                                Icon(Icons.Filled.ArrowBack, getString(R.string.back))
-                            }
-                        },
-                        title = { Text(stringResource(R.string.about)) },
-                        scrollBehavior = scrollBehavior
-                    )
-                }) {
-                    Content()
+                Scaffold(
+                    topBar = {
+                        TopBar(
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(Icons.Filled.ArrowBack, getString(R.string.back))
+                                }
+                            },
+                            title = stringResource(R.string.about),
+                            scrollBehavior = scrollBehavior
+                        )
+                    },
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                ) { contentPadding ->
+                    Content(contentPadding)
                 }
             }
         }
@@ -66,9 +77,12 @@ class AboutActivity : ComponentActivity() {
 }
 
 @Composable
-@Preview(showSystemUi = true)
-fun Content() {
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+fun Content(contentPadding: PaddingValues = PaddingValues(0.dp)) {
+    Column(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(contentPadding)
+    ) {
         Image(
             painterResource(R.drawable.ic_logo),
             stringResource(R.string.app_name),

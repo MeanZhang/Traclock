@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,6 +37,8 @@ import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.RecordItemWithoutProject
+import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.Database
 import com.mean.traclock.util.getDataString
@@ -63,9 +63,7 @@ class ProjectActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+                SetSystemBar()
 
                 val showMenu = mutableStateOf(false)
 
@@ -73,21 +71,18 @@ class ProjectActivity : ComponentActivity() {
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
 
-//                    val coroutineScope = rememberCoroutineScope()
-
-//                    val projectsListState = rememberLazyListState()
                 val records by viewModel.records.collectAsState(listOf())
                 val time by viewModel.timeByDate.collectAsState(listOf())
 
                 Scaffold(
                     topBar = {
-                        SmallTopAppBar(
+                        TopBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = { Text(viewModel.projectName) },
+                            title = viewModel.projectName,
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -126,7 +121,6 @@ class ProjectActivity : ComponentActivity() {
                         )
                     },
                     modifier = Modifier
-                        .systemBarsPadding()
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     LazyColumn(

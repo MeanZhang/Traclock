@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -19,10 +18,8 @@ import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -39,6 +36,9 @@ import androidx.core.view.WindowCompat
 import com.mean.traclock.test.TestActivity
 import com.mean.traclock.ui.BottomNavType
 import com.mean.traclock.ui.EditProjectActivity
+import com.mean.traclock.ui.components.BottomBar
+import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
 import com.mean.traclock.ui.screens.Statistics
@@ -62,9 +62,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+                SetSystemBar()
 
                 val homeScreenState by viewModel.homeScreenState.collectAsState(BottomNavType.TIMELINE)
 
@@ -72,26 +70,17 @@ class MainActivity : ComponentActivity() {
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
 
-//                    val coroutineScope = rememberCoroutineScope()
-
-//                    val timelineListState = rememberLazyListState()
-
                 Scaffold(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
-                        TopBar(
+                        HomeTopBar(
                             homeScreenState,
                             detailView,
                             scrollBehavior,
-//                                coroutineScope,
-//                                timelineListState
                         )
                     },
-                    bottomBar = { BottomBar(homeScreenState) }
+                    bottomBar = { HomeBottomBar(homeScreenState) }
                 ) { contentPadding ->
-
                     when (homeScreenState) {
                         BottomNavType.TIMELINE -> if (detailView.value) TimeLine(
                             this,
@@ -122,22 +111,13 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun TopBar(
+    fun HomeTopBar(
         homeScreenState: BottomNavType,
         detailView: MutableState<Boolean>,
-        scrollBehavior: TopAppBarScrollBehavior,
-//        coroutineScope: CoroutineScope,
-//        listState: LazyListState
+        scrollBehavior: TopAppBarScrollBehavior
     ) {
-        SmallTopAppBar(
-//            modifier = Modifier.combinedClickable(
-//                onClick = {},
-//                onDoubleClick = {
-//                    coroutineScope.launch {
-//                        listState.animateScrollToItem(index = 0)
-//                    }
-//                }),
-            title = { Text(getTitle(homeScreenState)) },
+        TopBar(
+            title = getTitle(homeScreenState),
             scrollBehavior = scrollBehavior,
             actions = {
                 when (homeScreenState) {
@@ -151,7 +131,9 @@ class MainActivity : ComponentActivity() {
                     }) {
                         Icon(Icons.Default.Add, stringResource(R.string.new_project))
                     }
-                    BottomNavType.TIMELINE -> IconButton(onClick = { detailView.value = !detailView.value }) {
+                    BottomNavType.TIMELINE -> IconButton(onClick = {
+                        detailView.value = !detailView.value
+                    }) {
                         Icon(Icons.Default.SwapHoriz, stringResource(R.string.change_view))
                     }
                     BottomNavType.STATISTICS -> {
@@ -172,8 +154,8 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun BottomBar(homeScreenState: BottomNavType) {
-        NavigationBar {
+    fun HomeBottomBar(homeScreenState: BottomNavType) {
+        BottomBar {
             NavigationBarItem(
                 selected = homeScreenState == BottomNavType.TIMELINE,
                 onClick = { viewModel.setHomeScreenState(BottomNavType.TIMELINE) },

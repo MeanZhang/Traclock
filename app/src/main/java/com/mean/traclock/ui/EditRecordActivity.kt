@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
@@ -32,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -55,6 +53,8 @@ import com.loper7.date_time_picker.dialog.CardDatePickerDialog
 import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
+import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.Database
 import com.mean.traclock.util.getDateTimeString
@@ -84,9 +84,7 @@ class EditRecordActivity : AppCompatActivity() {
 
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+                SetSystemBar()
 
                 val project by viewModel.project.collectAsState("")
                 val startTime by viewModel.startTime.collectAsState(0L)
@@ -101,17 +99,14 @@ class EditRecordActivity : AppCompatActivity() {
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
 
                 Scaffold(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
-                        SmallTopAppBar(
+                        TopBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = { Text(getString(R.string.edit_record)) },
+                            title =getString(R.string.edit_record),
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -131,7 +126,9 @@ class EditRecordActivity : AppCompatActivity() {
                             },
                             scrollBehavior = scrollBehavior
                         )
-                    }
+                    },
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
                     val scope = rememberCoroutineScope()

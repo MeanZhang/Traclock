@@ -3,8 +3,9 @@
 // }
 
 plugins {
-    id("com.android.application") version "7.2.0-alpha06" apply false
-    id("com.android.library") version "7.2.0-alpha06" apply false
+    val agpVersion = "7.2.0-beta02"
+    id("com.android.application") version agpVersion apply false
+    id("com.android.library") version agpVersion apply false
     id("org.jetbrains.kotlin.android") version "1.6.10" apply false
     id("com.diffplug.spotless") version "6.3.0"
 }
@@ -22,7 +23,7 @@ configure<com.diffplug.gradle.spotless.SpotlessExtension> {
         ktlint(ktlintVersion)
     }
     kotlinGradle {
-        target("*.gradle.kts")
+        target("**.gradle.kts")
         ktlint(ktlintVersion)
     }
 }

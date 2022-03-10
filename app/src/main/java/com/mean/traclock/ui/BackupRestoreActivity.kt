@@ -10,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -19,14 +18,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import com.mean.traclock.App
@@ -34,8 +34,10 @@ import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
+import com.mean.traclock.ui.components.SetSystemBar
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.getIntDate
 import java.io.BufferedReader
@@ -63,24 +65,23 @@ class BackupRestoreActivity : ComponentActivity() {
             }
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
-
+                SetSystemBar()
                 var showDialog by remember { mutableStateOf(false) }
-
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
-                    modifier = Modifier.systemBarsPadding(),
                     topBar = {
-                        SmallTopAppBar(
+                        TopBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = { Text(getString(R.string.title_activity_backup_restore)) }
+                            title = getString(R.string.title_activity_backup_restore),
+                            scrollBehavior = scrollBehavior
                         )
-                    }
+                    },
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     Column(modifier = Modifier.padding(contentPadding)) {
                         SettingGroupTitleWithoutIcon(stringResource(R.string.backup))

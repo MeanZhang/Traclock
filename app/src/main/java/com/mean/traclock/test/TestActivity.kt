@@ -1,30 +1,35 @@
 package com.mean.traclock.test
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
+import com.mean.traclock.ui.components.BottomBar
+import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 
 class TestActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -32,24 +37,36 @@ class TestActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             TraclockTheme {
+                SetSystemBar()
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
-                    modifier = Modifier.systemBarsPadding(),
-                    topBar = { SmallTopAppBar({ Text("Test") }) }
+                    topBar = {
+                        TopBar(
+                            title = "Test",
+                            scrollBehavior = scrollBehavior,
+                        )
+                    },
+                    bottomBar = {
+                        var selected by remember { mutableStateOf(1) }
+                        BottomBar {
+                            for (i in 1..4) {
+                                NavigationBarItem(
+                                    selected = selected == i,
+                                    onClick = { selected = i },
+                                    icon = { Icon(Icons.Outlined.Timeline, null) },
+                                    label = { Text("测试") },
+                                    alwaysShowLabel = false
+                                )
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     Column {
-                        val s by test().collectAsState(0)
-                        AndroidView(
-                            factory = { context ->
-                                TextView(context).apply {
-                                    this.text = ""
-                                }
-                            },
-                            update = {
-                                it.text = s.toString()
-                            }
-                        )
                         Test(contentPadding = contentPadding)
                     }
                 }
@@ -58,15 +75,8 @@ class TestActivity : ComponentActivity() {
     }
 }
 
-fun test() = flow {
-    for (i in 1..100) {
-        delay(1000)
-        emit(i)
-    }
-}
-
 @Composable
-fun Test(contentPadding: PaddingValues) {
+fun Test(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     LazyColumn(
         contentPadding = contentPadding,
         modifier = Modifier.fillMaxSize(),

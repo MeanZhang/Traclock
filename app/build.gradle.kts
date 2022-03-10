@@ -56,11 +56,10 @@ dependencies {
     val roomVersion = "2.4.2"
     val accompanistVersion = "0.24.3-alpha"
     val workVersion = "2.7.1"
+    val navVersion = "2.4.1"
 
-    implementation("androidx.compose.material:material:$composeVersion")
-
+    //MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
     //查看数据库
     debugImplementation("com.guolindev.glance:glance:1.1.0")
     //查看内存泄漏
@@ -69,7 +68,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:5.0.3")
     //日期时间选择器
     implementation("com.google.android.material:material:1.5.0")
-    implementation("com.github.loperSeven:DateTimePicker:0.5.4")
+    implementation("com.github.loperSeven:DateTimePicker:0.5.7")
     //accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     //Room数据库
@@ -78,17 +77,19 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     //WorkManager
     implementation("androidx.work:work-runtime-ktx:$workVersion")
-
-    implementation("androidx.fragment:fragment-ktx:1.4.1")
-
+    //Navigation
+    implementation("androidx.navigation:navigation-compose:$navVersion")
+    //Compose
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha06")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 
     implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha06")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
+    implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
     implementation("androidx.activity:activity-compose:1.4.0")
     testImplementation("junit:junit:4.13.2")

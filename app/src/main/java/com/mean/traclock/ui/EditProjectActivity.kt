@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
+import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditProjectViewModelFactory
@@ -63,10 +63,7 @@ class EditProjectActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled =
-//                        androidx.compose.material.MaterialTheme.colors.isLight
+                SetSystemBar()
 
                 val name by viewModel.name.collectAsState("")
                 val color by viewModel.color.collectAsState(0)
@@ -75,26 +72,26 @@ class EditProjectActivity : ComponentActivity() {
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
-                        SmallTopAppBar(
+                        TopBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = { Text(getString(R.string.edit)) },
+                            title = getString(R.string.edit),
                             actions = {
                                 if (name.isNotBlank()) {
                                     IconButton(onClick = { save(viewModel) }) {
                                         Icon(Icons.Filled.Check, stringResource(R.string.save))
                                     }
                                 }
-                            }
+                            },
+                            scrollBehavior = scrollBehavior,
                         )
-                    }
+                    },
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     Column {
                         Box(
