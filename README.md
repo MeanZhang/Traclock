@@ -1,4 +1,4 @@
-<img src="docs/.vuepress/public/images/logo.svg" alt="Hexo logo" width="100" height="100" align="right" />
+<img src="docs/.vuepress/public/images/logo.svg" alt="logo" width="100" height="100" align="right" />
 
 # 时迹
 
@@ -35,16 +35,16 @@
 
 显示所有项目，点击可查看项目所有记录或者修改项目信息。
 
-<img src="docs/.vuepress/public/images/ui/projects.jpg" alt="时间线" style="zoom:33%;" />
+<img src="docs/.vuepress/public/images/ui/projects.jpg" alt="项目" style="zoom:33%;" />
 
 ### 统计
 
 显示指定时间段（暂只支持当天）的统计数据。
 
-<img src="docs/.vuepress/public/images/ui/statistics.jpg" alt="时间线" style="zoom:33%;" />
+<img src="docs/.vuepress/public/images/ui/statistics.jpg" alt="统计" style="zoom:33%;" />
 
 ### 设置
 
 包括备份与回复（待完善）、帮助与反馈功能和关于页面。
 
-<img src="docs/.vuepress/public/images/ui/settings.jpg" alt="时间线" style="zoom:33%;" />
+<img src="docs/.vuepress/public/images/ui/settings.jpg" alt="设置" style="zoom:33%;" />
