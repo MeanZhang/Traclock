@@ -27,7 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.ui.components.BottomBar
-import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 

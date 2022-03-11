@@ -1,4 +1,4 @@
-package com.mean.traclock.ui.components
+package com.mean.traclock.ui.util
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable

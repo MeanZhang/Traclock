@@ -7,6 +7,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -37,7 +40,7 @@ import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.RecordItemWithoutProject
-import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.Database
@@ -122,9 +125,9 @@ class ProjectActivity : ComponentActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
-                ) { contentPadding ->
+                ) {
                     LazyColumn(
-                        contentPadding = contentPadding
+                        contentPadding = WindowInsets.navigationBars.asPaddingValues()
                     ) {
                         items(records.size) { i ->
                             val record = records[i]

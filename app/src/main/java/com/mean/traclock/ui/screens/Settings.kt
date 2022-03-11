@@ -34,7 +34,7 @@ import com.mean.traclock.ui.settings.FeedbackActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(context: Context, contentPadding: PaddingValues) {
+fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) {
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     Scaffold(
         topBar = {
@@ -55,10 +55,9 @@ fun Settings(context: Context, contentPadding: PaddingValues) {
         modifier = Modifier
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
+    ) {
         Column(
             modifier = Modifier
-                .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
             SettingGroupTitle(stringResource(R.string.normal))

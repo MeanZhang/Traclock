@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,6 +28,7 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.ui.util.SetSystemBar
 
 class FeedbackActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -34,10 +36,10 @@ class FeedbackActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TraclockTheme {
+                SetSystemBar()
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
                     modifier = Modifier
-                        .systemBarsPadding()
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         SmallTopAppBar(
@@ -51,7 +53,7 @@ class FeedbackActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    Column() {
+                    Column(Modifier.navigationBarsPadding()) {
                         SettingGroupTitle(stringResource(R.string.help))
                         SettingItem(
                             icon = Icons.Outlined.HelpOutline,

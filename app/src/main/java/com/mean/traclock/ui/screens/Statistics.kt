@@ -55,7 +55,7 @@ import com.mean.traclock.util.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Statistics(contentPadding: PaddingValues) {
+fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val date = getIntDate(System.currentTimeMillis())
     val projectsTime by AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDate(date)
         .collectAsState(listOf())
@@ -72,12 +72,11 @@ fun Statistics(contentPadding: PaddingValues) {
         modifier = Modifier
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
+    ) {
         if (duration > 0) {
             Column(
                 Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(innerPadding)
             ) {
                 Row(
                     Modifier
@@ -144,7 +143,7 @@ fun Statistics(contentPadding: PaddingValues) {
                 }
             }
         } else {
-            NoData(Modifier.padding(innerPadding))
+            NoData()
         }
     }
 }

@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -38,9 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
-import com.mean.traclock.ui.components.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.util.HORIZONTAL_MARGIN
 
 class AboutActivity : ComponentActivity() {
@@ -66,8 +69,8 @@ class AboutActivity : ComponentActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
-                ) { contentPadding ->
-                    Content(contentPadding)
+                ) {
+                    Content(WindowInsets.navigationBars.asPaddingValues())
                 }
             }
         }

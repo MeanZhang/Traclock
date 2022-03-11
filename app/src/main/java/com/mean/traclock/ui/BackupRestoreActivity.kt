@@ -34,7 +34,7 @@ import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
-import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
 import com.mean.traclock.ui.components.TopBar

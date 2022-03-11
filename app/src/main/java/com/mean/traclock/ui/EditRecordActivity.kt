@@ -53,7 +53,7 @@ import com.loper7.date_time_picker.dialog.CardDatePickerDialog
 import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
-import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.util.Database
@@ -129,7 +129,7 @@ class EditRecordActivity : AppCompatActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
-                ) { contentPadding ->
+                ) {
                     val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
                     val scope = rememberCoroutineScope()
                     ModalBottomSheetLayout(
@@ -185,7 +185,7 @@ class EditRecordActivity : AppCompatActivity() {
                         Surface {
                             Column(
                                 modifier = Modifier
-                                    .padding(contentPadding)
+                                    .navigationBarsPadding()
                                     .padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {

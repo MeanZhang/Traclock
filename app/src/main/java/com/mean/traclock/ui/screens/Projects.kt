@@ -78,8 +78,8 @@ fun Projects(
         modifier = Modifier
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
-        LazyColumn(contentPadding = innerPadding) {
+    ) {
+        LazyColumn {
             item {
                 TimingCard(
                     TimingControl.getProjectName(),

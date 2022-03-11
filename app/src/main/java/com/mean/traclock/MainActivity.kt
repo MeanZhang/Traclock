@@ -24,7 +24,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.mean.traclock.ui.components.BottomBar
-import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
 import com.mean.traclock.ui.screens.Statistics
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                             TimeLine(
                                 this@MainActivity,
                                 viewModel,
-                                contentPadding = contentPadding
+                                contentPadding
                             )
                         }
                         composable(PROJECTS.route) {

@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
-import com.mean.traclock.ui.components.SetSystemBar
+import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.viewmodels.EditProjectViewModel
@@ -92,12 +92,11 @@ class EditProjectActivity : ComponentActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
-                ) { contentPadding ->
-                    Column {
+                ) {
+                    Column(Modifier.navigationBarsPadding()) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .padding(contentPadding)
                                 .fillMaxWidth()
                                 .height(240.dp)
                                 .background(
