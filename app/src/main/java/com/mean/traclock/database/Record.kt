@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Fts4
 import androidx.room.PrimaryKey
-import com.mean.traclock.util.getIntDate
+import com.mean.traclock.utils.getIntDate
 
 @Fts4
 @Entity

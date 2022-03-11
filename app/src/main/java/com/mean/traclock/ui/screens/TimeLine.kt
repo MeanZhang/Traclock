@@ -29,8 +29,8 @@ import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.components.TopBar
-import com.mean.traclock.util.TimingControl
-import com.mean.traclock.util.getDataString
+import com.mean.traclock.utils.TimingControl
+import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.MainViewModel
 
 @OptIn(ExperimentalFoundationApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)

@@ -3,7 +3,7 @@ package com.mean.traclock.viewmodels
 import androidx.lifecycle.ViewModel
 import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
-import com.mean.traclock.ui.util.Destinations
+import com.mean.traclock.ui.utils.Destinations
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

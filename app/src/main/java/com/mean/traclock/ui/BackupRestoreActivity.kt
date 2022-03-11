@@ -34,12 +34,12 @@ import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
-import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.util.getIntDate
+import com.mean.traclock.ui.utils.SetSystemBar
+import com.mean.traclock.utils.getIntDate
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.concurrent.thread

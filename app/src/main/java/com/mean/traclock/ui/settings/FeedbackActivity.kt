@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Feedback
@@ -28,7 +27,7 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.util.SetSystemBar
+import com.mean.traclock.ui.utils.SetSystemBar
 
 class FeedbackActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)

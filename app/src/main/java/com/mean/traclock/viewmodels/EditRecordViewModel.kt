@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
-import com.mean.traclock.util.getIntDate
+import com.mean.traclock.utils.getIntDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.concurrent.thread

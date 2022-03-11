@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
-import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditProjectViewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow

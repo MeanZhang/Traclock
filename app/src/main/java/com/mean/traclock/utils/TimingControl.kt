@@ -1,4 +1,4 @@
-package com.mean.traclock.util
+package com.mean.traclock.utils
 
 import android.content.Context
 import android.widget.Toast

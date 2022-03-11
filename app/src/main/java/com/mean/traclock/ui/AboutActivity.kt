@@ -43,8 +43,8 @@ import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.util.SetSystemBar
-import com.mean.traclock.util.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.utils.SetSystemBar
+import com.mean.traclock.utils.HORIZONTAL_MARGIN
 
 class AboutActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)

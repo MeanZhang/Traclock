@@ -34,10 +34,10 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.EditRecordActivity
 import com.mean.traclock.ui.ProjectActivity
-import com.mean.traclock.util.HORIZONTAL_MARGIN
-import com.mean.traclock.util.TimingControl
-import com.mean.traclock.util.getDurationString
-import com.mean.traclock.util.getTimeString
+import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.TimingControl
+import com.mean.traclock.utils.getDurationString
+import com.mean.traclock.utils.getTimeString
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlin.concurrent.thread
 

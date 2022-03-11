@@ -1,4 +1,4 @@
-package com.mean.traclock.util
+package com.mean.traclock.utils
 
 import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
@@ -7,18 +7,17 @@ import com.mean.traclock.database.Record
 import kotlin.concurrent.thread
 
 object Database {
+    private val database = AppDatabase.getDatabase(App.context)
     fun deleteRecord(record: Record) {
         thread {
-            AppDatabase.getDatabase(App.context).recordDao()
-                .delete(record)
+            database.recordDao().delete(record)
         }
     }
 
     fun deleteProject(project: Project) {
         thread {
-            AppDatabase.getDatabase(App.context).projectDao()
-                .delete(project)
-            AppDatabase.getDatabase(App.context).recordDao().deleteByProject(project.name)
+            database.projectDao().delete(project)
+            database.recordDao().deleteByProject(project.name)
         }
     }
 }

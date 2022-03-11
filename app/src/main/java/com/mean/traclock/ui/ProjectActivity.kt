@@ -40,11 +40,11 @@ import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.RecordItemWithoutProject
-import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.util.Database
-import com.mean.traclock.util.getDataString
+import com.mean.traclock.ui.utils.SetSystemBar
+import com.mean.traclock.utils.Database
+import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.ProjectViewModel
 import com.mean.traclock.viewmodels.ProjectViewModelFactory
 

@@ -53,11 +53,11 @@ import com.loper7.date_time_picker.dialog.CardDatePickerDialog
 import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
-import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.util.Database
-import com.mean.traclock.util.getDateTimeString
+import com.mean.traclock.ui.utils.SetSystemBar
+import com.mean.traclock.utils.Database
+import com.mean.traclock.utils.getDateTimeString
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.EditRecordViewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow

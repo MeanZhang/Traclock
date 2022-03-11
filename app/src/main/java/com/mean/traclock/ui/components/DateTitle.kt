@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.util.HORIZONTAL_MARGIN
-import com.mean.traclock.util.getDurationString
+import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.getDurationString
 
 @Composable
 fun DateTitle(date: String, duration: Long) {

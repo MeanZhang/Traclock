@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
-import com.mean.traclock.util.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.HORIZONTAL_MARGIN
 
 @Composable
 fun SettingItem(

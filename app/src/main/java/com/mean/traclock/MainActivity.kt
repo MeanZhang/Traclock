@@ -24,17 +24,17 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.mean.traclock.ui.components.BottomBar
-import com.mean.traclock.ui.util.SetSystemBar
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
 import com.mean.traclock.ui.screens.Statistics
 import com.mean.traclock.ui.screens.TimeLine
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.util.Destinations
-import com.mean.traclock.ui.util.Destinations.PROJECTS
-import com.mean.traclock.ui.util.Destinations.SETTINGS
-import com.mean.traclock.ui.util.Destinations.STATISTICS
-import com.mean.traclock.ui.util.Destinations.TIMELINE
+import com.mean.traclock.ui.utils.Destinations
+import com.mean.traclock.ui.utils.Destinations.PROJECTS
+import com.mean.traclock.ui.utils.Destinations.SETTINGS
+import com.mean.traclock.ui.utils.Destinations.STATISTICS
+import com.mean.traclock.ui.utils.Destinations.TIMELINE
+import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 
