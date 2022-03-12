@@ -1,5 +1,6 @@
 package com.mean.traclock.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -55,8 +56,7 @@ class EditProjectActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val viewModel by viewModels<EditProjectViewModel> {
             EditProjectViewModelFactory(
-                intent.getStringExtra("name") ?: "",
-                intent.getIntExtra("color", Color.Red.toArgb())
+                intent.getStringExtra("projectName") ?: ""
             )
         }
         isModified = viewModel.isModified()
@@ -79,7 +79,7 @@ class EditProjectActivity : ComponentActivity() {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = getString(R.string.edit),
+                            title = name,
                             actions = {
                                 if (name.isNotBlank()) {
                                     IconButton(onClick = { save(viewModel) }) {
@@ -169,7 +169,13 @@ class EditProjectActivity : ComponentActivity() {
 
     private fun save(viewModel: EditProjectViewModel) {
         when (viewModel.updateProject()) {
-            1 -> super.finish()
+            1 -> {
+                val intent = Intent().apply {
+                    putExtra("projectName", viewModel.name.value)
+                }
+                setResult(RESULT_OK, intent)
+                super.finish()
+            }
             -1 -> Toast.makeText(
                 this@EditProjectActivity,
                 getString((R.string.project_exists)),

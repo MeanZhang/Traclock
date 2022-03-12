@@ -2,11 +2,12 @@ package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mean.traclock.App
 
 @Suppress("UNCHECKED_CAST")
-class EditProjectViewModelFactory(private val name: String, private val color: Int) :
+class EditProjectViewModelFactory(private val projectName: String) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return EditProjectViewModel(name, color) as T
+        return EditProjectViewModel(projectName, App.projectsList[projectName] ?: 0) as T
     }
 }

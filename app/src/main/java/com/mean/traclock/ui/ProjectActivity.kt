@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.WindowInsets
@@ -34,7 +35,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
-import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
@@ -49,21 +49,29 @@ import com.mean.traclock.viewmodels.ProjectViewModel
 import com.mean.traclock.viewmodels.ProjectViewModelFactory
 
 class ProjectActivity : ComponentActivity() {
+    private val viewModel by viewModels<ProjectViewModel> {
+        ProjectViewModelFactory(
+            intent.getStringExtra(
+                "projectName"
+            ) ?: ""
+        )
+    }
+    private val editProjectLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.getStringExtra("projectName")
+                    ?.let {
+                        viewModel.setProjectName(it)
+                        recreate()
+                    }
+            }
+        }
+
     @SuppressLint("UnrememberedMutableState")
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        val viewModel by viewModels<ProjectViewModel> {
-            ProjectViewModelFactory(
-                intent.getStringExtra(
-                    "projectName"
-                ) ?: ""
-            )
-        }
-
         setContent {
             TraclockTheme {
                 SetSystemBar()
@@ -76,6 +84,7 @@ class ProjectActivity : ComponentActivity() {
 
                 val records by viewModel.records.collectAsState(listOf())
                 val time by viewModel.timeByDate.collectAsState(listOf())
+                val projectName by viewModel.projectNameFlow.collectAsState()
 
                 Scaffold(
                     topBar = {
@@ -85,7 +94,7 @@ class ProjectActivity : ComponentActivity() {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = viewModel.projectName,
+                            title = projectName,
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -98,17 +107,12 @@ class ProjectActivity : ComponentActivity() {
                                         text = { Text(stringResource(R.string.edit)) },
                                         onClick = {
                                             showMenu.value = false
-                                            val intent =
-                                                Intent(
-                                                    this@ProjectActivity,
-                                                    EditProjectActivity::class.java
-                                                )
-                                            intent.putExtra("name", viewModel.projectName)
-                                            intent.putExtra(
-                                                "color",
-                                                App.projectsList[viewModel.projectName]
-                                            )
-                                            startActivity(intent)
+
+                                            val intent = Intent(
+                                                this@ProjectActivity,
+                                                EditProjectActivity::class.java
+                                            ).apply { putExtra("projectName", projectName) }
+                                            editProjectLauncher.launch(intent)
                                         }
                                     )
                                     DropdownMenuItem(
@@ -154,7 +158,7 @@ class ProjectActivity : ComponentActivity() {
                             confirmButton = {
                                 TextButton(
                                     onClick = {
-                                        Database.deleteProject(Project(viewModel.projectName))
+                                        Database.deleteProject(Project(projectName))
                                         finish()
                                     }
                                 ) {
