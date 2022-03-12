@@ -1,5 +1,7 @@
 package com.mean.traclock.viewmodels
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
@@ -8,21 +10,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.concurrent.thread
 
-class EditProjectViewModel(private val initialName: String, private val initialColor: Int) :
+class EditProjectViewModel(private val initialName: String, private val initialColor: Color) :
     ViewModel() {
     private val _name = MutableStateFlow(initialName)
     private val _color = MutableStateFlow(initialColor)
 
     val name: StateFlow<String>
         get() = _name
-    val color: StateFlow<Int>
+    val color: StateFlow<Color>
         get() = _color
 
     fun setName(name: String) {
         _name.value = name
     }
 
-    fun setColor(color: Int) {
+    fun setColor(color: Color) {
         _color.value = color
     }
 
@@ -38,8 +40,8 @@ class EditProjectViewModel(private val initialName: String, private val initialC
             _name.value != initialName -> { // 项目名发生变化
                 thread {
                     AppDatabase.getDatabase(App.context).projectDao().let {
-                        it.insert(Project(_name.value, _color.value))
-                        it.delete(Project(initialName, initialColor))
+                        it.insert(Project(_name.value, _color.value.toArgb()))
+                        it.delete(Project(initialName, initialColor.toArgb()))
                     }
                     _name.value.let {
                         AppDatabase.getDatabase(App.context).recordDao().updateProject(
@@ -53,7 +55,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
             _color.value != initialColor -> { // 项目名没变，颜色变化
                 thread {
                     AppDatabase.getDatabase(App.context).projectDao()
-                        .update(Project(initialName, _color.value))
+                        .update(Project(initialName, _color.value.toArgb()))
                 }
                 1
             }

@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -66,7 +65,7 @@ class EditProjectActivity : ComponentActivity() {
                 SetSystemBar()
 
                 val name by viewModel.name.collectAsState("")
-                val color by viewModel.color.collectAsState(0)
+                val color by viewModel.color.collectAsState(Color.Blue)
 
                 val showDialogState by showDialog.collectAsState(false)
 
@@ -87,7 +86,7 @@ class EditProjectActivity : ComponentActivity() {
                                     }
                                 }
                             },
-                            scrollBehavior = scrollBehavior,
+                            scrollBehavior = scrollBehavior
                         )
                     },
                     modifier = Modifier
@@ -102,7 +101,7 @@ class EditProjectActivity : ComponentActivity() {
                                 .background(
                                     Brush.verticalGradient(
                                         listOf(
-                                            Color(color),
+                                            color,
                                             Color.Black
                                         )
                                     )
@@ -118,7 +117,7 @@ class EditProjectActivity : ComponentActivity() {
                         }
                         ColorPicker(
                             onColorSelected = {
-                                viewModel.setColor(it.toArgb())
+                                viewModel.setColor(it)
                                 isModified = viewModel.isModified()
                             }
                         )
