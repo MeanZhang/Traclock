@@ -21,7 +21,7 @@
             android:label="@string/title_activity_feedback"
             android:theme="@style/Theme.Traclock" />
         <activity
-            android:name=".ui.AboutActivity"
+            android:name=".ui.settings.AboutActivity"
             android:exported="false"
             android:label="@string/title_activity_about"
             android:theme="@style/Theme.Traclock" />
@@ -31,7 +31,7 @@
             android:label="@string/title_activity_project"
             android:theme="@style/Theme.Traclock" />
         <activity
-            android:name=".ui.BackupRestoreActivity"
+            android:name=".ui.settings.BackupRestoreActivity"
             android:exported="true"
             android:label="@string/title_activity_backup_restore"
             android:theme="@style/Theme.Traclock" />

@@ -19,13 +19,16 @@ interface RecordDao {
     fun update(record: Record)
 
     @Query("UPDATE Record SET project = :newProject WHERE project = :oldProject")
-    fun updateProject(oldProject: String, newProject: String)
+    fun update(oldProject: String, newProject: String)
 
     @Query("DELETE FROM Record WHERE project = :projectName")
     fun deleteByProject(projectName: String)
 
     @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
     fun getAll(): Flow<List<Record>>
+
+    @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
+    fun getRecordsList(): List<Record>
 
     @Query("SELECT *, rowid FROM Record WHERE project = :projectName ORDER BY startTime DESC")
     fun getAll(projectName: String): Flow<List<Record>>
@@ -45,6 +48,6 @@ interface RecordDao {
     @Query("SELECT *, rowid FROM Record WHERE date=:date")
     fun getRecordsOfDate(date: Int): Flow<List<Record>>
 
-    @Query("SELECT *, rowid FROM Record WHERE date=:date GROUP BY project")
+    @Query("SELECT project, 0 AS startTime, SUM(endTime - startTime) AS endTime, date, rowid FROM Record WHERE date=:date GROUP BY project")
     fun getProjectsTimeOfDate(date: Int): Flow<List<Record>>
 }

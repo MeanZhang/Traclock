@@ -1,5 +1,6 @@
 package com.mean.traclock.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -10,8 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,18 +21,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,13 +39,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditProjectViewModelFactory
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class EditProjectActivity : ComponentActivity() {
-    private val showDialog = MutableStateFlow(false)
+    private val showDialog = mutableStateOf(false)
     private var isModified = false
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -55,58 +55,51 @@ class EditProjectActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val viewModel by viewModels<EditProjectViewModel> {
             EditProjectViewModelFactory(
-                intent.getStringExtra("name") ?: "",
-                intent.getIntExtra("color", Color.Red.toArgb())
+                intent.getStringExtra("projectName") ?: ""
             )
         }
         isModified = viewModel.isModified()
 
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled =
-//                        androidx.compose.material.MaterialTheme.colors.isLight
+                SetSystemBar()
 
                 val name by viewModel.name.collectAsState("")
-                val color by viewModel.color.collectAsState(0)
-
-                val showDialogState by showDialog.collectAsState(false)
+                val color by viewModel.color.collectAsState(Color.Blue)
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
-                        SmallTopAppBar(
+                        TopBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = { Text(getString(R.string.edit)) },
+                            title = name,
                             actions = {
                                 if (name.isNotBlank()) {
                                     IconButton(onClick = { save(viewModel) }) {
                                         Icon(Icons.Filled.Check, stringResource(R.string.save))
                                     }
                                 }
-                            }
+                            },
+                            scrollBehavior = scrollBehavior
                         )
-                    }
-                ) { contentPadding ->
-                    Column {
+                    },
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                ) {
+                    Column(Modifier.navigationBarsPadding()) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .padding(contentPadding)
                                 .fillMaxWidth()
                                 .height(240.dp)
                                 .background(
                                     Brush.verticalGradient(
                                         listOf(
-                                            Color(color),
+                                            color,
                                             Color.Black
                                         )
                                     )
@@ -122,13 +115,13 @@ class EditProjectActivity : ComponentActivity() {
                         }
                         ColorPicker(
                             onColorSelected = {
-                                viewModel.setColor(it.toArgb())
+                                viewModel.setColor(it)
                                 isModified = viewModel.isModified()
                             }
                         )
                     }
                 }
-                if (showDialogState) {
+                if (showDialog.value) {
                     AlertDialog(
                         onDismissRequest = { showDialog.value = false },
                         title = { Text(stringResource(R.string.discard_changes)) },
@@ -173,7 +166,13 @@ class EditProjectActivity : ComponentActivity() {
 
     private fun save(viewModel: EditProjectViewModel) {
         when (viewModel.updateProject()) {
-            1 -> super.finish()
+            1 -> {
+                val intent = Intent().apply {
+                    putExtra("projectName", viewModel.name.value)
+                }
+                setResult(RESULT_OK, intent)
+                super.finish()
+            }
             -1 -> Toast.makeText(
                 this@EditProjectActivity,
                 getString((R.string.project_exists)),

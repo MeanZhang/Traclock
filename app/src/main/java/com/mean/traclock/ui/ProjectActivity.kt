@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -33,39 +35,46 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
-import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.RecordItemWithoutProject
+import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.util.Database
-import com.mean.traclock.util.getDataString
+import com.mean.traclock.ui.utils.SetSystemBar
+import com.mean.traclock.utils.Database
+import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.ProjectViewModel
 import com.mean.traclock.viewmodels.ProjectViewModelFactory
 
 class ProjectActivity : ComponentActivity() {
+    private val viewModel by viewModels<ProjectViewModel> {
+        ProjectViewModelFactory(
+            intent.getStringExtra(
+                "projectName"
+            ) ?: ""
+        )
+    }
+    private val editProjectLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.getStringExtra("projectName")
+                    ?.let {
+                        viewModel.setProjectName(it)
+                        recreate()
+                    }
+            }
+        }
+
     @SuppressLint("UnrememberedMutableState")
     @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        val viewModel by viewModels<ProjectViewModel> {
-            ProjectViewModelFactory(
-                intent.getStringExtra(
-                    "projectName"
-                ) ?: ""
-            )
-        }
-
         setContent {
             TraclockTheme {
-//                val systemUiController = rememberSystemUiController()
-//                    systemUiController.setSystemBarsColor(Color.Transparent)
-//                    systemUiController.systemBarsDarkContentEnabled = !isSystemInDarkTheme()
+                SetSystemBar()
 
                 val showMenu = mutableStateOf(false)
 
@@ -73,21 +82,19 @@ class ProjectActivity : ComponentActivity() {
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
 
-//                    val coroutineScope = rememberCoroutineScope()
-
-//                    val projectsListState = rememberLazyListState()
                 val records by viewModel.records.collectAsState(listOf())
                 val time by viewModel.timeByDate.collectAsState(listOf())
+                val projectName by viewModel.projectNameFlow.collectAsState()
 
                 Scaffold(
                     topBar = {
-                        SmallTopAppBar(
+                        TopBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = { Text(viewModel.projectName) },
+                            title = projectName,
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -100,17 +107,12 @@ class ProjectActivity : ComponentActivity() {
                                         text = { Text(stringResource(R.string.edit)) },
                                         onClick = {
                                             showMenu.value = false
-                                            val intent =
-                                                Intent(
-                                                    this@ProjectActivity,
-                                                    EditProjectActivity::class.java
-                                                )
-                                            intent.putExtra("name", viewModel.projectName)
-                                            intent.putExtra(
-                                                "color",
-                                                App.projectsList[viewModel.projectName]
-                                            )
-                                            startActivity(intent)
+
+                                            val intent = Intent(
+                                                this@ProjectActivity,
+                                                EditProjectActivity::class.java
+                                            ).apply { putExtra("projectName", projectName) }
+                                            editProjectLauncher.launch(intent)
                                         }
                                     )
                                     DropdownMenuItem(
@@ -126,11 +128,10 @@ class ProjectActivity : ComponentActivity() {
                         )
                     },
                     modifier = Modifier
-                        .systemBarsPadding()
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
-                ) { contentPadding ->
+                ) {
                     LazyColumn(
-                        contentPadding = contentPadding
+                        contentPadding = WindowInsets.navigationBars.asPaddingValues()
                     ) {
                         items(records.size) { i ->
                             val record = records[i]
@@ -157,7 +158,7 @@ class ProjectActivity : ComponentActivity() {
                             confirmButton = {
                                 TextButton(
                                     onClick = {
-                                        Database.deleteProject(Project(viewModel.projectName))
+                                        Database.deleteProject(Project(projectName))
                                         finish()
                                     }
                                 ) {

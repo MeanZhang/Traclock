@@ -32,8 +32,8 @@
     <string name="title_activity_project">Project</string>
     <string name="title_activity_edit_record">Edit Record</string>
     <string name="title_activity_edit_project">Edit Project</string>
-    <string name="notice_channel_name">Tracking</string>
-    <string name="notice_channel_description">Recording information currently in progress</string>
+    <string name="timing_channel_name">Tracking</string>
+    <string name="timing_channel_description">Recording information currently in progress</string>
     <string name="title_activity_backup_restore">Backup &amp; Restore</string>
     <string name="normal">Normal</string>
     <string name="settings_description_backup_restore">Backup or restore projects and records</string>
@@ -62,4 +62,12 @@
     <string name="title_activity_feedback">Help &amp; Feedback</string>
     <string name="records_duration">Recorded Duration</string>
     <string name="no_record">No Record</string>
+    <string name="restore_channel_name">Restore Data</string>
+    <string name="restore_channel_description">Restore projects and records</string>
+    <string name="restoring">Restoring</string>
+    <string name="backing_up">Backing Up</string>
+    <string name="backup_completed">Backup Completed</string>
+    <string name="restore_completed">Restore Completed</string>
+    <string name="ok">OK</string>
+    <string name="please_wait">Please wait.</string>
 </resources>

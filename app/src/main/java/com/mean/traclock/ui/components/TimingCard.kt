@@ -30,11 +30,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.App
 import com.mean.traclock.R
-import com.mean.traclock.util.TimingControl
-import com.mean.traclock.util.getDurationString
-import com.mean.traclock.util.getTimeWithSeconds
+import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.TimingControl
+import com.mean.traclock.utils.getDurationString
+import com.mean.traclock.utils.getTimeWithSeconds
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -63,7 +63,7 @@ fun TimingCard(
                 delay(1000)
             }
         }
-        Column(modifier = Modifier.padding(horizontal = App.horizontalMargin)) {
+        Column(modifier = Modifier.padding(horizontal = HORIZONTAL_MARGIN)) {
             // 记录中
             Text(
                 stringResource(R.string.tracking),

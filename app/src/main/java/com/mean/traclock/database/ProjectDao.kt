@@ -15,6 +15,9 @@ interface ProjectDao {
     @Delete
     fun delete(project: Project)
 
+    @Query("DELETE FROM Project WHERE name LIKE :name")
+    fun delete(name: String)
+
     @Update
     fun update(project: Project)
 
