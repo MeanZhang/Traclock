@@ -48,6 +48,6 @@ interface RecordDao {
     @Query("SELECT *, rowid FROM Record WHERE date=:date")
     fun getRecordsOfDate(date: Int): Flow<List<Record>>
 
-    @Query("SELECT *, rowid FROM Record WHERE date=:date GROUP BY project")
+    @Query("SELECT project, 0 AS startTime, SUM(endTime - startTime) AS endTime, date, rowid FROM Record WHERE date=:date GROUP BY project")
     fun getProjectsTimeOfDate(date: Int): Flow<List<Record>>
 }
