@@ -65,4 +65,9 @@
     <string name="restore_channel_name">Restore Data</string>
     <string name="restore_channel_description">Restore projects and records</string>
     <string name="restoring">Restoring</string>
+    <string name="backing_up">Backing Up</string>
+    <string name="backup_completed">Backup Completed</string>
+    <string name="restore_completed">Restore Completed</string>
+    <string name="ok">OK</string>
+    <string name="please_wait">Please wait.</string>
 </resources>

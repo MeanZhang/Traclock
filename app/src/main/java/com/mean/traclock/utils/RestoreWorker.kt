@@ -28,7 +28,7 @@ class RestoreWorker(context: Context, params: WorkerParameters) : Worker(context
         manager.notify(RESTORE_NOTIFICATION_ID, builder.build())
         val uri = Uri.parse(inputData.getString("uri"))
         restore(uri)
-        builder.setContentTitle("恢复完成").setOngoing(false)
+        builder.setContentTitle(App.context.getString(R.string.restore_completed)).setOngoing(false)
         manager.notify(RESTORE_NOTIFICATION_ID, builder.build())
         return Result.success()
     }

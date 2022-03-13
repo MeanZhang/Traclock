@@ -17,6 +17,7 @@ object Database {
     }
 
     fun deleteProject(project: Project) {
+        projectsList.remove(project.name)
         thread {
             projectDao.delete(project)
             recordDao.deleteByProject(project.name)
@@ -54,6 +55,8 @@ object Database {
 
     fun updateProject(oldProject: String, newProject: Project): Boolean {
         if (newProject.name !in projectsList) {
+            projectsList.remove(oldProject)
+            projectsList[newProject.name] = newProject.color
             thread {
                 projectDao.delete(oldProject)
                 projectDao.insert(newProject)
@@ -65,6 +68,7 @@ object Database {
     }
 
     fun updateProject(project: Project) {
+        projectsList[project.name] = project.color
         thread {
             projectDao.update(project)
         }

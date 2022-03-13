@@ -5,7 +5,7 @@ import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 
 class MainViewModel : ViewModel() {
-    val recordDao = AppDatabase.getDatabase(App.context).recordDao()
+    private val recordDao = AppDatabase.getDatabase(App.context).recordDao()
     val records = recordDao.getAll()
     val projectsTimeByDate = recordDao.getProjectsTimeByDate()
     val timeByDate = recordDao.getTimeByDate()

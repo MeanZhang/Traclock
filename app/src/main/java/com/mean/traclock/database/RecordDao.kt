@@ -27,6 +27,9 @@ interface RecordDao {
     @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
     fun getAll(): Flow<List<Record>>
 
+    @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
+    fun getRecordsList(): List<Record>
+
     @Query("SELECT *, rowid FROM Record WHERE project = :projectName ORDER BY startTime DESC")
     fun getAll(projectName: String): Flow<List<Record>>
 

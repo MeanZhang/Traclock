@@ -12,7 +12,7 @@ import kotlin.math.abs
  * @param timestamp 时间戳（毫秒）
  * @return 以整数表示的日期，例如20211231
  */
-fun getIntDate(timestamp: Long): Int {
+fun getIntDate(timestamp: Long = System.currentTimeMillis()): Int {
     val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
     return time.year * 10000 + time.monthValue * 100 + time.dayOfMonth
 }
@@ -118,4 +118,9 @@ fun getDataString(date: Int): String {
 fun getTimeWithSeconds(timestamp: Long): String {
     val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
     return DateTimeFormatter.ofPattern("HH:mm:ss").format(time)
+}
+
+fun getTime(): String {
+    val time = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
+    return DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(time)
 }

@@ -70,6 +70,11 @@
     <string name="restore_channel_id" translatable="false">Traclock_Channel_Restore</string>
     <string name="restore_channel_name">恢复数据</string>
     <string name="restore_channel_description">恢复项目和记录</string>
-    <string name="restoring">恢复中</string>
+    <string name="restoring">正在恢复</string>
     <string name="restore_work_name" translatable="false">Restore_Work</string>
+    <string name="backing_up">正在备份</string>
+    <string name="backup_completed">备份完成</string>
+    <string name="restore_completed">恢复完成</string>
+    <string name="ok">确定</string>
+    <string name="please_wait">请稍候</string>
 </resources>
