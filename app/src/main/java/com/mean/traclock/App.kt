@@ -36,39 +36,49 @@ class App : Application() {
 
         projects = AppDatabase.getDatabase(context).projectDao().getAll()
         GlobalScope.launch {
-            projects.collect {
-                projectsList.clear()
-                for (project in it) {
-                    projectsList[project.name] = project.color
-                }
+            initProjectsList()
+        }
+        initNotification()
+    }
+
+    private suspend fun initProjectsList() {
+        projects.collect {
+            for (project in it) {
+                projectsList[project.name] = project.color
             }
         }
-
-        createNotificationChannel()
-        initNotification()
     }
 
     @DelicateCoroutinesApi
     private fun initNotification() {
+        createNotificationChannels()
         if (isTiming.value) {
             TimingControl.startNotify()
         }
     }
 
-    private fun createNotificationChannel() {
+    private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
+            val timingChannel =
                 NotificationChannel(
-                    getString(R.string.notice_channel_id),
-                    getString(R.string.notice_channel_name),
+                    getString(R.string.timing_channel_id),
+                    getString(R.string.timing_channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT
                 ).apply {
-                    description = getString(R.string.notice_channel_description)
+                    description = getString(R.string.timing_channel_description)
                 }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(timingChannel)
+
+            val restoreChannel = NotificationChannel(
+                getString(R.string.restore_channel_id),
+                getString(R.string.restore_channel_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = getString(R.string.restore_channel_description)
+            }
+            notificationManager.createNotificationChannel(restoreChannel)
         }
     }
 }

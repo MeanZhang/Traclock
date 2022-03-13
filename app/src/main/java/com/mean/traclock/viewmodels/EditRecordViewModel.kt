@@ -2,12 +2,11 @@ package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.mean.traclock.App
-import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
+import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.getIntDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.concurrent.thread
 
 class EditRecordViewModel(val record: Record) : ViewModel() {
     private val _project = MutableStateFlow(record.project)
@@ -27,18 +26,15 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
 
     fun updateRecord(): Int {
         if (isModified()) {
-            if (_project.value.isBlank()) {
-                return -1 // 项目名为空
+            return if (_project.value.isBlank()) {
+                -1 // 项目名为空
             } else {
-                return if (_project.value in App.projectsList) {
+                if (_project.value in App.projectsList) {
                     record.project = _project.value
                     record.startTime = startTime.value
                     record.endTime = endTime.value
                     record.date = getIntDate(record.startTime)
-                    thread {
-                        AppDatabase.getDatabase(App.context)
-                            .recordDao().update(record)
-                    }
+                    Database.updateRecord(record)
                     1
                 } else {
                     -2 // 项目不存在

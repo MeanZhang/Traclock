@@ -25,11 +25,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.mean.traclock.R
 import com.mean.traclock.test.TestActivity
-import com.mean.traclock.ui.AboutActivity
-import com.mean.traclock.ui.BackupRestoreActivity
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.components.TopBar
+import com.mean.traclock.ui.settings.AboutActivity
+import com.mean.traclock.ui.settings.BackupRestoreActivity
 import com.mean.traclock.ui.settings.FeedbackActivity
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -28,18 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.App
 import com.mean.traclock.R
-import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.EditRecordActivity
 import com.mean.traclock.ui.ProjectActivity
+import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getTimeString
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlin.concurrent.thread
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(DelicateCoroutinesApi::class, ExperimentalFoundationApi::class)
@@ -106,7 +104,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
             DropdownMenu(showMenu, { showMenu = false }) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.delete)) },
-                    onClick = { showMenu = false; deleteRecord(record) }
+                    onClick = { showMenu = false; Database.deleteRecord(record) }
                 )
             }
         }
@@ -147,7 +145,7 @@ fun RecordItemWithoutProject(context: Context, record: Record) {
         DropdownMenu(showMenu, { showMenu = false }) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
-                onClick = { showMenu = false; deleteRecord(record) }
+                onClick = { showMenu = false; Database.deleteRecord(record) }
             )
         }
     }
@@ -159,11 +157,4 @@ fun putRecord(intent: Intent, record: Record) {
     intent.putExtra("startTime", record.startTime)
     intent.putExtra("endTime", record.endTime)
     intent.putExtra("date", record.date)
-}
-
-fun deleteRecord(record: Record) {
-    thread {
-        AppDatabase.getDatabase(App.context).recordDao()
-            .delete(record)
-    }
 }

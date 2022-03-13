@@ -9,10 +9,8 @@ import androidx.work.WorkManager
 import com.mean.traclock.App
 import com.mean.traclock.App.Companion.context
 import com.mean.traclock.R
-import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlin.concurrent.thread
 
 object TimingControl {
     private val sharedPref = context.getSharedPreferences(
@@ -50,9 +48,7 @@ object TimingControl {
                 getStartTime(),
                 System.currentTimeMillis()
             )
-            thread {
-                AppDatabase.getDatabase(context).recordDao().insert(record)
-            }
+            Database.insertRecord(record)
         }
     }
 
@@ -66,7 +62,7 @@ object TimingControl {
                 .build()
         WorkManager.getInstance(context)
             .enqueueUniqueWork(
-                context.getString(R.string.unique_work_name),
+                context.getString(R.string.notification_work_name),
                 ExistingWorkPolicy.KEEP,
                 request
             )

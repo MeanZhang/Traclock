@@ -19,7 +19,7 @@ interface RecordDao {
     fun update(record: Record)
 
     @Query("UPDATE Record SET project = :newProject WHERE project = :oldProject")
-    fun updateProject(oldProject: String, newProject: String)
+    fun update(oldProject: String, newProject: String)
 
     @Query("DELETE FROM Record WHERE project = :projectName")
     fun deleteByProject(projectName: String)

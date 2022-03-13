@@ -1,4 +1,4 @@
-package com.mean.traclock.ui
+package com.mean.traclock.ui.settings
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

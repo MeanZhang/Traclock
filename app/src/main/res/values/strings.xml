@@ -28,13 +28,13 @@
     <string name="title_activity_project">项目</string>
     <string name="title_activity_test">测试</string>
     <string name="new_project">新建项目</string>
-    <string name="notice_channel_id" translatable="false">Traclock</string>
+    <string name="timing_channel_id" translatable="false">Traclock_Channel_Timing</string>
     <string name="change_view">切换视图</string>
     <string name="is_tracking">当前有项目正在记录，请先停止</string>
     <string name="confirm_delete_project">您确定要删除该项目吗？该操作不可逆。</string>
     <string name="cancel">取消</string>
-    <string name="notice_channel_name">记录中</string>
-    <string name="notice_channel_description">当前正在进行的记录信息</string>
+    <string name="timing_channel_name">记录中</string>
+    <string name="timing_channel_description">当前正在进行的记录信息</string>
     <string name="preference_file_key" translatable="false">com.mean.traclock.PREFERENCE_FILE_KEY</string>
     <string name="title_activity_backup_restore">备份与恢复</string>
     <string name="normal">常规</string>
@@ -64,7 +64,12 @@
     <string name="debug_tag" translatable="false">Traclock-debug</string>
     <string name="feedback_url" translatable="false">https://support.qq.com/product/138287</string>
     <string name="doc_url" translatable="false">https://traclock.meancoder.xyz</string>
-    <string name="unique_work_name" translatable="false">notification</string>
+    <string name="notification_work_name" translatable="false">Notification_Work</string>
     <string name="records_duration">记录时长</string>
     <string name="no_record">暂无记录</string>
+    <string name="restore_channel_id" translatable="false">Traclock_Channel_Restore</string>
+    <string name="restore_channel_name">恢复数据</string>
+    <string name="restore_channel_description">恢复项目和记录</string>
+    <string name="restoring">恢复中</string>
+    <string name="restore_work_name" translatable="false">Restore_Work</string>
 </resources>

@@ -51,7 +51,6 @@ import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.utils.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getIntDate
-import com.mean.traclock.utils.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -154,7 +153,6 @@ fun setPieChart(
     duration: Long,
     selected: MutableState<Int>
 ) {
-    log(projectsTime.toString())
     chart.minimumHeight = chart.width // 宽高相同
     chart.description.isEnabled = false // 不显示description
     chart.setHoleColor(Color.Transparent.toArgb()) // 中间圆孔设为透明

@@ -26,6 +26,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,10 +44,9 @@ import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditProjectViewModelFactory
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class EditProjectActivity : ComponentActivity() {
-    private val showDialog = MutableStateFlow(false)
+    private val showDialog = mutableStateOf(false)
     private var isModified = false
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +66,6 @@ class EditProjectActivity : ComponentActivity() {
 
                 val name by viewModel.name.collectAsState("")
                 val color by viewModel.color.collectAsState(Color.Blue)
-
-                val showDialogState by showDialog.collectAsState(false)
 
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 Scaffold(
@@ -123,7 +121,7 @@ class EditProjectActivity : ComponentActivity() {
                         )
                     }
                 }
-                if (showDialogState) {
+                if (showDialog.value) {
                     AlertDialog(
                         onDismissRequest = { showDialog.value = false },
                         title = { Text(stringResource(R.string.discard_changes)) },
