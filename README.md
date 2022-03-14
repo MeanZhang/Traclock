@@ -11,6 +11,7 @@
   <a href="https://android-arsenal.com/api?level=24" alt="API">
     <img src="https://img.shields.io/badge/API-24%2B-blue?logo=android" />
   </a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2FMeanZhang%2FTraclock?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FMeanZhang%2FTraclock.svg?type=shield"/></a>
   <a href="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml"  alt="Android CI">
     <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml/badge.svg" />
   </a>
@@ -48,3 +49,7 @@
 包括备份与回复（待完善）、帮助与反馈功能和关于页面。
 
 <img src="docs/.vuepress/public/images/ui/settings.jpg" alt="设置" style="zoom:33%;" />
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FMeanZhang%2FTraclock.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FMeanZhang%2FTraclock?ref=badge_large)
