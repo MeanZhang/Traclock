@@ -1,9 +1,9 @@
 package com.mean.traclock.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -31,7 +31,6 @@ private enum class ProjectColor(val color: Color) {
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    androidx.compose.foundation.ExperimentalFoundationApi::class
 )
 @Composable
 fun ColorPicker(
@@ -39,7 +38,7 @@ fun ColorPicker(
 ) {
     var selected by remember { mutableStateOf(ProjectColor.Blue) }
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(minSize = 60.dp),
+        columns = GridCells.Adaptive(60.dp),
         contentPadding = PaddingValues(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp)
     ) {
         items(ProjectColor.values()) { color ->
