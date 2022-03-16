@@ -23,7 +23,7 @@ footer: Copyright © 2021-2022 Mean
 
 ## 简介
 
-时迹一款记录各项任务时间的时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
+时迹是一款用来记录各项任务时间的时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
 
 使用 Jetpack Compose 构建，采用 Material You 设计，已完成项目记录、管理和统计等基本功能，UI 界面将随 Jetpack Compose 的更新逐步完善。
 
@@ -50,6 +50,6 @@ footer: Copyright © 2021-2022 Mean
 
 ### 设置
 
-包括备份与回复（待完善）、帮助与反馈功能和关于页面。
+包括备份与恢复、帮助与反馈功能和关于页面。
 
 <img src="/images/ui/settings.jpg" alt="时间线" style="zoom:33%;" />
