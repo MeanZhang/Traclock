@@ -22,7 +22,7 @@ import com.mean.traclock.R
 @Composable
 fun NoData(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(50.dp)
     ) {

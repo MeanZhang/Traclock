@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.2.0--alpha04-brightgreen" />
+    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.2.0--alpha06-brightgreen" />
   </a>
   <a href="https://android-arsenal.com/api?level=24" alt="API">
     <img src="https://img.shields.io/badge/API-24%2B-blue?logo=android" />
@@ -15,6 +15,7 @@
     <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml/badge.svg" />
   </a>
 </p>
+
 
 ## 简介
 

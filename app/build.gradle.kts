@@ -1,4 +1,4 @@
-val composeVersion by extra("1.2.0-alpha04")
+val composeVersion by extra("1.2.0-alpha06")
 
 plugins {
     id("com.android.application")
