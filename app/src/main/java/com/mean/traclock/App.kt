@@ -14,7 +14,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class App : Application() {
@@ -70,15 +69,6 @@ class App : Application() {
             val notificationManager: NotificationManager =
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(timingChannel)
-
-            val restoreChannel = NotificationChannel(
-                getString(R.string.restore_channel_id),
-                getString(R.string.restore_channel_name),
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = getString(R.string.restore_channel_description)
-            }
-            notificationManager.createNotificationChannel(restoreChannel)
         }
     }
 }

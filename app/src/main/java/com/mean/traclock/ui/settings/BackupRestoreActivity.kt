@@ -76,9 +76,11 @@ class BackupRestoreActivity : ComponentActivity() {
                 SetSystemBar()
                 val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
                 val showBackupDialog by viewModel.showBackupDialog.collectAsState()
+                val showRestoreDialog by viewModel.showRestoreDialog.collectAsState()
                 val showConfirmDialog by viewModel.showConfirmDialog.collectAsState()
                 val backingUp by viewModel.backingUp.collectAsState()
-                val backupProcess by viewModel.backupProcess.collectAsState()
+                val restoring by viewModel.restoring.collectAsState()
+                val progress by viewModel.progress.collectAsState()
                 Scaffold(
                     topBar = {
                         TopBar(
@@ -140,12 +142,29 @@ class BackupRestoreActivity : ComponentActivity() {
                         onDismissRequest = { },
                         title = { Text(stringResource(if (backingUp) R.string.backing_up else R.string.backup_completed)) },
                         text = {
-                            LinearProgressIndicator(progress = backupProcess)
+                            LinearProgressIndicator(progress = progress)
                         },
                         confirmButton = {
                             TextButton(
                                 enabled = !backingUp,
                                 onClick = { viewModel.showBackupDialog.value = false }
+                            ) {
+                                Text(stringResource(R.string.ok))
+                            }
+                        }
+                    )
+                }
+                if (showRestoreDialog) {
+                    AlertDialog(
+                        onDismissRequest = { },
+                        title = { Text(stringResource(if (restoring) R.string.restoring else R.string.restore_completed)) },
+                        text = {
+                            LinearProgressIndicator(progress = progress)
+                        },
+                        confirmButton = {
+                            TextButton(
+                                enabled = !restoring,
+                                onClick = { viewModel.showRestoreDialog.value = false }
                             ) {
                                 Text(stringResource(R.string.ok))
                             }
