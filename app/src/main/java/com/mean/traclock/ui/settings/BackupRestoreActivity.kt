@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -104,7 +105,7 @@ class BackupRestoreActivity : ComponentActivity() {
                             onClick = { backupLauncher.launch(BuildConfig.APPLICATION_ID + "_backup_" + getTime() + ".csv") }
                         )
 
-                        Divider()
+                        MenuDefaults.Divider()
 
                         SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
                         SettingItemWinthoutIcon(

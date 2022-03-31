@@ -16,6 +16,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -70,7 +71,7 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
                     context.startActivity(intent)
                 }
             )
-            Divider()
+            MenuDefaults.Divider()
             SettingGroupTitle(stringResource(R.string.others))
             SettingItem(
                 Icons.Outlined.Feedback,
