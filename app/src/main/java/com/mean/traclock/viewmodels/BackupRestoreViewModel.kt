@@ -86,10 +86,10 @@ class BackupRestoreViewModel : ViewModel() {
                         }
                     }
                 }
+                progress.value = 1F
+                restoring.value = false
             }
         }
-        progress.value = 1F
-        restoring.value = false
     }
 
     private fun restore(line: String): Int {
