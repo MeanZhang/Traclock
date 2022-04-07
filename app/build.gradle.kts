@@ -39,6 +39,9 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
     }
+    lint {
+        checkDependencies = true
+    }
     buildFeatures {
         compose = true
     }
