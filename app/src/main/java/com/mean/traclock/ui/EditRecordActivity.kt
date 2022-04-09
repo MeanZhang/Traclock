@@ -13,14 +13,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -30,8 +27,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,7 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,17 +59,13 @@ import com.mean.traclock.utils.getDateTimeString
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.EditRecordViewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 class EditRecordActivity : AppCompatActivity() {
     private var showDialog = MutableStateFlow(false)
     private var isModified = false
 
     @SuppressLint("UnrememberedMutableState")
-    @OptIn(
-        ExperimentalMaterial3Api::class,
-        androidx.compose.material.ExperimentalMaterialApi::class
-    )
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -85,13 +79,13 @@ class EditRecordActivity : AppCompatActivity() {
         setContent {
             TraclockTheme {
                 SetSystemBar()
-
                 val project by viewModel.project.collectAsState("")
                 val startTime by viewModel.startTime.collectAsState(0L)
                 val endTime by viewModel.endTime.collectAsState(0L)
-
+                val projects by App.projects.collectAsState(listOf())
                 val showMenu = mutableStateOf(false)
                 val showDialogState by showDialog.collectAsState(false)
+                var showProjectsDialog by remember { mutableStateOf(false) }
 
                 val builder = CardDatePickerDialog.builder(this).showBackNow(false)
                     .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
@@ -130,148 +124,125 @@ class EditRecordActivity : AppCompatActivity() {
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) {
-                    val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-                    val scope = rememberCoroutineScope()
-                    ModalBottomSheetLayout(
-                        sheetState = state,
-                        sheetContent = {
-                            Surface {
-                                val projects by App.projects.collectAsState(listOf())
-                                Column(
-                                    modifier = Modifier
-                                        .navigationBarsPadding()
-                                        .padding(
-                                            horizontal = 32.dp,
-                                            vertical = 16.dp
-                                        )
-                                ) {
-                                    Text(
-                                        stringResource(R.string.projects),
-                                        style = MaterialTheme.typography.headlineSmall,
-                                        modifier = Modifier.padding(vertical = 8.dp)
-                                    )
-                                    for (project1 in projects) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .clickable {
-                                                    viewModel.setProject(project1.name)
-                                                    isModified = viewModel.isModified()
-                                                    scope.launch {
-                                                        state.hide()
-                                                    }
-                                                }
-                                                .padding(vertical = 8.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Circle,
-                                                contentDescription = null,
-                                                tint = Color(project1.color),
-                                                modifier = Modifier
-                                                    .size(32.dp)
-                                                    .padding(8.dp, 0.dp)
-                                            )
-                                            Text(
-                                                project1.name,
-                                                style = MaterialTheme.typography.headlineSmall
-                                            )
-                                        }
-                                    }
-                                }
+                    Column(
+                        modifier = Modifier
+                            .navigationBarsPadding()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                stringResource(R.string.project),
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            OutlinedButton(
+                                onClick = { showProjectsDialog = true },
+                                modifier = Modifier.weight(3f)
+                            ) {
+                                Text(project)
                             }
                         }
-                    ) {
-                        Surface {
-                            Column(
-                                modifier = Modifier
-                                    .navigationBarsPadding()
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                stringResource(R.string.start),
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            OutlinedButton(
+                                onClick = {
+                                    builder.setDefaultTime(startTime)
+                                    builder.setOnChoose {
+                                        viewModel.setStartTime(it)
+                                        isModified = viewModel.isModified()
+                                    }
+                                    builder.build().show()
+                                },
+                                modifier = Modifier.weight(3f)
                             ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        stringResource(R.string.project),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    OutlinedButton(
-                                        onClick = { scope.launch { state.show() } },
-                                        modifier = Modifier.weight(3f)
-                                    ) {
-                                        Text(project)
-                                    }
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        stringResource(R.string.start),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    OutlinedButton(
-                                        onClick = {
-                                            builder.setDefaultTime(startTime)
-                                            builder.setOnChoose {
-                                                viewModel.setStartTime(it)
-                                                isModified = viewModel.isModified()
-                                            }
-                                            builder.build().show()
-                                        },
-                                        modifier = Modifier.weight(3f)
-                                    ) {
-                                        Text(getDateTimeString(startTime))
-                                    }
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        stringResource(R.string.end),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    OutlinedButton(
-                                        onClick = {
-                                            builder.setDefaultTime(endTime)
-                                            builder.setOnChoose {
-                                                viewModel.setEndTime(it)
-                                                isModified = viewModel.isModified()
-                                            }
-                                            builder.build().show()
-                                        },
-                                        modifier = Modifier.weight(3f)
-                                    ) {
-                                        Text(getDateTimeString(endTime))
-                                    }
-                                }
-                                Button(onClick = {
-                                    when (viewModel.updateRecord()) {
-                                        2 -> super.finish()
-                                        1 -> super.finish()
-                                        -1 -> Toast.makeText(
-                                            this@EditRecordActivity,
-                                            this@EditRecordActivity.getString(R.string.please_enter_a_project_name),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        -2 -> Toast.makeText(
-                                            this@EditRecordActivity,
-                                            this@EditRecordActivity.getString(R.string.no_such_project),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }) {
-                                    Text(stringResource(R.string.save))
-                                }
+                                Text(getDateTimeString(startTime))
                             }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                stringResource(R.string.end),
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            OutlinedButton(
+                                onClick = {
+                                    builder.setDefaultTime(endTime)
+                                    builder.setOnChoose {
+                                        viewModel.setEndTime(it)
+                                        isModified = viewModel.isModified()
+                                    }
+                                    builder.build().show()
+                                },
+                                modifier = Modifier.weight(3f)
+                            ) {
+                                Text(getDateTimeString(endTime))
+                            }
+                        }
+                        Button(onClick = {
+                            when (viewModel.updateRecord()) {
+                                2 -> super.finish()
+                                1 -> super.finish()
+                                -1 -> Toast.makeText(
+                                    this@EditRecordActivity,
+                                    this@EditRecordActivity.getString(R.string.please_enter_a_project_name),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                -2 -> Toast.makeText(
+                                    this@EditRecordActivity,
+                                    this@EditRecordActivity.getString(R.string.no_such_project),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }) {
+                            Text(stringResource(R.string.save))
                         }
                     }
+                }
+                if (showProjectsDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showProjectsDialog = false },
+                        title = { Text(stringResource(R.string.projects)) },
+                        confirmButton = {},
+                        text = {
+                            LazyColumn {
+                                items(projects) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.clickable {
+                                            viewModel.setProject(it.name)
+                                            isModified = viewModel.isModified()
+                                            showProjectsDialog = false
+                                        }) {
+                                        RadioButton(
+                                            selected = project == it.name,
+                                            colors = RadioButtonDefaults.colors(
+                                                selectedColor = Color(it.color),
+                                                unselectedColor = Color(it.color)
+                                            ),
+                                            onClick = {
+                                                viewModel.setProject(it.name)
+                                                isModified = viewModel.isModified()
+                                                showProjectsDialog = false
+                                            })
+                                        Text(it.name, Modifier.fillMaxWidth())
+                                    }
+                                }
+                            }
+                        })
                 }
                 if (showDialogState) {
                     AlertDialog(
