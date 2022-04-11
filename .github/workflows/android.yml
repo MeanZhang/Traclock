@@ -41,7 +41,7 @@ jobs:
         run: mv ${{ env.SIGNED_RELEASE_FILE }} '${{ secrets.APP_NAME }}.apk'
 
       - name: 上传 APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: APK
           path: ${{ secrets.APP_NAME }}.apk
