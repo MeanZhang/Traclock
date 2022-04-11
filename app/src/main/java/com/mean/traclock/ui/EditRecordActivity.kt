@@ -226,7 +226,8 @@ class EditRecordActivity : AppCompatActivity() {
                                             viewModel.setProject(it.name)
                                             isModified = viewModel.isModified()
                                             showProjectsDialog = false
-                                        }) {
+                                        }
+                                    ) {
                                         RadioButton(
                                             selected = project == it.name,
                                             colors = RadioButtonDefaults.colors(
@@ -237,12 +238,14 @@ class EditRecordActivity : AppCompatActivity() {
                                                 viewModel.setProject(it.name)
                                                 isModified = viewModel.isModified()
                                                 showProjectsDialog = false
-                                            })
+                                            }
+                                        )
                                         Text(it.name, Modifier.fillMaxWidth())
                                     }
                                 }
                             }
-                        })
+                        }
+                    )
                 }
                 if (showDialogState) {
                     AlertDialog(
