@@ -1,7 +1,11 @@
 package com.mean.traclock.utils
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -47,6 +51,32 @@ object TimingControl {
                 System.currentTimeMillis()
             )
             Database.insertRecord(record)
+
+            //发送通知
+            val manager = NotificationManagerCompat.from(context)
+            val notificationBuilder = NotificationCompat.Builder(
+                context, context.getString(R.string.timing_channel_id)
+            )
+                .setSmallIcon(R.drawable.ic_logo)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setOngoing(false) // 设置通知可清除
+                .setContentTitle(record.project)
+                .setContentText(getDurationString(record.startTime, record.endTime))
+
+            val intent = Intent(NOTIFICATION_ACTION).putExtra("isTiming", true)
+                .putExtra("projectName", record.project)
+            val pendingIntent =
+                PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_IMMUTABLE)
+
+            // 添加开始按钮
+            notificationBuilder.addAction(
+                R.drawable.ic_logo,
+                context.getString(R.string.start),
+                pendingIntent
+            )
+            manager.notify(TIMING_NOTIFICATION_ID, notificationBuilder.build())
         }
     }
 
