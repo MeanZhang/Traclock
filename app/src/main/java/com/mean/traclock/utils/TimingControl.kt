@@ -10,7 +10,6 @@ import com.mean.traclock.App
 import com.mean.traclock.App.Companion.context
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 object TimingControl {
     private val sharedPref = context.getSharedPreferences(
@@ -18,7 +17,6 @@ object TimingControl {
         Context.MODE_PRIVATE
     )
 
-    @DelicateCoroutinesApi
     fun startRecord(project: String) {
         if (App.isTiming.value) {
             Toast.makeText(context, context.getString(R.string.is_tracking), Toast.LENGTH_SHORT)

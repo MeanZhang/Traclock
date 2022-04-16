@@ -5,10 +5,13 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.IntentFilter
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
+import com.mean.traclock.utils.NOTIFICATION_ACTION
+import com.mean.traclock.utils.NotificationBroadcastReceiver
 import com.mean.traclock.utils.TimingControl
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -38,6 +41,13 @@ class App : Application() {
             initProjectsList()
         }
         initNotification()
+        initBroadcast()
+    }
+
+    private fun initBroadcast() {
+        val broadcastReceiver = NotificationBroadcastReceiver()
+        val filter = IntentFilter(NOTIFICATION_ACTION)
+        registerReceiver(broadcastReceiver, filter)
     }
 
     private suspend fun initProjectsList() {
