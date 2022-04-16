@@ -50,20 +50,21 @@ object TimingControl {
         }
     }
 
-    fun startNotify(projectName: String? = null, startTime: Long? = null) {
+    fun startNotify(projectName: String = getProjectName(), startTime: Long = getStartTime()) {
+        val workManager = WorkManager.getInstance(context)
         val data =
-            Data.Builder().putString("projectName", projectName ?: getProjectName())
-                .putLong("startTime", startTime ?: getStartTime())
+            Data.Builder()
+                .putString("projectName", projectName)
+                .putLong("startTime", startTime)
                 .build()
         val request =
             OneTimeWorkRequest.Builder(NotificationWorker::class.java).setInputData(data)
                 .build()
-        WorkManager.getInstance(context)
-            .enqueueUniqueWork(
-                context.getString(R.string.notification_work_name),
-                ExistingWorkPolicy.KEEP,
-                request
-            )
+        workManager.enqueueUniqueWork(
+            NOTIFICATION_WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            request
+        )
     }
 
     fun getIsTiming() = sharedPref.getBoolean("isTiming", false)
