@@ -42,95 +42,31 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 @SuppressLint("UnrememberedMutableState")
 @OptIn(DelicateCoroutinesApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun RecordItem(context: Context, record: Record, color: Color, detailView: Boolean = false) {
+fun RecordItem(context: Context, record: Record, color: Color, detailView: Boolean = true) {
     val startTime = getTimeString(record.startTime)
     val endTime = getTimeString(record.endTime)
     val projectName = record.project
-    var showMenu by remember { mutableStateOf(false) }
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .combinedClickable(
-                    onClick = {
-                        val activity =
-                            if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
-                        val intent = Intent(context, activity)
-                        if (detailView) {
-                            putRecord(intent, record)
-                        } else {
-                            intent.putExtra("projectName", record.project)
-                        }
-                        context.startActivity(intent)
-                    },
-                    onLongClick = if (detailView) {
-                        { showMenu = true }
-                    } else null
-                )
-                .padding(vertical = 8.dp, horizontal = HORIZONTAL_MARGIN),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Circle,
-                        contentDescription = null,
-                        tint = color,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(8.dp, 0.dp)
-                    )
-                    Column {
-                        Text(projectName)
-                        if (detailView) {
-                            Text(
-                                "$startTime - $endTime",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-                SmallOutlinedButton(
-                    text = getDurationString(record.startTime, record.endTime, detailView),
-                    onClick = { TimingControl.startRecord(projectName) }
-                )
-            }
-            DropdownMenu(showMenu, { showMenu = false }) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.delete)) },
-                    onClick = { showMenu = false; Database.deleteRecord(record) }
-                )
-            }
-        }
-    }
-}
-
-@SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun RecordItemWithoutProject(context: Context, record: Record) {
-    val startTime = getTimeString(record.startTime)
-    val endTime = getTimeString(record.endTime)
     var showMenu by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
-                enabled = true,
                 onClick = {
-                    val intent = Intent(context, EditRecordActivity::class.java)
-                    putRecord(intent, record)
+                    val activity =
+                        if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
+                    val intent = Intent(context, activity)
+                    if (detailView) {
+                        putRecord(intent, record)
+                    } else {
+                        intent.putExtra("projectName", record.project)
+                    }
                     context.startActivity(intent)
                 },
-                onLongClick = { showMenu = true }
+                onLongClick = if (detailView) {
+                    { showMenu = true }
+                } else null
             )
-            .padding(vertical = 24.dp, horizontal = HORIZONTAL_MARGIN),
+            .padding(vertical = 8.dp, horizontal = HORIZONTAL_MARGIN),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -139,8 +75,29 @@ fun RecordItemWithoutProject(context: Context, record: Record) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("$startTime - $endTime")
-            Text(getDurationString(record.startTime, record.endTime))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Circle,
+                    contentDescription = null,
+                    tint = color,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(20.dp)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(projectName)
+                    Text(
+                        if (detailView) "$startTime - $endTime"
+                        else getDurationString(record.startTime, record.endTime, false),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            SmallOutlinedButton(
+                text = getDurationString(record.startTime, record.endTime, detailView),
+                onClick = { TimingControl.startRecord(projectName) }
+            )
         }
         DropdownMenu(showMenu, { showMenu = false }) {
             DropdownMenuItem(

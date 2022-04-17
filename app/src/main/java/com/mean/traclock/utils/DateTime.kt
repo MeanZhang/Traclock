@@ -102,7 +102,6 @@ fun getDataString(date: Int): String {
     val month = (date / 100) % 100
     val day = date % 100
     val time = ZonedDateTime.of(year, month, day, 1, 0, 0, 0, ZoneId.systemDefault())
-//    val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
     val pattern = when (Locale.getDefault().language) {
         "zh" -> "MMMd日 EEE"
         else -> "EEE, MMM d"

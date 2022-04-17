@@ -58,7 +58,7 @@ fun TimingCard(
         }
         val scope = rememberCoroutineScope()
         scope.launch {
-            while (true) {
+            while (isTiming) {
                 now = System.currentTimeMillis()
                 delay(1000)
             }

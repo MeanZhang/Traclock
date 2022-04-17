@@ -21,6 +21,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,15 +32,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
+import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
-import com.mean.traclock.ui.components.DividerWithPadding
-import com.mean.traclock.ui.components.RecordItemWithoutProject
+import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.ui.utils.SetSystemBar
@@ -141,13 +143,13 @@ class ProjectActivity : ComponentActivity() {
                                     duration = time.find { it.date == record.date }?.time
                                         ?: 0L
                                 )
-                                DividerWithPadding()
+                                MenuDefaults.Divider()
                             }
-                            RecordItemWithoutProject(
+                            RecordItem(
                                 context = this@ProjectActivity,
-                                record = records[i]
+                                record = records[i],
+                                color = Color(App.projectsList[projectName] ?: 0),
                             )
-                            DividerWithPadding()
                         }
                     }
 

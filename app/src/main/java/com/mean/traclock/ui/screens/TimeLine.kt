@@ -2,6 +2,7 @@ package com.mean.traclock.ui.screens
 
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -25,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.DateTitle
-import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.components.TopBar
@@ -65,7 +66,7 @@ fun TimeLine(
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) {
-        LazyColumn {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             item {
                 TimingCard(
                     TimingControl.getProjectName(),
@@ -73,20 +74,17 @@ fun TimeLine(
                     isTiming
                 )
             }
-
             items(records.size) { i ->
                 val record = records[i]
-
                 val color = Color(App.projectsList[record.project] ?: 0)
                 if (i == 0 || (i > 0 && record.date != records[i - 1].date)) {
                     DateTitle(
                         date = getDataString(record.date),
                         duration = time.find { it.date == record.date }?.time ?: 0L
                     )
-                    DividerWithPadding()
+                    MenuDefaults.Divider()
                 }
                 RecordItem(context, record, color, detailView)
-                DividerWithPadding()
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,7 +37,6 @@ import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.EditProjectActivity
 import com.mean.traclock.ui.ProjectActivity
-import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.SmallOutlinedButton
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.components.TopBar
@@ -94,7 +94,7 @@ fun Projects(
                         it,
                         getDurationString(time.find { pt -> pt.project == it.name }?.endTime ?: 0)
                     )
-                    DividerWithPadding()
+                    MenuDefaults.Divider()
                 }
             }
         }
