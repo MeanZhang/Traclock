@@ -40,7 +40,7 @@ import com.mean.traclock.ui.components.DividerWithPadding
 import com.mean.traclock.ui.components.SmallOutlinedButton
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.components.TopBar
-import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
 import kotlinx.coroutines.DelicateCoroutinesApi

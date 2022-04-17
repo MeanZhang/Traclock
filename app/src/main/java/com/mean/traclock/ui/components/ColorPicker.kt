@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 
 private enum class ProjectColor(val color: Color) {
     Blue(Color.Blue),

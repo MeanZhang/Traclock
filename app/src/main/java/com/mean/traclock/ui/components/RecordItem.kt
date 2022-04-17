@@ -32,8 +32,8 @@ import com.mean.traclock.R
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.EditRecordActivity
 import com.mean.traclock.ui.ProjectActivity
+import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getTimeString

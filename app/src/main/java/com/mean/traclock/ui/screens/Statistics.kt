@@ -48,7 +48,7 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.TopBar
-import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getIntDate
 

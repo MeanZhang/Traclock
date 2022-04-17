@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
-import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getTimeWithSeconds

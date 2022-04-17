@@ -10,7 +10,7 @@ import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
-import com.mean.traclock.utils.NOTIFICATION_ACTION
+import com.mean.traclock.utils.Config
 import com.mean.traclock.utils.NotificationBroadcastReceiver
 import com.mean.traclock.utils.TimingControl
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -46,7 +46,7 @@ class App : Application() {
 
     private fun initBroadcast() {
         val broadcastReceiver = NotificationBroadcastReceiver()
-        val filter = IntentFilter(NOTIFICATION_ACTION)
+        val filter = IntentFilter(Config.NOTIFICATION_ACTION)
         registerReceiver(broadcastReceiver, filter)
     }
 
@@ -70,7 +70,7 @@ class App : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val timingChannel =
                 NotificationChannel(
-                    getString(R.string.timing_channel_id),
+                    Config.TIMING_NOTIFICATION_CHANNEL,
                     getString(R.string.timing_channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT
                 ).apply {

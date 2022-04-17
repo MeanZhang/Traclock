@@ -5,7 +5,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.mean.traclock.utils.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 
 @Composable
 fun DividerWithPadding() =

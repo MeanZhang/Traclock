@@ -61,29 +61,29 @@ dependencies {
     val workVersion = "2.7.1"
     val navVersion = "2.4.1"
 
-    //MPAndroidChart
+    // MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    //查看数据库
+    // 查看数据库
     debugImplementation("com.guolindev.glance:glance:1.1.0")
-    //查看内存泄漏
+    // 查看内存泄漏
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.8.1")
-    //lottie动画
+    // lottie动画
     implementation("com.airbnb.android:lottie-compose:5.0.3")
-    //日期时间选择器
+    // 日期时间选择器
     implementation("com.google.android.material:material:1.5.0")
     implementation("com.github.loperSeven:DateTimePicker:0.5.7")
-    //accompanist
+    // accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
-    //Room数据库
+    // Room数据库
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
-    //WorkManager
+    // WorkManager
     implementation("androidx.work:work-runtime-ktx:$workVersion")
-    //Navigation
+    // Navigation
     implementation("androidx.navigation:navigation-compose:$navVersion")
-    //Compose
+    // Compose
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
