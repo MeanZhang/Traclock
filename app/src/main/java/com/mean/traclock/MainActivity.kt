@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                         composable(PROJECTS.route) {
                             Projects(
                                 this@MainActivity,
-                                viewModel.projectsTime,
+                                viewModel,
                                 contentPadding
                             )
                         }
