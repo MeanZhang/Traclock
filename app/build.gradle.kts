@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mean.traclock"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 32
         versionCode = 1
         versionName = "0.6.0"
@@ -89,6 +89,8 @@ dependencies {
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-alpha08")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
+    // ThreeTenABP
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 

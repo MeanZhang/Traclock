@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.utils.Config
@@ -42,6 +43,7 @@ class App : Application() {
         }
         initNotification()
         initBroadcast()
+        AndroidThreeTen.init(this)
     }
 
     private fun initBroadcast() {
