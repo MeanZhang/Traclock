@@ -1,9 +1,9 @@
-val composeVersion by extra("1.2.0-alpha06")
+val composeVersion by extra("1.2.0-alpha08")
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version "1.6.10-1.0.4"
+    id("com.google.devtools.ksp") version "1.6.20-1.0.5"
 }
 
 android {
