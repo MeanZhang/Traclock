@@ -68,7 +68,7 @@ dependencies {
     // 查看内存泄漏
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
     // lottie动画
-    implementation("com.airbnb.android:lottie-compose:5.0.3")
+    implementation("com.airbnb.android:lottie-compose:5.1.1")
     // 日期时间选择器
     implementation("com.google.android.material:material:1.5.0")
     implementation("com.github.loperSeven:DateTimePicker:0.5.7")
