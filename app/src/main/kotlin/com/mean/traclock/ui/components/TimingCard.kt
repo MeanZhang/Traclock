@@ -55,10 +55,12 @@ fun TimingCard(
             mutableStateOf(System.currentTimeMillis())
         }
         val scope = rememberCoroutineScope()
-        scope.launch {
-            while (isTiming) {
-                now = System.currentTimeMillis()
-                delay(1000)
+        if (isTiming) {
+            scope.launch {
+                while (isTiming) {
+                    now = System.currentTimeMillis()
+                    delay(1000)
+                }
             }
         }
         Column(modifier = Modifier.padding(horizontal = HORIZONTAL_MARGIN)) {

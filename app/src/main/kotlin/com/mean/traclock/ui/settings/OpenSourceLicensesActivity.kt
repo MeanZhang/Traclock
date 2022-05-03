@@ -171,6 +171,13 @@ class OpenSourceLicensesActivity : ComponentActivity() {
                 "Apache License 2.0"
             )
         )
+        licenses.add(
+            License(
+                "MMKV",
+                "https://github.com/Tencent/MMKV",
+                "BSD 3-Clause License"
+            )
+        )
         licenses.sortBy { it.name }
         return licenses
     }

@@ -14,6 +14,7 @@ import com.mean.traclock.database.Project
 import com.mean.traclock.utils.Config
 import com.mean.traclock.utils.NotificationBroadcastReceiver
 import com.mean.traclock.utils.TimingControl
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -34,7 +35,7 @@ class App : Application() {
         super.onCreate()
 
         context = applicationContext
-
+        MMKV.initialize(this)
         isTiming.value = TimingControl.getIsTiming()
 
         projects = AppDatabase.getDatabase(context).projectDao().getAll()

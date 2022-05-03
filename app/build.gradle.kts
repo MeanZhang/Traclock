@@ -89,6 +89,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     // ThreeTenABP
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
+    // MMKV
+    implementation("com.tencent:mmkv:1.2.13")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 
