@@ -57,7 +57,7 @@
     <string name="title_activity_about">About</string>
     <string name="version">"Version: "</string>
     <string name="developer_avatar">developer\'s avatar</string>
-    <string name="developer_introduction">An amateur developer.</string>
+    <string name="developer_introduction">An amateur developer</string>
     <string name="developer">Developer</string>
     <string name="title_activity_feedback">Help &amp; Feedback</string>
     <string name="records_duration">Recorded Duration</string>
@@ -70,4 +70,5 @@
     <string name="restore_completed">Restore Completed</string>
     <string name="ok">OK</string>
     <string name="please_wait">Please wait.</string>
+    <string name="title_activity_open_source_licenses">Open Source Licenses</string>
 </resources>

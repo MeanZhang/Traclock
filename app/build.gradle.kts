@@ -63,8 +63,6 @@ dependencies {
 
     // MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    // 查看数据库
-    debugImplementation("com.guolindev.glance:glance:1.1.0")
     // 查看内存泄漏
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
     // lottie动画

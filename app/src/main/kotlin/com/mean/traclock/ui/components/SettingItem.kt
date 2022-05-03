@@ -14,9 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.R
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 
 @Composable
@@ -29,18 +27,18 @@ fun SettingItem(
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
+            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = stringResource(id = R.string.title_activity_backup_restore),
+            contentDescription = title,
             modifier = Modifier
                 .padding(start = 4.dp, end = 20.dp)
                 .size(28.dp)
         )
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
@@ -53,6 +51,7 @@ fun SettingItem(
         }
     }
 }
+
 @Composable
 fun SettingItemWinthoutIcon(
     title: String,
