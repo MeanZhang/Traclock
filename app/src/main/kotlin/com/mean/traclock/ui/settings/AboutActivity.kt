@@ -1,10 +1,12 @@
 package com.mean.traclock.ui.settings
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -101,7 +103,14 @@ class AboutActivity : ComponentActivity() {
                         SettingGroupTitle(stringResource(R.string.developer))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(HORIZONTAL_MARGIN, 12.dp)
+                            modifier = Modifier
+                                .clickable {
+                                    val uri = Uri.parse(getString(R.string.github_page))
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    startActivity(intent)
+                                }
+                                .padding(HORIZONTAL_MARGIN, 12.dp)
+                                .fillMaxWidth()
                         ) {
                             Image(
                                 painterResource(R.drawable.avatar),
@@ -120,7 +129,7 @@ class AboutActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        MenuDefaults.Divider(Modifier.padding(vertical = 16.dp))
+                        MenuDefaults.Divider()
                         SettingGroupTitle(stringResource(R.string.others))
                         SettingItem(
                             icon = Icons.Default.Code,
