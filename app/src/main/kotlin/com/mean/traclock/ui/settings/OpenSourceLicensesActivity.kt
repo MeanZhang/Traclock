@@ -103,15 +103,8 @@ class OpenSourceLicensesActivity : ComponentActivity() {
         val licenses = mutableListOf<License>()
         licenses.add(
             License(
-                "AndroidX",
-                "https://source.android.com/",
-                "Apache License 2.0"
-            )
-        )
-        licenses.add(
-            License(
                 "Android Jetpack",
-                "https://source.android.com/",
+                "https://github.com/androidx/androidx",
                 "Apache License 2.0"
             )
         )
