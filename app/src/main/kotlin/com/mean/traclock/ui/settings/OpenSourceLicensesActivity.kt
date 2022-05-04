@@ -171,6 +171,13 @@ class OpenSourceLicensesActivity : ComponentActivity() {
                 "BSD 3-Clause License"
             )
         )
+        licenses.add(
+            License(
+                "Coil",
+                "https://github.com/coil-kt/coil",
+                "Apache License 2.0"
+            )
+        )
         licenses.sortBy { it.name }
         return licenses
     }

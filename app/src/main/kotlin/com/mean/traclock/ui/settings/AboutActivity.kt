@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import coil.compose.AsyncImage
 import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
@@ -79,9 +80,9 @@ class AboutActivity : ComponentActivity() {
                             .verticalScroll(rememberScrollState())
                             .padding(WindowInsets.navigationBars.asPaddingValues())
                     ) {
-                        Image(
-                            painterResource(R.drawable.ic_logo),
-                            stringResource(R.string.app_name),
+                        AsyncImage(
+                            R.drawable.ic_logo,
+                            contentDescription = stringResource(R.string.app_name),
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(vertical = 24.dp)
