@@ -1,0 +1,28 @@
+package com.mean.traclock.database
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+
+@Dao
+interface ProjectDao {
+    @Insert
+    fun insert(project: Project)
+
+    @Delete
+    fun delete(project: Project)
+
+    @Query("DELETE FROM Project WHERE name LIKE :name")
+    fun delete(name: String)
+
+    @Update
+    fun update(project: Project)
+
+    @Query("SELECT * FROM Project")
+    fun getAll(): List<Project>
+
+    @Query("SELECT * FROM Project WHERE name LIKE :name")
+    fun findByName(name: String): Project
+}

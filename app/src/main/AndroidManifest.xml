@@ -16,6 +16,11 @@
         android:theme="@style/Theme.Traclock"
         tools:targetApi="31">
         <activity
+            android:name=".ui.settings.OpenSourceLicensesActivity"
+            android:exported="false"
+            android:label="@string/title_activity_open_source_licenses"
+            android:theme="@style/Theme.Traclock" />
+        <activity
             android:name=".ui.settings.FeedbackActivity"
             android:exported="false"
             android:label="@string/title_activity_feedback"
