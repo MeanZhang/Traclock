@@ -82,7 +82,6 @@ class EditRecordActivity : AppCompatActivity() {
                 val project by viewModel.project.collectAsState("")
                 val startTime by viewModel.startTime.collectAsState(0L)
                 val endTime by viewModel.endTime.collectAsState(0L)
-                val projects by App.projects.collectAsState(listOf())
                 val showMenu = mutableStateOf(false)
                 val showDialogState by showDialog.collectAsState(false)
                 var showProjectsDialog by remember { mutableStateOf(false) }
@@ -219,28 +218,28 @@ class EditRecordActivity : AppCompatActivity() {
                         confirmButton = {},
                         text = {
                             LazyColumn {
-                                items(projects) {
+                                items(App.projects.toList()) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.clickable {
-                                            viewModel.setProject(it.name)
+                                            viewModel.setProject(it.first)
                                             isModified = viewModel.isModified()
                                             showProjectsDialog = false
                                         }
                                     ) {
                                         RadioButton(
-                                            selected = project == it.name,
+                                            selected = project == it.first,
                                             colors = RadioButtonDefaults.colors(
-                                                selectedColor = Color(it.color),
-                                                unselectedColor = Color(it.color)
+                                                selectedColor = Color(it.second),
+                                                unselectedColor = Color(it.second)
                                             ),
                                             onClick = {
-                                                viewModel.setProject(it.name)
+                                                viewModel.setProject(it.first)
                                                 isModified = viewModel.isModified()
                                                 showProjectsDialog = false
                                             }
                                         )
-                                        Text(it.name, Modifier.fillMaxWidth())
+                                        Text(it.first, Modifier.fillMaxWidth())
                                     }
                                 }
                             }

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mean.traclock"
-        minSdk = 23
+        minSdk = 21
         targetSdk = 32
         versionCode = 1
         versionName = "0.6.0"

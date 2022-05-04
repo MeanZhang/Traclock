@@ -9,6 +9,6 @@ import com.mean.traclock.App
 class EditProjectViewModelFactory(private val projectName: String) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return EditProjectViewModel(projectName, Color(App.projectsList[projectName] ?: 0)) as T
+        return EditProjectViewModel(projectName, Color(App.projects[projectName] ?: 0)) as T
     }
 }

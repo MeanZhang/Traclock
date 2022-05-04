@@ -29,7 +29,7 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
             return if (_project.value.isBlank()) {
                 -1 // 项目名为空
             } else {
-                if (_project.value in App.projectsList) {
+                if (_project.value in App.projects) {
                     record.project = _project.value
                     record.startTime = startTime.value
                     record.endTime = endTime.value

@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
 object Database {
     private val recordDao = AppDatabase.getDatabase(App.context).recordDao()
     private val projectDao = AppDatabase.getDatabase(App.context).projectDao()
-    private val projectsList = App.projectsList
+    private val projectsList = App.projects
     fun deleteRecord(record: Record) {
         thread {
             recordDao.delete(record)
@@ -58,12 +58,20 @@ object Database {
             projectsList.remove(oldProject)
             projectsList[newProject.name] = newProject.color
             thread {
-                projectDao.delete(oldProject)
-                projectDao.insert(newProject)
-                recordDao.update(oldProject, newProject.name)
+                try {
+                    projectDao.insert(newProject)
+                    if (oldProject.isNotBlank()) {
+                        projectDao.delete(oldProject)
+                        recordDao.update(oldProject, newProject.name)
+                    }
+                } catch (e: Exception) {
+                    TLog.e(e)
+                }
             }
             return true
         }
+        TLog.d(projectsList.toString())
+        TLog.d("项目已存在")
         return false
     }
 

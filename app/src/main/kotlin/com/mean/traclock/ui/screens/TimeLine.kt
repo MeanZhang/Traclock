@@ -76,7 +76,7 @@ fun TimeLine(
             }
             items(records.size) { i ->
                 val record = records[i]
-                val color = Color(App.projectsList[record.project] ?: 0)
+                val color = Color(App.projects[record.project] ?: 0)
                 if (i == 0 || (i > 0 && record.date != records[i - 1].date)) {
                     DateTitle(
                         date = getDataString(record.date),

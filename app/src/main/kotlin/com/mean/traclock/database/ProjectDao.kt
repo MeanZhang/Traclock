@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProjectDao {
@@ -22,7 +21,7 @@ interface ProjectDao {
     fun update(project: Project)
 
     @Query("SELECT * FROM Project")
-    fun getAll(): Flow<List<Project>>
+    fun getAll(): List<Project>
 
     @Query("SELECT * FROM Project WHERE name LIKE :name")
     fun findByName(name: String): Project

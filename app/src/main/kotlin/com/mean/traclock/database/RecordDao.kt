@@ -33,7 +33,7 @@ interface RecordDao {
     @Query("SELECT *, rowid FROM Record WHERE project = :projectName ORDER BY startTime DESC")
     fun getAll(projectName: String): Flow<List<Record>>
 
-    @Query("SELECT project, 0 AS startTime, SUM(endTime - startTime)/1000 AS endTime, 0 AS date ,rowid FROM Record GROUP BY project")
+    @Query("SELECT Project.name AS project, 0 AS startTime, SUM(endTime - startTime)/1000 AS endTime, 0 AS date, 0 AS rowid FROM Project LEFT JOIN Record ON Record.project=Project.name GROUP BY Project.name")
     fun getProjectsTime(): Flow<List<Record>>
 
     @Query("SELECT date, SUM(endTime - startTime)/1000 AS time FROM Record GROUP BY date")

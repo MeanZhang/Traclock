@@ -122,7 +122,7 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
                             Icon(
                                 imageVector = Icons.Default.Circle,
                                 contentDescription = null,
-                                tint = Color(App.projectsList[project.project] ?: 0),
+                                tint = Color(App.projects[project.project] ?: 0),
                                 modifier = Modifier
                                     .size(20.dp)
                                     .padding(horizontal = 4.dp)
@@ -173,7 +173,7 @@ fun setPieChart(
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, App.context.getString(R.string.records_duration))
-    dataset.colors = projectsTime.map { App.projectsList[it.project] }
+    dataset.colors = projectsTime.map { App.projects[it.project] }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)

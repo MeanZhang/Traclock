@@ -148,7 +148,7 @@ class ProjectActivity : ComponentActivity() {
                             RecordItem(
                                 context = this@ProjectActivity,
                                 record = records[i],
-                                color = Color(App.projectsList[projectName] ?: 0),
+                                color = Color(App.projects[projectName] ?: 0),
                             )
                         }
                     }

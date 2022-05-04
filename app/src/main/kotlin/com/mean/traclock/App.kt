@@ -10,23 +10,19 @@ import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.database.AppDatabase
-import com.mean.traclock.database.Project
 import com.mean.traclock.utils.Config
 import com.mean.traclock.utils.NotificationBroadcastReceiver
 import com.mean.traclock.utils.TimingControl
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 class App : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
-        lateinit var projects: Flow<List<Project>>
-        val projectsList = mutableMapOf<String, Int>()
+        val projects = mutableMapOf<String, Int>()
         val isTiming = MutableStateFlow(false)
     }
 
@@ -38,8 +34,7 @@ class App : Application() {
         MMKV.initialize(this)
         isTiming.value = TimingControl.getIsTiming()
 
-        projects = AppDatabase.getDatabase(context).projectDao().getAll()
-        GlobalScope.launch {
+        thread {
             initProjectsList()
         }
         initNotification()
@@ -53,11 +48,10 @@ class App : Application() {
         registerReceiver(broadcastReceiver, filter)
     }
 
-    private suspend fun initProjectsList() {
-        projects.collect {
-            for (project in it) {
-                projectsList[project.name] = project.color
-            }
+    private fun initProjectsList() {
+        val projectsList = AppDatabase.getDatabase(context).projectDao().getAll()
+        for (project in projectsList) {
+            projects[project.name] = project.color
         }
     }
 

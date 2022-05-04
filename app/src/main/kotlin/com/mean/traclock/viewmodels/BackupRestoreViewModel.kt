@@ -8,8 +8,8 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.utils.Database
+import com.mean.traclock.utils.TLog
 import com.mean.traclock.utils.getIntDate
-import com.mean.traclock.utils.log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -37,12 +37,12 @@ class BackupRestoreViewModel : ViewModel() {
         backingUp.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val records = AppDatabase.getDatabase(App.context).recordDao().getRecordsList()
-            val size = App.projectsList.size + records.size
+            val size = App.projects.size + records.size
             var done = 0
             App.context.contentResolver.openOutputStream(uri).use { outputStream ->
                 BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
                     writer.write("Project,Start Time,End Time\n")
-                    for (project in App.projectsList) {
+                    for (project in App.projects) {
                         writer.write(project.key + ",-1," + project.value + "\n")
                         progress.value = done++.toFloat() / size
                     }
@@ -79,7 +79,6 @@ class BackupRestoreViewModel : ViewModel() {
                             val res = restore(line)
                             progress.value = done++.toFloat() / lines
                             if (res < 0) {
-                                log(res.toString())
                                 break
                             }
                             line = reader.readLine()
@@ -106,14 +105,14 @@ class BackupRestoreViewModel : ViewModel() {
         val startTime = try {
             columns[1].toLong()
         } catch (e: Exception) {
-            log(e.toString())
+            TLog.e(e)
             return -3
         }
         if (startTime == -1L) {
             val color = try {
                 columns[2].toInt()
             } catch (e: Exception) {
-                log(e.toString())
+                TLog.e(e)
                 return -3
             }
             Database.insertProject(Project(projectName, color))
