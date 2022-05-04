@@ -110,7 +110,7 @@ class OpenSourceLicensesActivity : ComponentActivity() {
         )
         licenses.add(
             License(
-                "accompanist",
+                "Accompanist",
                 "https://github.com/google/accompanist",
                 "Apache License 2.0"
             )
