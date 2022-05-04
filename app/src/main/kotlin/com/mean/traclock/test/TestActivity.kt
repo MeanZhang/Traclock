@@ -3,10 +3,13 @@ package com.mean.traclock.test
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Timeline
@@ -24,8 +27,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import coil.compose.AsyncImage
+import com.mean.traclock.R
 import com.mean.traclock.ui.components.BottomBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
@@ -81,6 +88,25 @@ fun Test(contentPadding: PaddingValues = PaddingValues(0.dp)) {
         contentPadding = contentPadding,
         modifier = Modifier.fillMaxSize(),
     ) {
+        item {
+            Image(
+                painterResource(R.drawable.ic_logo),
+                stringResource(R.string.app_name),
+                modifier = Modifier
+                    .padding(vertical = 24.dp)
+                    .size(72.dp)
+                    .fillMaxWidth()
+            )
+            AsyncImage(
+                R.drawable.ic_logo,
+                contentDescription = stringResource(R.string.app_name),
+                modifier = Modifier
+                    .padding(vertical = 24.dp)
+                    .size(72.dp)
+                    .fillMaxWidth()
+            )
+        }
+
         item {
             Text(text = "displayLarge", style = MaterialTheme.typography.displayLarge)
         }
