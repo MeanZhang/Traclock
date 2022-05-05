@@ -1,6 +1,7 @@
 ---
 home: true
 heroImage: /images/logo.svg
+heroImageDark: /images/logo-dark.svg
 heroText: 时迹
 tagline: 一款记录任务时间的时间管理应用
 actions:
