@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.mean.traclock.R
 
@@ -45,6 +46,6 @@ fun LottieWorkingLoadingView() {
             .fillMaxWidth()
             .height(250.dp)
             .defaultMinSize(300.dp),
-        iterations = 10
+        iterations = LottieConstants.IterateForever
     )
 }
