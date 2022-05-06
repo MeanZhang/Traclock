@@ -30,7 +30,6 @@ import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.components.TopBar
-import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.MainViewModel
 
@@ -69,8 +68,8 @@ fun TimeLine(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             item {
                 TimingCard(
-                    TimingControl.getProjectName(),
-                    TimingControl.getStartTime(),
+                    App.projectName.value,
+                    App.startTime.value,
                     isTiming
                 )
             }

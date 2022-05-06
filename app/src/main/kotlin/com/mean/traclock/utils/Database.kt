@@ -4,6 +4,7 @@ import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
+import com.orhanobut.logger.Logger
 import kotlin.concurrent.thread
 
 object Database {
@@ -65,13 +66,12 @@ object Database {
                         recordDao.update(oldProject, newProject.name)
                     }
                 } catch (e: Exception) {
-                    TLog.e(e)
+                    Logger.e(e, "更新项目失败")
                 }
             }
             return true
         }
-        TLog.d(projectsList.toString())
-        TLog.d("项目已存在")
+        Logger.d("项目已存在：%s", newProject.name)
         return false
     }
 

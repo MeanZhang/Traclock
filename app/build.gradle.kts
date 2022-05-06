@@ -102,6 +102,8 @@ dependencies {
     implementation("com.tencent:mmkv:1.2.13")
     // Coil（Compose的Image会缺角）
     implementation("io.coil-kt:coil-compose:2.0.0-rc03")
+    // Logger
+    implementation("com.orhanobut:logger:2.2.0")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 

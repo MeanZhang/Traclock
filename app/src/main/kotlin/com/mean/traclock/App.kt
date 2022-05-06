@@ -13,6 +13,10 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.utils.Config
 import com.mean.traclock.utils.NotificationBroadcastReceiver
 import com.mean.traclock.utils.TimingControl
+import com.orhanobut.logger.AndroidLogAdapter
+import com.orhanobut.logger.FormatStrategy
+import com.orhanobut.logger.Logger
+import com.orhanobut.logger.PrettyFormatStrategy
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +28,8 @@ class App : Application() {
         lateinit var context: Context
         val projects = mutableMapOf<String, Int>()
         val isTiming = MutableStateFlow(false)
+        val projectName = MutableStateFlow("")
+        val startTime = MutableStateFlow(0L)
     }
 
     @OptIn(ExperimentalFoundationApi::class, DelicateCoroutinesApi::class)
@@ -31,8 +37,8 @@ class App : Application() {
         super.onCreate()
 
         context = applicationContext
-        MMKV.initialize(this)
-        isTiming.value = TimingControl.getIsTiming()
+        initLogger()
+        initMMKV(this)
 
         thread {
             initProjectsList()
@@ -40,6 +46,25 @@ class App : Application() {
         initNotification()
         initBroadcast()
         AndroidThreeTen.init(this)
+    }
+
+    private fun initMMKV(context: Context) {
+        MMKV.initialize(context)
+        val kv = MMKV.defaultMMKV()
+        isTiming.value = kv.decodeBool("isTiming", false)
+        projectName.value = kv.decodeString("projectName") ?: ""
+        startTime.value = kv.decodeLong("startTime", System.currentTimeMillis())
+        Logger.d(
+            "读取MMKV：isTiming=%s，projectName=%s，startTime=%s", isTiming.value, projectName.value,
+            startTime.value
+        )
+    }
+
+    private fun initLogger() {
+        val formatStrategy: FormatStrategy = PrettyFormatStrategy.newBuilder()
+            .tag("TLCK")
+            .build()
+        Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
     }
 
     private fun initBroadcast() {

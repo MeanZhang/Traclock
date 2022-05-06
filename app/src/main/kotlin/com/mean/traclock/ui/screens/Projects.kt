@@ -27,7 +27,6 @@ import com.mean.traclock.ui.EditProjectActivity
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.components.TopBar
-import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -66,8 +65,8 @@ fun Projects(
         LazyColumn {
             item {
                 TimingCard(
-                    TimingControl.getProjectName(),
-                    TimingControl.getStartTime(),
+                    App.projectName.value,
+                    App.startTime.value,
                     isTiming
                 )
             }

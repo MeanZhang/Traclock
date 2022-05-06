@@ -8,8 +8,8 @@ import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.TLog
 import com.mean.traclock.utils.getIntDate
+import com.orhanobut.logger.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -105,14 +105,14 @@ class BackupRestoreViewModel : ViewModel() {
         val startTime = try {
             columns[1].toLong()
         } catch (e: Exception) {
-            TLog.e(e)
+            Logger.e(e, "开始时间格式有误：" + columns[1])
             return -3
         }
         if (startTime == -1L) {
             val color = try {
                 columns[2].toInt()
             } catch (e: Exception) {
-                TLog.e(e)
+                Logger.e(e, "颜色格式有误：" + columns[2])
                 return -3
             }
             Database.insertProject(Project(projectName, color))
