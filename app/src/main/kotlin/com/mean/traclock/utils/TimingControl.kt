@@ -11,12 +11,19 @@ import com.mean.traclock.database.Record
 import com.orhanobut.logger.Logger
 import com.tencent.mmkv.MMKV
 
+/**
+ * 计时控制
+ */
 object TimingControl {
     private val kv = MMKV.defaultMMKV()
     private val workManager = WorkManager.getInstance(context)
     private val workRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java).build()
 
-    fun startRecord(project: String) {
+    /**
+     * 开始记录，同时开始发送通知
+     * @param projectName 记录的项目名
+     */
+    fun startRecord(projectName: String) {
         if (App.isTiming.value) {
             Logger.d("项目%s正在记录，请先停止", App.projectName.value)
             Toast.makeText(context, context.getString(R.string.is_tracking), Toast.LENGTH_SHORT)
@@ -24,13 +31,16 @@ object TimingControl {
         } else {
             val startTime = System.currentTimeMillis()
             setIsTiming(true)
-            setProjectName(project)
+            setProjectName(projectName)
             setStartTime(startTime)
             Logger.d("项目%s开始记录", App.projectName.value)
             startNotify()
         }
     }
 
+    /**
+     * 停止记录，同时停止发送通知，并将记录保存在数据库中
+     */
     fun stopRecord() {
         if (App.isTiming.value) {
             setIsTiming(false)
@@ -45,6 +55,9 @@ object TimingControl {
         }
     }
 
+    /**
+     * 开始发送通知
+     */
     fun startNotify() {
         workManager.enqueueUniqueWork(
             Config.NOTIFICATION_WORK_NAME,

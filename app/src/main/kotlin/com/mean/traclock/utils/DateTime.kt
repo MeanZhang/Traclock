@@ -119,6 +119,9 @@ fun getTimeWithSeconds(timestamp: Long): String {
     return DateTimeFormatter.ofPattern("HH:mm:ss").format(time)
 }
 
+/**
+ * 获取当前时间字符串，格式“yyyyMMddHHmmss”
+ */
 fun getTime(): String {
     val time = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
     return DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(time)
