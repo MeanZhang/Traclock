@@ -178,6 +178,13 @@ class OpenSourceLicensesActivity : ComponentActivity() {
                 "Apache License 2.0"
             )
         )
+        licenses.add(
+            License(
+                "Logger",
+                "https://github.com/orhanobut/logger",
+                "Apache License 2.0"
+            )
+        )
         licenses.sortBy { it.name }
         return licenses
     }
