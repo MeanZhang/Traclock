@@ -79,6 +79,7 @@ class AboutActivity : ComponentActivity() {
                     Column(
                         Modifier
                             .verticalScroll(rememberScrollState())
+                            .padding(it)
                             .padding(WindowInsets.navigationBars.asPaddingValues())
                     ) {
                         AsyncImage(

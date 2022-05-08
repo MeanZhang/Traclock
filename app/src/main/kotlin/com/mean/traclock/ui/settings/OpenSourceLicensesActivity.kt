@@ -59,8 +59,11 @@ class OpenSourceLicensesActivity : ComponentActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
-                ) {
-                    LazyColumn(contentPadding = WindowInsets.navigationBars.asPaddingValues()) {
+                ) { contentPadding ->
+                    LazyColumn(
+                        modifier = Modifier.padding(contentPadding),
+                        contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                    ) {
                         items(getLicenses()) {
                             LicenseItem(it)
                         }

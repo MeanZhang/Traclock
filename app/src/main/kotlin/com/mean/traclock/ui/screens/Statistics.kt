@@ -75,6 +75,7 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
         if (duration > 0) {
             Column(
                 Modifier
+                    .padding(it)
                     .verticalScroll(rememberScrollState())
             ) {
                 Row(
@@ -142,7 +143,7 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
                 }
             }
         } else {
-            NoData()
+            NoData(Modifier.padding(it))
         }
     }
 }

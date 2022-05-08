@@ -59,6 +59,7 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
     ) {
         Column(
             modifier = Modifier
+                .padding(it)
                 .verticalScroll(rememberScrollState())
         ) {
             SettingGroupTitle(stringResource(R.string.normal))

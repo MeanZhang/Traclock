@@ -65,7 +65,10 @@ fun TimeLine(
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = it
+        ) {
             item {
                 TimingCard(
                     App.projectName.value,

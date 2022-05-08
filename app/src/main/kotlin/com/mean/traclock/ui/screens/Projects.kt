@@ -62,7 +62,7 @@ fun Projects(
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) {
-        LazyColumn {
+        LazyColumn(contentPadding = it) {
             item {
                 TimingCard(
                     App.projectName.value,

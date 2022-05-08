@@ -125,7 +125,7 @@ class EditRecordActivity : AppCompatActivity() {
                 ) {
                     Column(
                         modifier = Modifier
-                            .navigationBarsPadding()
+                            .padding(it)
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Feedback
@@ -54,7 +55,7 @@ class FeedbackActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    Column(Modifier.navigationBarsPadding()) {
+                    Column(Modifier.padding(it)) {
                         SettingGroupTitle(stringResource(R.string.help))
                         SettingItem(
                             icon = Icons.Outlined.HelpOutline,

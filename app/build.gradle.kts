@@ -71,7 +71,7 @@ dependencies {
     val navVersion = "2.4.1"
 
     // MPAndroidChart
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
     // 查看内存泄漏
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
     // lottie动画
@@ -94,7 +94,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha08")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     // ThreeTenABP
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")

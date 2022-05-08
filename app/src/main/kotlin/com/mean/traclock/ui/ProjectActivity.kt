@@ -11,6 +11,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -133,6 +134,7 @@ class ProjectActivity : ComponentActivity() {
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) {
                     LazyColumn(
+                        modifier = Modifier.padding(it),
                         contentPadding = WindowInsets.navigationBars.asPaddingValues()
                     ) {
                         items(records.size) { i ->
