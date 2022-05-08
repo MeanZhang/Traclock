@@ -104,6 +104,11 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.0.0-rc03")
     // Logger
     implementation("com.orhanobut:logger:2.2.0")
+    // 友盟
+    // debugImplementation("com.tencent.bugly:crashreport:4.0.4")
+    debugImplementation("com.umeng.umsdk:common:9.4.9")
+    debugImplementation("com.umeng.umsdk:asms:1.4.1")
+    debugImplementation("com.umeng.umsdk:apm:1.6.2")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 
