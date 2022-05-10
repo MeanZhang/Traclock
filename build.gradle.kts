@@ -3,7 +3,7 @@
 // }
 
 plugins {
-    val agpVersion = "7.2.0-beta02"
+    val agpVersion = "7.2.0"
     id("com.android.application") version agpVersion apply false
     id("com.android.library") version agpVersion apply false
     id("org.jetbrains.kotlin.android") version "1.6.20" apply false
