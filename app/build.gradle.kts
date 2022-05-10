@@ -106,7 +106,7 @@ dependencies {
     implementation("com.orhanobut:logger:2.2.0")
     // 友盟
     // debugImplementation("com.tencent.bugly:crashreport:4.0.4")
-    debugImplementation("com.umeng.umsdk:common:9.4.9")
+    debugImplementation("com.umeng.umsdk:common:9.5.0")
     debugImplementation("com.umeng.umsdk:asms:1.6.3")
     debugImplementation("com.umeng.umsdk:apm:1.6.2")
 
