@@ -55,7 +55,9 @@ class App : Application() {
         projectName.value = kv.decodeString("projectName") ?: ""
         startTime.value = kv.decodeLong("startTime", System.currentTimeMillis())
         Logger.d(
-            "读取MMKV：isTiming=%s，projectName=%s，startTime=%s", isTiming.value, projectName.value,
+            "读取MMKV：isTiming=%s，projectName=%s，startTime=%s",
+            isTiming.value,
+            projectName.value,
             startTime.value
         )
     }

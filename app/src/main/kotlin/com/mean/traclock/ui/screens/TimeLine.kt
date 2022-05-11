@@ -63,7 +63,7 @@ fun TimeLine(
         },
         modifier = Modifier
             .padding(contentPadding)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),

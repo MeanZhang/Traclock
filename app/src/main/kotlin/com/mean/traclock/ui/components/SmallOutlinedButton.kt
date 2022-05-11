@@ -73,7 +73,7 @@ fun SmallOutlinedButton(text: String, onClick: () -> Unit = {}) {
             width = 1.dp,
             // 边框颜色
             color = MaterialTheme.colorScheme.outline.copy(0.2f)
-        ),
+        )
     ) {
         Text(
             text = text,

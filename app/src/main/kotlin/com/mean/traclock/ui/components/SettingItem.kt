@@ -41,7 +41,7 @@ fun SettingItem(
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = description,
@@ -68,7 +68,7 @@ fun SettingItemWinthoutIcon(
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = description,

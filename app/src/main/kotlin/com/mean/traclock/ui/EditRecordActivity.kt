@@ -120,7 +120,7 @@ class EditRecordActivity : AppCompatActivity() {
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) {
                     Column(
                         modifier = Modifier

@@ -58,7 +58,7 @@ class OpenSourceLicensesActivity : ComponentActivity() {
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     LazyColumn(
                         modifier = Modifier.padding(contentPadding),

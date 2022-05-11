@@ -40,7 +40,7 @@ fun TopBar(
                 Text(
                     text = title,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             },
             navigationIcon = navigationIcon,

@@ -23,11 +23,11 @@ fun DateTitle(date: String, duration: Long) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            date,
+            date
 //            style = MaterialTheme.typography.headlineSmall
         )
         Text(
-            getDurationString(duration),
+            getDurationString(duration)
 //            style = MaterialTheme.typography.headlineSmall
         )
     }

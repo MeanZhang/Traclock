@@ -60,7 +60,7 @@ fun Projects(
         },
         modifier = Modifier
             .padding(contentPadding)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         LazyColumn(contentPadding = it) {
             item {

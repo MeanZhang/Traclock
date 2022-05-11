@@ -30,7 +30,7 @@ private enum class ProjectColor(val color: Color) {
 }
 
 @OptIn(
-    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
 )
 @Composable
 fun ColorPicker(

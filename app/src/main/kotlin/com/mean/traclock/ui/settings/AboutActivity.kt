@@ -74,7 +74,7 @@ class AboutActivity : ComponentActivity() {
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) {
                     Column(
                         Modifier

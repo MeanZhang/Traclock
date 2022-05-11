@@ -15,12 +15,12 @@ plugins {
 // }
 
 configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-    val ktlintVersion = "0.44.0"
+    val ktlintVersion = "0.45.2"
 
     kotlin {
         target("**/*.kt")
         targetExclude("$buildDir/**/*.kt", "bin/**/*.kt")
-        ktlint(ktlintVersion)
+        ktlint(ktlintVersion).setUseExperimental(true)
     }
     kotlinGradle {
         target("**.gradle.kts")

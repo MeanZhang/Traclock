@@ -68,7 +68,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
             )
             .padding(vertical = 8.dp, horizontal = HORIZONTAL_MARGIN),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

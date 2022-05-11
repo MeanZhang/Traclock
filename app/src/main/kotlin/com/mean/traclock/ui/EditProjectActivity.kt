@@ -88,7 +88,7 @@ class EditProjectActivity : ComponentActivity() {
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) {
                     Column(Modifier.padding(it)) {
                         Box(

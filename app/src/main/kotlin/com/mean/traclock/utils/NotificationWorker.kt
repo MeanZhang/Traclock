@@ -24,7 +24,8 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
     private val flag =
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
     private val notificationBuilder = NotificationCompat.Builder(
-        App.context, Config.TIMING_NOTIFICATION_CHANNEL
+        App.context,
+        Config.TIMING_NOTIFICATION_CHANNEL
     )
         .setSmallIcon(R.drawable.ic_logo)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)

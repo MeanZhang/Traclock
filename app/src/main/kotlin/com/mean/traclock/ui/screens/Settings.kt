@@ -55,7 +55,7 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
         },
         modifier = Modifier
             .padding(contentPadding)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         Column(
             modifier = Modifier

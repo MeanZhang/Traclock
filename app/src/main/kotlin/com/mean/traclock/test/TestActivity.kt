@@ -53,7 +53,7 @@ class TestActivity : ComponentActivity() {
                     topBar = {
                         TopBar(
                             title = "Test",
-                            scrollBehavior = scrollBehavior,
+                            scrollBehavior = scrollBehavior
                         )
                     },
                     bottomBar = {
@@ -71,7 +71,7 @@ class TestActivity : ComponentActivity() {
                         }
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     Column {
                         Test(contentPadding = contentPadding)
@@ -86,7 +86,7 @@ class TestActivity : ComponentActivity() {
 fun Test(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     LazyColumn(
         contentPadding = contentPadding,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         item {
             Image(

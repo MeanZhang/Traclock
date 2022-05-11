@@ -70,7 +70,7 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
         },
         modifier = Modifier
             .padding(contentPadding)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         if (duration > 0) {
             Column(
@@ -118,7 +118,7 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Circle,
