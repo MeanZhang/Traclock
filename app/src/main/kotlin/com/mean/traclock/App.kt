@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
-import androidx.compose.foundation.ExperimentalFoundationApi
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.utils.Config
@@ -18,7 +17,6 @@ import com.orhanobut.logger.FormatStrategy
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.concurrent.thread
 
@@ -32,7 +30,6 @@ class App : Application() {
         val startTime = MutableStateFlow(0L)
     }
 
-    @OptIn(ExperimentalFoundationApi::class, DelicateCoroutinesApi::class)
     override fun onCreate() {
         super.onCreate()
 
@@ -82,7 +79,6 @@ class App : Application() {
         }
     }
 
-    @DelicateCoroutinesApi
     private fun initNotification() {
         createNotificationChannels()
         if (isTiming.value) {

@@ -1,9 +1,9 @@
-val composeVersion by extra("1.2.0-alpha08")
+val composeVersion by extra("1.2.0-beta01")
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version "1.6.20-1.0.5"
+    id("com.google.devtools.ksp") version "1.6.21-1.0.5"
 }
 
 android {
@@ -66,7 +66,7 @@ android {
 
 dependencies {
     val roomVersion = "2.4.2"
-    val accompanistVersion = "0.24.7-alpha"
+    val accompanistVersion = "0.24.8-beta"
     val workVersion = "2.7.1"
     val navVersion = "2.4.1"
 
