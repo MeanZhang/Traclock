@@ -36,9 +36,9 @@
     <string name="timing_channel_description">当前正在进行的记录信息</string>
     <string name="title_activity_backup_restore">备份与恢复</string>
     <string name="normal">常规</string>
-    <string name="settings_description_backup_restore">备份或恢复项目和记录</string>
+    <string name="settings_description_backup_restore">备份、恢复</string>
     <string name="about">关于</string>
-    <string name="settings_description_about">关于此 APP</string>
+    <string name="settings_description_about">开发者、开放源代码许可</string>
     <string name="help">帮助</string>
     <string name="settings_description_help">查看使用帮助</string>
     <string name="feedback">反馈</string>

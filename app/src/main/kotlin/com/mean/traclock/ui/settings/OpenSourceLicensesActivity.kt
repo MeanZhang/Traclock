@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -44,7 +45,10 @@ class OpenSourceLicensesActivity : ComponentActivity() {
         setContent {
             TraclockTheme {
                 SetSystemBar()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+                val scrollBehavior = remember(decayAnimationSpec) {
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+                }
                 Scaffold(
                     topBar = {
                         TopBar(

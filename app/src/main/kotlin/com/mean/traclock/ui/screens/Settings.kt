@@ -2,6 +2,7 @@ package com.mean.traclock.ui.screens
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -12,11 +13,9 @@ import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -36,7 +35,10 @@ import com.mean.traclock.ui.settings.FeedbackActivity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) {
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val scrollBehavior = remember(decayAnimationSpec) {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -72,7 +74,6 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
                     context.startActivity(intent)
                 }
             )
-            MenuDefaults.Divider()
             SettingGroupTitle(stringResource(R.string.others))
             SettingItem(
                 Icons.Outlined.Feedback,

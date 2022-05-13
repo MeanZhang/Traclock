@@ -1,5 +1,6 @@
 package com.mean.traclock.ui.screens
 
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -60,7 +61,10 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
         .collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val scrollBehavior = remember(decayAnimationSpec) {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+    }
     Scaffold(
         topBar = {
             TopBar(

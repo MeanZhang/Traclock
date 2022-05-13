@@ -3,6 +3,7 @@ package com.mean.traclock.test
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,7 +49,10 @@ class TestActivity : ComponentActivity() {
         setContent {
             TraclockTheme {
                 SetSystemBar()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+                val scrollBehavior = remember(decayAnimationSpec) {
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+                }
                 Scaffold(
                     topBar = {
                         TopBar(

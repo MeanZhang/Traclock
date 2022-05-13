@@ -15,8 +15,8 @@ fun SettingGroupTitle(title: String) {
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
-            .padding(vertical = HORIZONTAL_MARGIN, horizontal = 16.dp)
-            .padding(start = 52.dp)
+            .padding(horizontal = HORIZONTAL_MARGIN)
+            .padding(start = 52.dp, top = 28.dp, bottom = 12.dp)
     )
 }
 
@@ -26,9 +26,10 @@ fun SettingGroupTitleWithoutIcon(title: String) {
         text = title,
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(
-            horizontal = HORIZONTAL_MARGIN,
-            vertical = 12.dp
-        )
+        modifier = Modifier
+            .padding(
+                horizontal = HORIZONTAL_MARGIN
+            )
+            .padding(top = 28.dp, bottom = 12.dp)
     )
 }

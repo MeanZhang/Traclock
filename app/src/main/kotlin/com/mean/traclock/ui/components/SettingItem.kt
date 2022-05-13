@@ -21,7 +21,7 @@ import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 fun SettingItem(
     icon: ImageVector,
     title: String,
-    description: String,
+    description: String? = null,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -41,13 +41,15 @@ fun SettingItem(
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleLarge
             )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            description?.let {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

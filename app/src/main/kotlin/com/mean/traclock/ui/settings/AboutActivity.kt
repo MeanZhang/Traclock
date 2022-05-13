@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +61,10 @@ class AboutActivity : ComponentActivity() {
         setContent {
             TraclockTheme {
                 SetSystemBar()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+                val scrollBehavior = remember(decayAnimationSpec) {
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+                }
                 Scaffold(
                     topBar = {
                         TopBar(
@@ -125,7 +129,7 @@ class AboutActivity : ComponentActivity() {
                                     .clip(CircleShape)
                             )
                             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                Text("Mean", style = MaterialTheme.typography.titleMedium)
+                                Text("Mean", style = MaterialTheme.typography.titleLarge)
                                 Text(
                                     stringResource(R.string.developer_introduction),
                                     style = MaterialTheme.typography.bodyMedium,
@@ -138,7 +142,6 @@ class AboutActivity : ComponentActivity() {
                         SettingItem(
                             icon = Icons.Default.Code,
                             title = stringResource(R.string.title_activity_open_source_licenses),
-                            description = stringResource(R.string.title_activity_open_source_licenses),
                             onClick = {
                                 val intent = Intent(
                                     this@AboutActivity,

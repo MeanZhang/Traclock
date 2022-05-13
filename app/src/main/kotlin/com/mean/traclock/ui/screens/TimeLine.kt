@@ -1,7 +1,7 @@
 package com.mean.traclock.ui.screens
 
 import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -33,7 +33,7 @@ import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.MainViewModel
 
-@OptIn(ExperimentalFoundationApi::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun TimeLine(
     context: Context,
@@ -46,7 +46,10 @@ fun TimeLine(
     val recordsAll by viewModel.records.collectAsState(listOf())
     val recordByProjects by viewModel.projectsTimeByDate.collectAsState(listOf())
     val records = if (detailView) recordsAll else recordByProjects
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val scrollBehavior = remember(decayAnimationSpec) {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+    }
     Scaffold(
         topBar = {
             TopBar(
@@ -64,10 +67,10 @@ fun TimeLine(
         modifier = Modifier
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) {
+    ) { innerPadding ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = it
+            contentPadding = innerPadding
         ) {
             item {
                 TimingCard(

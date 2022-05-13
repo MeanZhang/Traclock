@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -38,7 +39,10 @@ class FeedbackActivity : ComponentActivity() {
         setContent {
             TraclockTheme {
                 SetSystemBar()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+                val scrollBehavior = remember(decayAnimationSpec) {
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+                }
                 Scaffold(
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -59,7 +63,6 @@ class FeedbackActivity : ComponentActivity() {
                         SettingItem(
                             icon = Icons.Outlined.HelpOutline,
                             title = stringResource(R.string.help),
-                            description = stringResource(R.string.help),
                             onClick = {
                                 val uri = Uri.parse(getString(R.string.doc_url))
                                 val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -73,7 +76,6 @@ class FeedbackActivity : ComponentActivity() {
                         SettingItem(
                             icon = Icons.Outlined.Feedback,
                             title = stringResource(R.string.feedback),
-                            description = stringResource(R.string.feedback),
                             onClick = {
                                 val uri = Uri.parse(getString(R.string.feedback_url))
                                 val intent = Intent(Intent.ACTION_VIEW, uri)

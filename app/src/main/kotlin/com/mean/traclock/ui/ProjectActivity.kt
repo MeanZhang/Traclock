@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -83,7 +84,10 @@ class ProjectActivity : ComponentActivity() {
 
                 var showDialog by remember { mutableStateOf(false) }
 
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+                val scrollBehavior = remember(decayAnimationSpec) {
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+                }
 
                 val records by viewModel.records.collectAsState(listOf())
                 val time by viewModel.timeByDate.collectAsState(listOf())

@@ -2,6 +2,7 @@ package com.mean.traclock.ui.screens
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,7 +41,10 @@ fun Projects(
 ) {
     val projectsTime by viewModel.projectsTime.collectAsState(listOf())
     val isTiming: Boolean by App.isTiming.collectAsState(false)
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val scrollBehavior = remember(decayAnimationSpec) {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+    }
 
     Scaffold(
         topBar = {
