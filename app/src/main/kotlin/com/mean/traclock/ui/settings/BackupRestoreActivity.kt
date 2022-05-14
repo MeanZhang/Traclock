@@ -38,13 +38,12 @@ import com.mean.traclock.ui.components.SettingItemWinthoutIcon
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.ui.utils.SetSystemBar
-import com.mean.traclock.utils.getTime
 import com.mean.traclock.viewmodels.BackupRestoreViewModel
 
 class BackupRestoreActivity : ComponentActivity() {
     private val viewModel: BackupRestoreViewModel by viewModels()
     private val backupLauncher =
-        registerForActivityResult(CreateDocument()) {
+        registerForActivityResult(CreateDocument("text/csv")) {
             if (it != null) {
                 viewModel.backup(it)
             } else {
@@ -106,7 +105,7 @@ class BackupRestoreActivity : ComponentActivity() {
                         SettingItemWinthoutIcon(
                             title = stringResource(R.string.backup),
                             description = stringResource(R.string.backup_locally),
-                            onClick = { backupLauncher.launch(BuildConfig.APPLICATION_ID + "_backup_" + getTime() + ".csv") }
+                            onClick = { backupLauncher.launch(BuildConfig.APPLICATION_ID + "_backup.csv") }
                         )
 
                         MenuDefaults.Divider()

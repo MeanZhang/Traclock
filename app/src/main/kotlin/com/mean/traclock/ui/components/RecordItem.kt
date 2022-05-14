@@ -66,7 +66,7 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
                     { showMenu = true }
                 } else null
             )
-            .padding(vertical = 8.dp, horizontal = HORIZONTAL_MARGIN),
+            .padding(vertical = 12.dp, horizontal = HORIZONTAL_MARGIN),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

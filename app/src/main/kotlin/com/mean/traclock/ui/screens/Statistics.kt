@@ -57,7 +57,7 @@ import com.mean.traclock.utils.getIntDate
 @Composable
 fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val date = getIntDate(System.currentTimeMillis())
-    val projectsTime by AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDate(date)
+    val projectsTime by AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDay(date)
         .collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }

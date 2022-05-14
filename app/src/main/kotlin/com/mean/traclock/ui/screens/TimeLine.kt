@@ -2,15 +2,16 @@ package com.mean.traclock.ui.screens
 
 import android.content.Context
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -33,7 +34,7 @@ import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.MainViewModel
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TimeLine(
     context: Context,
@@ -42,9 +43,9 @@ fun TimeLine(
 ) {
     val isTiming by App.isTiming.collectAsState(false)
     var detailView by remember { mutableStateOf(true) }
-    val time by viewModel.timeByDate.collectAsState(listOf())
-    val recordsAll by viewModel.records.collectAsState(listOf())
-    val recordByProjects by viewModel.projectsTimeByDate.collectAsState(listOf())
+    val time by viewModel.timeOfDays.collectAsState(mapOf())
+    val recordsAll by viewModel.records.collectAsState(mapOf())
+    val recordByProjects by viewModel.projectsTimeOfDays.collectAsState(mapOf())
     val records = if (detailView) recordsAll else recordByProjects
     val decayAnimationSpec = rememberSplineBasedDecay<Float>()
     val scrollBehavior = remember(decayAnimationSpec) {
@@ -68,10 +69,7 @@ fun TimeLine(
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = innerPadding
-        ) {
+        LazyColumn(Modifier.padding(innerPadding)) {
             item {
                 TimingCard(
                     App.projectName.value,
@@ -79,17 +77,20 @@ fun TimeLine(
                     isTiming
                 )
             }
-            items(records.size) { i ->
-                val record = records[i]
-                val color = Color(App.projects[record.project] ?: 0)
-                if (i == 0 || (i > 0 && record.date != records[i - 1].date)) {
+            records.forEach { (date, data) ->
+                stickyHeader {
                     DateTitle(
-                        date = getDataString(record.date),
-                        duration = time.find { it.date == record.date }?.time ?: 0L
+                        date = getDataString(date),
+                        duration = time[date] ?: 0L
                     )
-                    MenuDefaults.Divider()
                 }
-                RecordItem(context, record, color, detailView)
+                items(data) {
+                    RecordItem(
+                        context = context,
+                        record = it,
+                        color = Color.Cyan
+                    )
+                }
             }
         }
     }

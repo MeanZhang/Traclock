@@ -85,6 +85,10 @@ fun getDurationString(duration: Long): String {
  */
 fun getDataString(timestamp: Long): String {
     val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
+    val today = ZonedDateTime.now(ZoneId.systemDefault())
+    if (time.year == today.year && time.dayOfYear == today.dayOfYear) {
+        return "今天"
+    }
     val pattern = when (Locale.getDefault().language) {
         "zh" -> "MMMd日 EEE"
         else -> "EEE, MMM d"
@@ -102,6 +106,10 @@ fun getDataString(date: Int): String {
     val month = (date / 100) % 100
     val day = date % 100
     val time = ZonedDateTime.of(year, month, day, 1, 0, 0, 0, ZoneId.systemDefault())
+    val today = ZonedDateTime.now(ZoneId.systemDefault())
+    if (time.year == today.year && time.dayOfYear == today.dayOfYear) {
+        return "今天"
+    }
     val pattern = when (Locale.getDefault().language) {
         "zh" -> "MMMd日 EEE"
         else -> "EEE, MMM d"
@@ -117,12 +125,4 @@ fun getDataString(date: Int): String {
 fun getTimeWithSeconds(timestamp: Long): String {
     val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
     return DateTimeFormatter.ofPattern("HH:mm:ss").format(time)
-}
-
-/**
- * 获取当前时间字符串，格式“yyyyMMddHHmmss”
- */
-fun getTime(): String {
-    val time = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())
-    return DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(time)
 }

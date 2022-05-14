@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -23,7 +24,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,7 +39,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
-import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
@@ -72,7 +71,7 @@ class ProjectActivity : ComponentActivity() {
         }
 
     @SuppressLint("UnrememberedMutableState")
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -89,8 +88,8 @@ class ProjectActivity : ComponentActivity() {
                     TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
                 }
 
-                val records by viewModel.records.collectAsState(listOf())
-                val time by viewModel.timeByDate.collectAsState(listOf())
+                val records by viewModel.records.collectAsState(mapOf())
+                val time by viewModel.timeOfDays.collectAsState(mapOf())
                 val projectName by viewModel.projectNameFlow.collectAsState()
 
                 Scaffold(
@@ -136,26 +135,25 @@ class ProjectActivity : ComponentActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
-                ) {
+                ) { contentPadding ->
                     LazyColumn(
-                        modifier = Modifier.padding(it),
+                        modifier = Modifier.padding(contentPadding),
                         contentPadding = WindowInsets.navigationBars.asPaddingValues()
                     ) {
-                        items(records.size) { i ->
-                            val record = records[i]
-                            if (i == 0 || (i > 0 && record.date != records[i - 1].date)) {
+                        records.forEach { (date, data) ->
+                            stickyHeader {
                                 DateTitle(
-                                    date = getDataString(record.startTime),
-                                    duration = time.find { it.date == record.date }?.time
-                                        ?: 0L
+                                    date = getDataString(date),
+                                    duration = time[date] ?: 0L
                                 )
-                                MenuDefaults.Divider()
                             }
-                            RecordItem(
-                                context = this@ProjectActivity,
-                                record = records[i],
-                                color = Color(App.projects[projectName] ?: 0)
-                            )
+                            items(data) {
+                                RecordItem(
+                                    context = this@ProjectActivity,
+                                    record = it,
+                                    color = Color.Cyan
+                                )
+                            }
                         }
                     }
 
