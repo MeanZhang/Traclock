@@ -1,5 +1,7 @@
 package com.mean.traclock.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.PieChart
@@ -52,13 +55,24 @@ import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getIntDate
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val date = getIntDate(System.currentTimeMillis())
-    val projectsTime by AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDay(date)
-        .collectAsState(listOf())
+    Content(
+        AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDay(date),
+        contentPadding
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: PaddingValues) {
+    val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }
     val decayAnimationSpec = rememberSplineBasedDecay<Float>()
@@ -182,4 +196,41 @@ fun setPieChart(
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+@Preview(showSystemUi = true)
+fun PreviewStatistics() {
+    val projects = mutableMapOf(
+        Pair("测试1", Color.Black.toArgb()),
+        Pair("测试2", Color.Blue.toArgb()),
+        Pair("测试3", Color.Cyan.toArgb()),
+        Pair("测试4", Color.DarkGray.toArgb())
+    )
+    val records = mutableListOf<Record>()
+    val now = ZonedDateTime.now(ZoneId.systemDefault())
+    for (i in 0..10) {
+        for (j in 0..10) {
+            val startTime =
+                now.minusDays(i.toLong()).minusHours(i.toLong())
+                    .minusMinutes((j * 30).toLong())
+            val endTime =
+                startTime.plusMinutes((j * 2).toLong()).plusSeconds(((i + j) * 3 + 2).toLong())
+            records.add(
+                Record(
+                    projects.keys.elementAt(j % projects.size),
+                    startTime.toInstant().toEpochMilli(),
+                    endTime.toInstant().toEpochMilli()
+                )
+            )
+        }
+    }
+    val projectsTimeFlow = flowOf(
+        records.groupBy { it.project }
+            .mapValues { (key, value) ->
+                Record(key, 0, value.sumOf { (it.endTime - it.startTime) / 1000 }, 0)
+            }.values.toList()
+    )
+    Content(projectsTimeFlow = projectsTimeFlow, contentPadding = PaddingValues())
 }

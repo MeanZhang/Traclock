@@ -37,12 +37,11 @@ import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getTimeString
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(DelicateCoroutinesApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecordItem(context: Context, record: Record, color: Color, detailView: Boolean = true) {
+fun RecordItem(context: Context?, record: Record, color: Color, detailView: Boolean = true) {
     val startTime = getTimeString(record.startTime)
     val endTime = getTimeString(record.endTime)
     val projectName = record.project
@@ -52,15 +51,17 @@ fun RecordItem(context: Context, record: Record, color: Color, detailView: Boole
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {
-                    val activity =
-                        if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
-                    val intent = Intent(context, activity)
-                    if (detailView) {
-                        putRecord(intent, record)
-                    } else {
-                        intent.putExtra("projectName", record.project)
+                    context?.let {
+                        val activity =
+                            if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
+                        val intent = Intent(context, activity)
+                        if (detailView) {
+                            putRecord(intent, record)
+                        } else {
+                            intent.putExtra("projectName", record.project)
+                        }
+                        context.startActivity(intent)
                     }
-                    context.startActivity(intent)
                 },
                 onLongClick = if (detailView) {
                     { showMenu = true }

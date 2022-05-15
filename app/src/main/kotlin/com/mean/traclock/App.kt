@@ -36,13 +36,13 @@ class App : Application() {
         context = applicationContext
         initLogger()
         initMMKV(this)
+        AndroidThreeTen.init(this)
 
         thread {
             initProjectsList()
         }
         initNotification()
         initBroadcast()
-        AndroidThreeTen.init(this)
     }
 
     private fun initMMKV(context: Context) {

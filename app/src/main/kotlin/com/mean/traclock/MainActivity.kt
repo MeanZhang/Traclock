@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
@@ -30,10 +29,6 @@ import com.mean.traclock.ui.screens.Statistics
 import com.mean.traclock.ui.screens.TimeLine
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.ui.utils.Destinations
-import com.mean.traclock.ui.utils.Destinations.PROJECTS
-import com.mean.traclock.ui.utils.Destinations.SETTINGS
-import com.mean.traclock.ui.utils.Destinations.STATISTICS
-import com.mean.traclock.ui.utils.Destinations.TIMELINE
 import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -42,10 +37,9 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     @OptIn(
-        ExperimentalFoundationApi::class,
-        ExperimentalMaterial3Api::class,
         DelicateCoroutinesApi::class,
-        ExperimentalAnimationApi::class
+        ExperimentalAnimationApi::class,
+        ExperimentalMaterial3Api::class
     )
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,25 +51,25 @@ class MainActivity : ComponentActivity() {
                 SetSystemBar()
                 val navController = rememberAnimatedNavController()
                 Scaffold(bottomBar = { HomeBottomBar(navController) }) { contentPadding ->
-                    AnimatedNavHost(navController, TIMELINE.route) {
-                        composable(TIMELINE.route) {
+                    AnimatedNavHost(navController, Destinations.TIMELINE.route) {
+                        composable(Destinations.TIMELINE.route) {
                             TimeLine(
                                 this@MainActivity,
                                 viewModel,
                                 contentPadding
                             )
                         }
-                        composable(PROJECTS.route) {
+                        composable(Destinations.PROJECTS.route) {
                             Projects(
                                 this@MainActivity,
                                 viewModel,
                                 contentPadding
                             )
                         }
-                        composable(STATISTICS.route) {
+                        composable(Destinations.STATISTICS.route) {
                             Statistics(contentPadding)
                         }
-                        composable(SETTINGS.route) {
+                        composable(Destinations.SETTINGS.route) {
                             Settings(this@MainActivity, contentPadding)
                         }
                     }
@@ -85,7 +79,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun HomeBottomBar(navController: NavHostController) {
+    private fun HomeBottomBar(navController: NavHostController) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
         BottomBar {

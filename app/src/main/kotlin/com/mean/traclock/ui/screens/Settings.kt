@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.mean.traclock.R
 import com.mean.traclock.test.TestActivity
 import com.mean.traclock.ui.components.SettingGroupTitle
@@ -34,7 +35,7 @@ import com.mean.traclock.ui.settings.FeedbackActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) {
+fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues()) {
     val decayAnimationSpec = rememberSplineBasedDecay<Float>()
     val scrollBehavior = remember(decayAnimationSpec) {
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
@@ -46,7 +47,7 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(onClick = {
-                        context.startActivity(
+                        context?.startActivity(
                             Intent(context, TestActivity::class.java)
                         )
                     }) {
@@ -70,8 +71,7 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
                 stringResource(R.string.title_activity_backup_restore),
                 stringResource(R.string.settings_description_backup_restore),
                 onClick = {
-                    val intent = Intent(context, BackupRestoreActivity::class.java)
-                    context.startActivity(intent)
+                    context?.startActivity(Intent(context, BackupRestoreActivity::class.java))
                 }
             )
             SettingGroupTitle(stringResource(R.string.others))
@@ -80,7 +80,7 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
                 stringResource(R.string.title_activity_feedback),
                 stringResource(R.string.settings_description_feedback),
                 onClick = {
-                    context.startActivity(Intent(context, FeedbackActivity::class.java))
+                    context?.startActivity(Intent(context, FeedbackActivity::class.java))
                 }
             )
             SettingItem(
@@ -88,9 +88,15 @@ fun Settings(context: Context, contentPadding: PaddingValues = PaddingValues()) 
                 stringResource(R.string.title_activity_about),
                 stringResource(R.string.settings_description_about),
                 onClick = {
-                    context.startActivity(Intent(context, AboutActivity::class.java))
+                    context?.startActivity(Intent(context, AboutActivity::class.java))
                 }
             )
         }
     }
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun PreviewSettings() {
+    Settings(context = null)
 }
