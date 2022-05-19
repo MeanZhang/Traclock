@@ -66,7 +66,7 @@ android {
 
 dependencies {
     val roomVersion = "2.4.2"
-    val accompanistVersion = "0.24.8-beta"
+    val accompanistVersion = "0.24.9-beta"
     val workVersion = "2.7.1"
     val navVersion = "2.4.1"
 
