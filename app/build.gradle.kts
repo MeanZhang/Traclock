@@ -1,4 +1,4 @@
-val composeVersion by extra("1.2.0-beta01")
+val composeVersion by extra("1.2.0-beta02")
 
 plugins {
     id("com.android.application")
@@ -66,7 +66,7 @@ android {
 
 dependencies {
     val roomVersion = "2.4.2"
-    val accompanistVersion = "0.24.8-beta"
+    val accompanistVersion = "0.24.9-beta"
     val workVersion = "2.7.1"
     val navVersion = "2.4.1"
 
@@ -94,7 +94,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha10")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     // ThreeTenABP
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
