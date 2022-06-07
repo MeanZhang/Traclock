@@ -12,10 +12,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Timeline
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,9 +51,9 @@ class TestActivity : ComponentActivity() {
             TraclockTheme {
                 SetSystemBar()
                 val decayAnimationSpec = rememberSplineBasedDecay<Float>()
-                val state= rememberTopAppBarScrollState()
+                val state = rememberTopAppBarScrollState()
                 val scrollBehavior = remember(decayAnimationSpec) {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec,state)
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
                 }
                 Scaffold(
                     topBar = {
