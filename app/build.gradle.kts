@@ -108,7 +108,7 @@ dependencies {
     // debugImplementation("com.tencent.bugly:crashreport:4.0.4")
     debugImplementation("com.umeng.umsdk:common:9.5.0")
     debugImplementation("com.umeng.umsdk:asms:1.6.3")
-    debugImplementation("com.umeng.umsdk:apm:1.6.2")
+    debugImplementation("com.umeng.umsdk:apm:1.6.4")
 
     implementation("androidx.appcompat:appcompat:1.4.1")
 
