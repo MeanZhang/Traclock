@@ -125,7 +125,8 @@ private fun Content(
                     RecordItem(
                         context = context,
                         record = it,
-                        color = Color(projects[it.project] ?: 0)
+                        color = Color(projects[it.project] ?: 0),
+                        detailView = detailView.value
                     )
                 }
             }
