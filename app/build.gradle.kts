@@ -78,7 +78,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:5.2.0")
     // 日期时间选择器
     implementation("com.google.android.material:material:1.5.0")
-    implementation("com.github.loperSeven:DateTimePicker:0.5.7")
+    implementation("com.github.loperSeven:DateTimePicker:0.5.8")
     // accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
