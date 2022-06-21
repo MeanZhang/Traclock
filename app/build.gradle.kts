@@ -77,7 +77,7 @@ dependencies {
     // lottie动画
     implementation("com.airbnb.android:lottie-compose:5.2.0")
     // 日期时间选择器
-    implementation("com.google.android.material:material:1.5.0")
+    implementation("com.google.android.material:material:1.6.1")
     implementation("com.github.loperSeven:DateTimePicker:0.5.8")
     // accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -110,9 +110,9 @@ dependencies {
     debugImplementation("com.umeng.umsdk:asms:1.6.3")
     debugImplementation("com.umeng.umsdk:apm:1.6.4")
 
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("androidx.appcompat:appcompat:1.4.2")
 
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
     implementation("androidx.activity:activity-compose:1.4.0")
