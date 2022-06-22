@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.outlined.TimerOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -100,7 +100,7 @@ fun TimingCard(
                     TimingControl.stopRecord()
                 }) {
                     Icon(
-                        Icons.Default.Stop,
+                        Icons.Outlined.TimerOff,
                         contentDescription = stringResource(R.string.stop),
                         modifier = Modifier.size(30.dp)
                     )
