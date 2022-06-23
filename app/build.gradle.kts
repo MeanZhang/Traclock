@@ -98,8 +98,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     // ThreeTenABP
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
-    // MMKV
-    implementation("com.tencent:mmkv:1.2.13")
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
     // Coil（Compose的Image会缺角）
     implementation("io.coil-kt:coil-compose:2.1.0")
     // Logger

@@ -7,6 +7,12 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.utils.Config
@@ -16,9 +22,14 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.FormatStrategy
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
-import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "timing")
 
 class App : Application() {
     companion object {
@@ -35,28 +46,31 @@ class App : Application() {
 
         context = applicationContext
         initLogger()
-        initMMKV(this)
+        initTimingControl()
         AndroidThreeTen.init(this)
 
         thread {
             initProjectsList()
         }
-        initNotification()
         initBroadcast()
     }
 
-    private fun initMMKV(context: Context) {
-        MMKV.initialize(context)
-        val kv = MMKV.defaultMMKV()
-        isTiming.value = kv.decodeBool("isTiming", false)
-        projectName.value = kv.decodeString("projectName") ?: ""
-        startTime.value = kv.decodeLong("startTime", System.currentTimeMillis())
-        Logger.d(
-            "读取MMKV：isTiming=%s，projectName=%s，startTime=%s",
-            isTiming.value,
-            projectName.value,
-            startTime.value
-        )
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun initTimingControl() {
+        GlobalScope.launch {
+            context.dataStore.data.first().let {
+                isTiming.value = it[booleanPreferencesKey("isTiming")] ?: false
+                projectName.value = it[stringPreferencesKey("projectName")] ?: ""
+                startTime.value = it[longPreferencesKey("startTime")] ?: 0L
+                Logger.d(
+                    "读取数据：isTiming=%s，projectName=%s，startTime=%s",
+                    isTiming.value,
+                    projectName.value,
+                    startTime.value
+                )
+                initNotification()
+            }
+        }
     }
 
     private fun initLogger() {
@@ -80,6 +94,7 @@ class App : Application() {
     }
 
     private fun initNotification() {
+        Logger.d("初始化通知")
         createNotificationChannels()
         if (isTiming.value) {
             TimingControl.startNotify()

@@ -36,7 +36,7 @@ import com.mean.traclock.R
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
-import kotlinx.coroutines.cancel
+import com.orhanobut.logger.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -96,8 +96,10 @@ fun TimingCard(
                     }
                 }
                 IconButton(onClick = {
-                    scope.cancel()
-                    TimingControl.stopRecord()
+                    scope.launch {
+                        Logger.d("点击取消")
+                        TimingControl.stopRecord()
+                    }
                 }) {
                     Icon(
                         Icons.Outlined.TimerOff,

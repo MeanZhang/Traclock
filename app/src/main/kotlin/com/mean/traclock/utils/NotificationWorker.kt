@@ -18,8 +18,6 @@ import java.lang.Thread.sleep
 
 /** 用于发送通知 */
 class NotificationWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
-    private val projectName = App.projectName.value
-    private val startTime = App.startTime.value
     private val manager = NotificationManagerCompat.from(App.context)
     private val flag =
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
@@ -54,19 +52,21 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             App.context.getString(R.string.stop),
             actionPendingIntent
         )
-        notificationBuilder.setContentTitle(projectName) // 设置通知标题（项目名）
         Logger.d("开始发送通知")
         while (App.isTiming.value && !this.isStopped) {
             // 设置通知内容（记录时间）
-            notificationBuilder.setContentText(
-                getDurationString(
-                    startTime,
-                    System.currentTimeMillis()
+            notificationBuilder
+                .setContentTitle(App.projectName.value) // 设置通知标题（项目名）
+                .setContentText(
+                    getDurationString(
+                        App.startTime.value,
+                        System.currentTimeMillis()
+                    )
                 )
-            )
             manager.notify(Config.TIMING_NOTIFICATION_ID, notificationBuilder.build())
             sleep(1000L)
         }
+        Logger.d("停止发送通知")
         return Result.success()
     }
 
@@ -74,11 +74,11 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
         super.onStopped()
         notificationBuilder
             .setOngoing(false) // 设置通知可清除
-            .setContentTitle(projectName)
-            .setContentText(getDurationString(startTime, System.currentTimeMillis()))
+            .setContentTitle(App.projectName.value)
+            .setContentText(getDurationString(App.startTime.value, System.currentTimeMillis()))
 
         val actionIntent = Intent(Config.NOTIFICATION_ACTION).putExtra("isTiming", true)
-            .putExtra("projectName", projectName)
+            .putExtra("projectName", App.projectName.value)
         val actionPendingIntent =
             PendingIntent.getBroadcast(
                 App.context,
@@ -94,6 +94,5 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             actionPendingIntent
         )
         manager.notify(Config.TIMING_NOTIFICATION_ID, notificationBuilder.build())
-        Logger.d("停止发送通知")
     }
 }

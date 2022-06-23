@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getTimeString
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalFoundationApi::class)
@@ -46,6 +48,7 @@ fun RecordItem(context: Context?, record: Record, color: Color, detailView: Bool
     val endTime = getTimeString(record.endTime)
     val projectName = record.project
     var showMenu by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,7 +100,7 @@ fun RecordItem(context: Context?, record: Record, color: Color, detailView: Bool
             }
             SmallOutlinedButton(
                 text = getDurationString(record.startTime, record.endTime, detailView),
-                onClick = { TimingControl.startRecord(projectName) }
+                onClick = { scope.launch { TimingControl.startRecord(projectName) } }
             )
         }
         DropdownMenu(showMenu, { showMenu = false }) {
