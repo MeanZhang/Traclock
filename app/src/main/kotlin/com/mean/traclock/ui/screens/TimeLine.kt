@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -43,6 +45,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -106,13 +109,17 @@ private fun Content(
             .padding(contentPadding)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        LazyColumn(Modifier.padding(innerPadding)) {
+        val listState = rememberLazyListState()
+        LazyColumn(Modifier.padding(innerPadding), state = listState) {
             item {
                 TimingCard(
                     timingProjectFlow.value,
                     startTimeFlow.value,
                     isTiming
                 )
+                rememberCoroutineScope().launch {
+                    listState.animateScrollToItem(0)
+                }
             }
             records.forEach { (date, data) ->
                 stickyHeader {
@@ -121,12 +128,13 @@ private fun Content(
                         duration = time[date] ?: 0L
                     )
                 }
-                items(data) {
+                items(data) { record ->
                     RecordItem(
                         context = context,
-                        record = it,
-                        color = Color(projects[it.project] ?: 0),
-                        detailView = detailView.value
+                        record = record,
+                        color = Color(projects[record.project] ?: 0),
+                        detailView = detailView.value,
+                        listState = listState
                     )
                 }
             }

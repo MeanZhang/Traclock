@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.DropdownMenu
@@ -43,7 +44,13 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecordItem(context: Context?, record: Record, color: Color, detailView: Boolean = true) {
+fun RecordItem(
+    context: Context?,
+    record: Record,
+    color: Color,
+    detailView: Boolean = true,
+    listState: LazyListState? = null
+) {
     val startTime = getTimeString(record.startTime)
     val endTime = getTimeString(record.endTime)
     val projectName = record.project
@@ -100,7 +107,12 @@ fun RecordItem(context: Context?, record: Record, color: Color, detailView: Bool
             }
             SmallOutlinedButton(
                 text = getDurationString(record.startTime, record.endTime, detailView),
-                onClick = { scope.launch { TimingControl.startRecord(projectName) } }
+                onClick = {
+                    scope.launch {
+                        TimingControl.startRecord(projectName)
+                        listState?.animateScrollToItem(0)
+                    }
+                }
             )
         }
         DropdownMenu(showMenu, { showMenu = false }) {
