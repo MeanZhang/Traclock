@@ -1,7 +1,6 @@
-import { defineUserConfig } from "vuepress";
-import type { DefaultThemeOptions } from "vuepress";
+import { defaultTheme, defineUserConfig } from "vuepress";
 
-export default defineUserConfig<DefaultThemeOptions>({
+export default defineUserConfig({
   lang: "zh-CN",
   title: "时迹",
   description: "时迹帮助文档",
@@ -25,8 +24,8 @@ export default defineUserConfig<DefaultThemeOptions>({
     ["meta", { name: "msapplication-TileColor", content: "#2d89ef" }],
   ],
 
-  themeConfig: {
-    logo: "/images/logo.png",
+  theme: defaultTheme({
+    logo: "/images/logo.svg",
     repo: "MeanZhang/Traclock",
     docsBranch: "main",
     docsDir: "docs",
@@ -43,7 +42,7 @@ export default defineUserConfig<DefaultThemeOptions>({
         link: "/privacy",
       },
     ],
-  },
+  }),
 
   // plugins: [
   //     [
