@@ -147,13 +147,6 @@ private fun getLicenses(): MutableList<License> {
     )
     licenses.add(
         License(
-            "MMKV",
-            "https://github.com/Tencent/MMKV",
-            "BSD 3-Clause License"
-        )
-    )
-    licenses.add(
-        License(
             "Coil",
             "https://github.com/coil-kt/coil",
             "Apache License 2.0"
