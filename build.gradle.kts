@@ -7,7 +7,7 @@ plugins {
     id("com.android.application") version agpVersion apply false
     id("com.android.library") version agpVersion apply false
     id("org.jetbrains.kotlin.android") version "1.6.21" apply false
-    id("com.diffplug.spotless") version "6.7.2"
+    id("com.diffplug.spotless") version "6.8.0"
 }
 
 // tasks.register("clean", Delete::class.java) {
