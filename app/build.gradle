@@ -64,7 +64,7 @@ android {
 
 dependencies {
     def roomVersion = "2.4.2"
-    def accompanistVersion = "0.24.12-rc"
+    def accompanistVersion = "0.24.13-rc"
     def workVersion = "2.7.1"
     def navVersion = "2.4.1"
 
