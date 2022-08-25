@@ -43,7 +43,6 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditProjectViewModelFactory
 
@@ -64,8 +63,6 @@ class EditProjectActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                SetSystemBar()
-
                 val name by viewModel.name.collectAsState("")
                 val color by viewModel.color.collectAsState(Color.Blue)
 

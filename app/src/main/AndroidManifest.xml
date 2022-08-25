@@ -49,7 +49,7 @@
             android:name=".ui.EditRecordActivity"
             android:exported="false"
             android:label="@string/title_activity_edit_record"
-            android:theme="@style/Theme.Traclock.NoActionBar" />
+            android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".ui.EditProjectActivity"
             android:exported="false"

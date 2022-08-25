@@ -37,7 +37,6 @@ import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.BackupRestoreViewModel
 
 class BackupRestoreActivity : ComponentActivity() {
@@ -74,7 +73,6 @@ class BackupRestoreActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                SetSystemBar()
                 val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
                 val scrollBehavior = remember(decayAnimationSpec) {

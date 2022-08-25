@@ -38,7 +38,6 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.BottomBar
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 
 class TestActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +48,6 @@ class TestActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                SetSystemBar()
                 val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
                 val scrollBehavior = remember(decayAnimationSpec) {

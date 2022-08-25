@@ -51,7 +51,6 @@ import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 
 class AboutActivity : ComponentActivity() {
@@ -61,7 +60,6 @@ class AboutActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                SetSystemBar()
                 val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
                 val scrollBehavior = remember(decayAnimationSpec) {

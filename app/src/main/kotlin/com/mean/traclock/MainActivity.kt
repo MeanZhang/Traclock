@@ -29,7 +29,6 @@ import com.mean.traclock.ui.screens.Statistics
 import com.mean.traclock.ui.screens.TimeLine
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.ui.utils.Destinations
-import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -48,7 +47,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                SetSystemBar()
                 val navController = rememberAnimatedNavController()
                 Scaffold(bottomBar = { HomeBottomBar(navController) }) { contentPadding ->
                     AnimatedNavHost(navController, Destinations.TIMELINE.route) {

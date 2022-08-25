@@ -46,7 +46,6 @@ import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.getDataString
 import com.mean.traclock.viewmodels.ProjectViewModel
@@ -78,8 +77,6 @@ class ProjectActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                SetSystemBar()
-
                 val showMenu = mutableStateOf(false)
 
                 var showDialog by remember { mutableStateOf(false) }

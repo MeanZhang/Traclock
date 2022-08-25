@@ -54,7 +54,6 @@ import com.mean.traclock.R
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.getDateTimeString
 import com.mean.traclock.viewmodels.EditRecordViewModel
@@ -79,7 +78,6 @@ class EditRecordActivity : AppCompatActivity() {
 
         setContent {
             TraclockTheme {
-                SetSystemBar()
                 val project by viewModel.project.collectAsState("")
                 val startTime by viewModel.startTime.collectAsState(0L)
                 val endTime by viewModel.endTime.collectAsState(0L)

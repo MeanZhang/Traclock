@@ -29,7 +29,6 @@ import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.SetSystemBar
 
 class FeedbackActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +37,6 @@ class FeedbackActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                SetSystemBar()
                 val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
                 val scrollBehavior = remember(decayAnimationSpec) {
