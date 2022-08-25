@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,11 +65,8 @@ class EditProjectActivity : ComponentActivity() {
                 val name by viewModel.name.collectAsState("")
                 val color by viewModel.color.collectAsState(Color.Blue)
 
-                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember(decayAnimationSpec) {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
-                }
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
                 Scaffold(
                     topBar = {
                         TopBar(

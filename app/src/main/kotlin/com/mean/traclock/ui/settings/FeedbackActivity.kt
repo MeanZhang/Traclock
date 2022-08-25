@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -37,11 +36,8 @@ class FeedbackActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember(decayAnimationSpec) {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
-                }
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
                 Scaffold(
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection),

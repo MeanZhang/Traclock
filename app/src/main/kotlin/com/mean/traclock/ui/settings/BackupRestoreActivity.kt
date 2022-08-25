@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 import androidx.activity.viewModels
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -73,11 +72,8 @@ class BackupRestoreActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember(decayAnimationSpec) {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
-                }
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
                 val showBackupDialog by viewModel.showBackupDialog.collectAsState()
                 val showRestoreDialog by viewModel.showRestoreDialog.collectAsState()
                 val showConfirmDialog by viewModel.showConfirmDialog.collectAsState()

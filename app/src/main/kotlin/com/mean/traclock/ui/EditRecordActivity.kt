@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -88,11 +87,8 @@ class EditRecordActivity : AppCompatActivity() {
                 val builder = CardDatePickerDialog.builder(this).showBackNow(false)
                     .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
 
-                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
                 val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember(decayAnimationSpec) {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
-                }
+                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
 
                 Scaffold(
                     topBar = {

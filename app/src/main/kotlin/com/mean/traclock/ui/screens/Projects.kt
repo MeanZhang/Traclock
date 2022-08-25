@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -75,11 +74,8 @@ private fun Content(
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
-    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
     val state = rememberTopAppBarScrollState()
-    val scrollBehavior = remember(decayAnimationSpec) {
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
-    }
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
     Scaffold(
         topBar = {
             TopBar(
