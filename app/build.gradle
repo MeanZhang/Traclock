@@ -99,7 +99,7 @@ dependencies {
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     // Coil（Compose的Image会缺角）
-    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.2.0")
     // Logger
     implementation("com.orhanobut:logger:2.2.0")
     // 友盟
