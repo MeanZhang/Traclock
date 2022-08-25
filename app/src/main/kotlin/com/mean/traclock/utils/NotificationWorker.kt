@@ -10,10 +10,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.elvishew.xlog.XLog
 import com.mean.traclock.App
 import com.mean.traclock.MainActivity
 import com.mean.traclock.R
-import com.orhanobut.logger.Logger
 import java.lang.Thread.sleep
 
 /** 用于发送通知 */
@@ -52,7 +52,7 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             App.context.getString(R.string.stop),
             actionPendingIntent
         )
-        Logger.d("开始发送通知")
+        XLog.d("开始发送通知")
         while (App.isTiming.value && !this.isStopped) {
             // 设置通知内容（记录时间）
             notificationBuilder
@@ -66,7 +66,7 @@ class NotificationWorker(context: Context, params: WorkerParameters) : Worker(co
             manager.notify(Config.TIMING_NOTIFICATION_ID, notificationBuilder.build())
             sleep(1000L)
         }
-        Logger.d("停止发送通知")
+        XLog.d("停止发送通知")
         return Result.success()
     }
 

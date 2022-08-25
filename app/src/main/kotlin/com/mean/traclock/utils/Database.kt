@@ -1,10 +1,10 @@
 package com.mean.traclock.utils
 
+import com.elvishew.xlog.XLog
 import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
-import com.orhanobut.logger.Logger
 import kotlin.concurrent.thread
 
 /**
@@ -98,12 +98,12 @@ object Database {
                         recordDao.update(oldProject, newProject.name)
                     }
                 } catch (e: Exception) {
-                    Logger.e(e, "更新项目失败")
+                    XLog.e("更新项目失败", e)
                 }
             }
             return true
         }
-        Logger.d("项目已存在：%s", newProject.name)
+        XLog.d("项目已存在：%s", newProject.name)
         return false
     }
 

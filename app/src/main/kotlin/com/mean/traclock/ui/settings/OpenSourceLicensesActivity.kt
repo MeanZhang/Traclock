@@ -154,8 +154,8 @@ private fun getLicenses(): MutableList<License> {
     )
     licenses.add(
         License(
-            "Logger",
-            "https://github.com/orhanobut/logger",
+            "XLog",
+            "https://github.com/elvishew/xLog",
             "Apache License 2.0"
         )
     )

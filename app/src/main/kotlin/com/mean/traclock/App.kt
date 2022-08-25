@@ -13,15 +13,14 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.elvishew.xlog.LogConfiguration
+import com.elvishew.xlog.LogLevel
+import com.elvishew.xlog.XLog
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.utils.Config
 import com.mean.traclock.utils.NotificationBroadcastReceiver
 import com.mean.traclock.utils.TimingControl
-import com.orhanobut.logger.AndroidLogAdapter
-import com.orhanobut.logger.FormatStrategy
-import com.orhanobut.logger.Logger
-import com.orhanobut.logger.PrettyFormatStrategy
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +44,7 @@ class App : Application() {
         super.onCreate()
 
         context = applicationContext
-        initLogger()
+        initXLog()
         initTimingControl()
         AndroidThreeTen.init(this)
 
@@ -62,7 +61,7 @@ class App : Application() {
                 isTiming.value = it[booleanPreferencesKey("isTiming")] ?: false
                 projectName.value = it[stringPreferencesKey("projectName")] ?: ""
                 startTime.value = it[longPreferencesKey("startTime")] ?: 0L
-                Logger.d(
+                XLog.d(
                     "读取数据：isTiming=%s，projectName=%s，startTime=%s",
                     isTiming.value,
                     projectName.value,
@@ -73,11 +72,15 @@ class App : Application() {
         }
     }
 
-    private fun initLogger() {
-        val formatStrategy: FormatStrategy = PrettyFormatStrategy.newBuilder()
-            .tag("TLCK")
+    private fun initXLog() {
+        val config = LogConfiguration.Builder()
+            .logLevel(if (BuildConfig.DEBUG) LogLevel.ALL else LogLevel.NONE)
+            // .enableThreadInfo() // 允许打印线程信息
+            .enableStackTrace(2) // 允许打印深度为 2 的调用栈信息
+            .enableBorder() // 允许打印日志边框
             .build()
-        Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
+        // 默认 TAG 为“X-LOG”
+        XLog.init(config)
     }
 
     private fun initBroadcast() {
@@ -94,7 +97,7 @@ class App : Application() {
     }
 
     private fun initNotification() {
-        Logger.d("初始化通知")
+        XLog.d("初始化通知")
         createNotificationChannels()
         if (isTiming.value) {
             TimingControl.startNotify()

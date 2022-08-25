@@ -100,8 +100,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     // Coil（Compose的Image会缺角）
     implementation("io.coil-kt:coil-compose:2.2.0")
-    // Logger
-    implementation("com.orhanobut:logger:2.2.0")
+    // XLog
+    implementation("com.elvishew:xlog:1.10.1")
     // 友盟
     // debugImplementation("com.tencent.bugly:crashreport:4.0.4")
     debugImplementation("com.umeng.umsdk:common:9.5.2")

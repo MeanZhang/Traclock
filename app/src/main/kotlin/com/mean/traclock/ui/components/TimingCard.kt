@@ -32,11 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.elvishew.xlog.XLog
 import com.mean.traclock.R
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimingControl
 import com.mean.traclock.utils.getDurationString
-import com.orhanobut.logger.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -97,7 +97,7 @@ fun TimingCard(
                 }
                 IconButton(onClick = {
                     scope.launch {
-                        Logger.d("点击取消")
+                        XLog.d("点击取消")
                         TimingControl.stopRecord()
                     }
                 }) {

@@ -8,12 +8,12 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import com.elvishew.xlog.XLog
 import com.mean.traclock.App
 import com.mean.traclock.App.Companion.context
 import com.mean.traclock.R
 import com.mean.traclock.dataStore
 import com.mean.traclock.database.Record
-import com.orhanobut.logger.Logger
 
 /**
  * 计时控制
@@ -28,7 +28,7 @@ object TimingControl {
      */
     suspend fun startRecord(projectName: String) {
         if (App.isTiming.value) {
-            Logger.d("项目%s正在记录，请先停止", App.projectName.value)
+            XLog.d("项目%s正在记录，请先停止", App.projectName.value)
             Toast.makeText(context, context.getString(R.string.is_tracking), Toast.LENGTH_SHORT)
                 .show()
         } else {
@@ -36,7 +36,7 @@ object TimingControl {
             setIsTiming(true)
             setProjectName(projectName)
             setStartTime(startTime)
-            Logger.d("项目%s开始记录", App.projectName.value)
+            XLog.d("项目%s开始记录", App.projectName.value)
             startNotify()
         }
     }
@@ -48,7 +48,7 @@ object TimingControl {
         if (App.isTiming.value) {
             setIsTiming(false)
             workManager.cancelUniqueWork(Config.NOTIFICATION_WORK_NAME)
-            Logger.d("项目%s停止记录", App.projectName.value)
+            XLog.d("项目%s停止记录", App.projectName.value)
             val record = Record(
                 App.projectName.value,
                 App.startTime.value,
@@ -71,7 +71,7 @@ object TimingControl {
 
     private suspend fun setIsTiming(isTiming: Boolean) {
         App.isTiming.value = isTiming
-        Logger.d("设置isTiming为%s", isTiming)
+        XLog.d("设置isTiming为%s", isTiming)
         context.dataStore.edit { it[booleanPreferencesKey("isTiming")] = isTiming }
     }
 
