@@ -100,7 +100,7 @@ dependencies {
     // Coil（Compose的Image会缺角）
     implementation("io.coil-kt:coil-compose:2.2.0")
     // XLog
-    implementation("com.elvishew:xlog:1.10.1")
+    implementation("com.elvishew:xlog:1.11.0")
     // 友盟
     // debugImplementation("com.tencent.bugly:crashreport:4.0.4")
     debugImplementation("com.umeng.umsdk:common:9.5.2")
