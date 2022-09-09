@@ -98,7 +98,7 @@ dependencies {
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     // Coil（Compose的Image会缺角）
-    implementation("io.coil-kt:coil-compose:2.2.0")
+    implementation("io.coil-kt:coil-compose:2.2.1")
     // XLog
     implementation("com.elvishew:xlog:1.11.0")
     // 友盟
