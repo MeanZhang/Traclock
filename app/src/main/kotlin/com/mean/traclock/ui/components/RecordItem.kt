@@ -36,7 +36,7 @@ import com.mean.traclock.ui.EditRecordActivity
 import com.mean.traclock.ui.ProjectActivity
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.TimingControl
+import com.mean.traclock.utils.Timer
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getTimeString
 import kotlinx.coroutines.launch
@@ -109,7 +109,7 @@ fun RecordItem(
                 text = getDurationString(record.startTime, record.endTime, detailView),
                 onClick = {
                     scope.launch {
-                        TimingControl.startRecord(projectName)
+                        Timer.startRecord(projectName)
                         listState?.animateScrollToItem(0)
                     }
                 }

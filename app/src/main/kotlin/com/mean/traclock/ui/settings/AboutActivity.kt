@@ -27,12 +27,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
-import androidx.compose.runtime.remember
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,7 +47,6 @@ import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 
@@ -59,17 +57,17 @@ class AboutActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
                 Scaffold(
                     topBar = {
-                        TopBar(
+                        TopAppBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = stringResource(R.string.about),
+                            title = { Text(text = getString(R.string.about)) },
                             scrollBehavior = scrollBehavior
                         )
                     },
@@ -103,7 +101,6 @@ class AboutActivity : ComponentActivity() {
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        MenuDefaults.Divider(Modifier.padding(vertical = 16.dp))
                         SettingGroupTitle(stringResource(R.string.developer))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -133,7 +130,6 @@ class AboutActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        MenuDefaults.Divider()
                         SettingGroupTitle(stringResource(R.string.others))
                         SettingItem(
                             icon = Icons.Default.Code,

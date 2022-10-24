@@ -16,11 +16,13 @@ import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import coil.compose.AsyncImage
 import com.mean.traclock.R
-import com.mean.traclock.ui.components.BottomBar
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 
 class TestActivity : ComponentActivity() {
@@ -47,18 +47,18 @@ class TestActivity : ComponentActivity() {
 
         setContent {
             TraclockTheme {
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
                 Scaffold(
                     topBar = {
-                        TopBar(
-                            title = "Test",
+                        TopAppBar(
+                            title = { Text("Test") },
                             scrollBehavior = scrollBehavior
                         )
                     },
                     bottomBar = {
                         var selected by remember { mutableStateOf(1) }
-                        BottomBar {
+                        NavigationBar {
                             for (i in 1..4) {
                                 NavigationBarItem(
                                     selected = selected == i,

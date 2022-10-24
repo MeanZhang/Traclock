@@ -23,12 +23,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditProjectViewModelFactory
@@ -65,17 +64,17 @@ class EditProjectActivity : ComponentActivity() {
                 val name by viewModel.name.collectAsState("")
                 val color by viewModel.color.collectAsState(Color.Blue)
 
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
                 Scaffold(
                     topBar = {
-                        TopBar(
+                        TopAppBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = name,
+                            title = { Text(name) },
                             actions = {
                                 if (name.isNotBlank()) {
                                     IconButton(onClick = { save(viewModel) }) {
@@ -86,10 +85,9 @@ class EditProjectActivity : ComponentActivity() {
                             scrollBehavior = scrollBehavior
                         )
                     },
-                    modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
-                ) {
-                    Column(Modifier.padding(it)) {
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                ) { contentPadding ->
+                    Column(Modifier.padding(contentPadding)) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -104,20 +102,15 @@ class EditProjectActivity : ComponentActivity() {
                                     )
                                 )
                         ) {
-                            OutlinedTextField(
-                                value = name,
-                                onValueChange = {
-                                    viewModel.setName(it)
-                                    isModified = viewModel.isModified()
-                                }
-                            )
-                        }
-                        ColorPicker(
-                            onColorSelected = {
-                                viewModel.setColor(it)
+                            OutlinedTextField(value = name, onValueChange = {
+                                viewModel.setName(it)
                                 isModified = viewModel.isModified()
-                            }
-                        )
+                            })
+                        }
+                        ColorPicker(onColorSelected = {
+                            viewModel.setColor(it)
+                            isModified = viewModel.isModified()
+                        })
                     }
                 }
                 if (showDialog.value) {
@@ -125,11 +118,9 @@ class EditProjectActivity : ComponentActivity() {
                         onDismissRequest = { showDialog.value = false },
                         title = { Text(stringResource(R.string.discard_changes)) },
                         confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    showDialog.value = false
-                                }
-                            ) {
+                            TextButton(onClick = {
+                                showDialog.value = false
+                            }) {
                                 Text(
                                     stringResource(R.string.keep_editing),
                                     fontWeight = FontWeight.Bold
@@ -137,11 +128,9 @@ class EditProjectActivity : ComponentActivity() {
                             }
                         },
                         dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    super.finish()
-                                }
-                            ) {
+                            TextButton(onClick = {
+                                super.finish()
+                            }) {
                                 Text(
                                     stringResource(R.string.discard),
                                     fontWeight = FontWeight.Bold

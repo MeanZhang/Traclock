@@ -11,9 +11,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         val isTiming = intent.getBooleanExtra("isTiming", true)
         if (isTiming) {
             intent.getStringExtra("projectName")
-                ?.let { runBlocking { TimingControl.startRecord(it) } }
+                ?.let { runBlocking { Timer.startRecord(it) } }
         } else {
-            runBlocking { TimingControl.stopRecord() }
+            runBlocking { Timer.stopRecord() }
         }
     }
 }

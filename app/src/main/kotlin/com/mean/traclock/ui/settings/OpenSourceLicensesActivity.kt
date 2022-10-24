@@ -8,10 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,10 +20,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -34,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.Config
 
@@ -80,17 +76,17 @@ fun LicenseItem(context: Context?, license: License) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Content(activity: OpenSourceLicensesActivity?) {
-    val state = rememberTopAppBarScrollState()
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+    val state = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     Scaffold(
         topBar = {
-            TopBar(
+            TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = { activity?.finish() }) {
                         Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
-                title = stringResource(R.string.title_activity_open_source_licenses),
+                title = { Text(stringResource(R.string.title_activity_open_source_licenses)) },
                 scrollBehavior = scrollBehavior
             )
         },
@@ -98,8 +94,7 @@ fun Content(activity: OpenSourceLicensesActivity?) {
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { contentPadding ->
         LazyColumn(
-            modifier = Modifier.padding(contentPadding),
-            contentPadding = WindowInsets.navigationBars.asPaddingValues()
+            contentPadding = contentPadding
         ) {
             items(LICENSES) {
                 LicenseItem(activity, it)

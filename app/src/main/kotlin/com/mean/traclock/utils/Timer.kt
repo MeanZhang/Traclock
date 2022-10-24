@@ -18,7 +18,7 @@ import com.mean.traclock.database.Record
 /**
  * 计时控制
  */
-object TimingControl {
+object Timer {
     private val workManager = WorkManager.getInstance(context)
     private val workRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java).build()
 

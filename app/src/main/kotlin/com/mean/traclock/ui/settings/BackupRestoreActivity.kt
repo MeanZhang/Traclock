@@ -17,15 +17,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,6 @@ import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.viewmodels.BackupRestoreViewModel
 
@@ -72,8 +70,8 @@ class BackupRestoreActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             TraclockTheme {
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
                 val showBackupDialog by viewModel.showBackupDialog.collectAsState()
                 val showRestoreDialog by viewModel.showRestoreDialog.collectAsState()
                 val showConfirmDialog by viewModel.showConfirmDialog.collectAsState()
@@ -82,13 +80,13 @@ class BackupRestoreActivity : ComponentActivity() {
                 val progress by viewModel.progress.collectAsState()
                 Scaffold(
                     topBar = {
-                        TopBar(
+                        TopAppBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = getString(R.string.title_activity_backup_restore),
+                            title = { Text(getString(R.string.title_activity_backup_restore)) },
                             scrollBehavior = scrollBehavior
                         )
                     },
@@ -102,8 +100,6 @@ class BackupRestoreActivity : ComponentActivity() {
                             description = stringResource(R.string.backup_locally),
                             onClick = { backupLauncher.launch(BuildConfig.APPLICATION_ID + "_backup.csv") }
                         )
-
-                        MenuDefaults.Divider()
 
                         SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
                         SettingItemWinthoutIcon(

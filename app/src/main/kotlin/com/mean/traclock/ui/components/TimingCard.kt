@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.elvishew.xlog.XLog
 import com.mean.traclock.R
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
-import com.mean.traclock.utils.TimingControl
+import com.mean.traclock.utils.Timer
 import com.mean.traclock.utils.getDurationString
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -98,7 +98,7 @@ fun TimingCard(
                 IconButton(onClick = {
                     scope.launch {
                         XLog.d("点击取消")
-                        TimingControl.stopRecord()
+                        Timer.stopRecord()
                     }
                 }) {
                     Icon(

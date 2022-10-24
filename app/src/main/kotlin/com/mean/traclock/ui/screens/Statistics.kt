@@ -17,10 +17,8 @@ import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -32,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,7 +48,6 @@ import com.mean.traclock.R
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.NoData
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.getDurationString
 import com.mean.traclock.utils.getIntDate
@@ -75,92 +71,80 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }
-    val state = rememberTopAppBarScrollState()
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = stringResource(R.string.statistics),
-                scrollBehavior = scrollBehavior
-            )
-        },
-        modifier = Modifier
-            .padding(contentPadding)
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) {
-        if (duration > 0) {
-            Column(
+    val state = rememberTopAppBarState()
+
+    if (duration > 0) {
+        Column(
+            Modifier
+                .padding(contentPadding)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Row(
                 Modifier
-                    .padding(it)
-                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = HORIZONTAL_MARGIN)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                Text(stringResource(R.string.records_duration))
+                Text(getDurationString(duration))
+            }
+            AndroidView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .padding(horizontal = HORIZONTAL_MARGIN),
+                factory = { context ->
+                    PieChart(context).apply {
+                        setPieChart(this, projectsTime, duration, selected)
+                    }
+                },
+                update = { chart -> setPieChart(chart, projectsTime, duration, selected) }
+            )
+            for ((index, project) in projectsTime.withIndex()) {
+                var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
+                var color by remember { mutableStateOf(Color.Black) }
+                if (index == selected.value) {
+                    fontWeight = FontWeight.Bold
+                    color = MaterialTheme.colorScheme.onSurface
+                } else {
+                    fontWeight = FontWeight.Normal
+                    color = MaterialTheme.colorScheme.outline
+                }
                 Row(
                     Modifier
-                        .padding(horizontal = HORIZONTAL_MARGIN)
+                        .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
                         .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(stringResource(R.string.records_duration))
-                    Text(getDurationString(duration))
-                }
-                AndroidView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp)
-                        .padding(horizontal = HORIZONTAL_MARGIN),
-                    factory = { context ->
-                        PieChart(context).apply {
-                            setPieChart(this, projectsTime, duration, selected)
-                        }
-                    },
-                    update = { chart -> setPieChart(chart, projectsTime, duration, selected) }
-                )
-                for ((index, project) in projectsTime.withIndex()) {
-                    var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
-                    var color by remember { mutableStateOf(Color.Black) }
-                    if (index == selected.value) {
-                        fontWeight = FontWeight.Bold
-                        color = MaterialTheme.colorScheme.onSurface
-                    } else {
-                        fontWeight = FontWeight.Normal
-                        color = MaterialTheme.colorScheme.outline
-                    }
                     Row(
-                        Modifier
-                            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Circle,
-                                contentDescription = null,
-                                tint = Color(App.projects[project.project] ?: 0),
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .padding(horizontal = 4.dp)
-                            )
-                            Text(
-                                project.project,
-                                fontWeight = fontWeight,
-                                color = color
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.Circle,
+                            contentDescription = null,
+                            tint = Color(App.projects[project.project] ?: 0),
+                            modifier = Modifier
+                                .size(20.dp)
+                                .padding(horizontal = 4.dp)
+                        )
                         Text(
-                            getDurationString(project.startTime, project.endTime),
+                            project.project,
                             fontWeight = fontWeight,
                             color = color
                         )
                     }
+                    Text(
+                        getDurationString(project.startTime, project.endTime),
+                        fontWeight = fontWeight,
+                        color = color
+                    )
                 }
             }
-        } else {
-            NoData(Modifier.padding(it))
         }
+    } else {
+        NoData(Modifier.padding(contentPadding))
     }
 }
 

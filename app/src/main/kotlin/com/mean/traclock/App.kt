@@ -20,7 +20,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.utils.Config
 import com.mean.traclock.utils.NotificationBroadcastReceiver
-import com.mean.traclock.utils.TimingControl
+import com.mean.traclock.utils.Timer
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -100,7 +100,7 @@ class App : Application() {
         XLog.d("初始化通知")
         createNotificationChannels()
         if (isTiming.value) {
-            TimingControl.startNotify()
+            Timer.startNotify()
         }
     }
 

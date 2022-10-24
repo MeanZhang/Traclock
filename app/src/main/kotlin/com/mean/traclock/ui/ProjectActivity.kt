@@ -26,8 +26,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +44,6 @@ import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.RecordItem
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.getDataString
@@ -80,8 +80,8 @@ class ProjectActivity : ComponentActivity() {
 
                 var showDialog by remember { mutableStateOf(false) }
 
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
 
                 val records by viewModel.records.collectAsState(mapOf())
                 val time by viewModel.timeOfDays.collectAsState(mapOf())
@@ -89,13 +89,13 @@ class ProjectActivity : ComponentActivity() {
 
                 Scaffold(
                     topBar = {
-                        TopBar(
+                        TopAppBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = projectName,
+                            title = { Text(projectName) },
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))

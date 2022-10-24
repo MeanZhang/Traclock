@@ -31,8 +31,9 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,7 +52,6 @@ import com.loper7.date_time_picker.dialog.CardDatePickerDialog
 import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.database.Record
-import com.mean.traclock.ui.components.TopBar
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.Database
 import com.mean.traclock.utils.getDateTimeString
@@ -87,18 +87,18 @@ class EditRecordActivity : AppCompatActivity() {
                 val builder = CardDatePickerDialog.builder(this).showBackNow(false)
                     .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
 
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior(state) }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
 
                 Scaffold(
                     topBar = {
-                        TopBar(
+                        TopAppBar(
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            title = getString(R.string.edit_record),
+                            title = { Text(stringResource(R.string.edit_record)) },
                             actions = {
                                 IconButton(onClick = { showMenu.value = true }) {
                                     Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -121,10 +121,10 @@ class EditRecordActivity : AppCompatActivity() {
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
-                ) {
+                ) { contentPadding ->
                     Column(
                         modifier = Modifier
-                            .padding(it)
+                            .padding(contentPadding)
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
