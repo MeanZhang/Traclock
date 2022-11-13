@@ -72,7 +72,7 @@ dependencies {
     // MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
     // 查看内存泄漏
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.10")
     // lottie动画
     implementation("com.airbnb.android:lottie-compose:5.2.0")
     // 日期时间选择器
