@@ -5,7 +5,7 @@
   "author": "Mean <390602272@qq.com>",
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^2.0.0-beta.53",
+    "vuepress": "^2.0.0-beta.54",
     "husky": "^8.0.0"
   },
   "scripts": {
