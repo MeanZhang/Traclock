@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
-import com.mean.traclock.BuildConfig
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
