@@ -12,7 +12,7 @@ footer: Copyright © 2021-2022 Mean
 
 <p align="center">
   <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.2.1-brightgreen?logo=android" />
+    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.3.3-brightgreen?logo=android" />
   </a>
   <a href="https://android-arsenal.com/api?level=21" alt="API">
     <img src="https://img.shields.io/badge/API-21%2B-blue?logo=android" />
