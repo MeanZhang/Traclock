@@ -32,11 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.elvishew.xlog.XLog
 import com.mean.traclock.R
-import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
-import com.mean.traclock.utils.Timer
-import com.mean.traclock.utils.getDurationString
+import com.mean.traclock.data.DataModel
+import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -89,7 +88,7 @@ fun TimingCard(
                     Column {
                         Text(project, style = MaterialTheme.typography.titleLarge)
                         Text(
-                            getDurationString(startTime, now),
+                            TimeUtils.getDurationString(startTime, now),
                             style = MaterialTheme.typography.bodyMedium,
                             fontFamily = FontFamily.Monospace
                         )
@@ -97,8 +96,7 @@ fun TimingCard(
                 }
                 IconButton(onClick = {
                     scope.launch {
-                        XLog.d("点击取消")
-                        Timer.stopRecord()
+                        DataModel.dataModel.stopTimer()
                     }
                 }) {
                     Icon(

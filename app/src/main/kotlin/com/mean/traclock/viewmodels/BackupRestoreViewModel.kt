@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elvishew.xlog.XLog
 import com.mean.traclock.App
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
-import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.getIntDate
+import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -37,13 +37,13 @@ class BackupRestoreViewModel : ViewModel() {
         backingUp.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val records = AppDatabase.getDatabase(App.context).recordDao().getRecordsList()
-            val size = App.projects.size + records.size
+            val size = DataModel.dataModel.projects.size + records.size
             var done = 0
             App.context.contentResolver.openOutputStream(uri).use { outputStream ->
                 BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
                     writer.write("Project,Start Time,End Time\n")
-                    for (project in App.projects) {
-                        writer.write(project.key + ",-1," + project.value + "\n")
+                    for (project in DataModel.dataModel.projects) {
+                        writer.write(project.key + ",-1," + project.value.color + "\n")
                         progress.value = done++.toFloat() / size
                     }
                     for (record in records) {
@@ -115,16 +115,16 @@ class BackupRestoreViewModel : ViewModel() {
                 XLog.e("颜色格式有误：" + columns[2], e)
                 return -3
             }
-            Database.insertProject(Project(projectName, color))
+            DataModel.dataModel.insertProject(Project(projectName, color))
         } else {
-            val date = getIntDate(startTime)
+            val date = TimeUtils.getIntDate(startTime)
             val endTime = try {
                 columns[2].toLong()
             } catch (e: Exception) {
                 return -4
             }
             val record = Record(projectName, startTime, endTime, date)
-            if (!Database.insertRecord(record)) {
+            if (!DataModel.dataModel.insertRecord(record)) {
                 return -4
             }
         }

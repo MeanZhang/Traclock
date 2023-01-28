@@ -49,12 +49,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.loper7.date_time_picker.dialog.CardDatePickerDialog
-import com.mean.traclock.App
 import com.mean.traclock.R
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.getDateTimeString
+import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.EditRecordViewModelFactory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -110,7 +109,7 @@ class EditRecordActivity : AppCompatActivity() {
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.delete)) },
                                         onClick = {
-                                            Database.deleteRecord(viewModel.record)
+                                            DataModel.dataModel.deleteRecord(viewModel.record)
                                             super.finish()
                                         }
                                     )
@@ -164,7 +163,7 @@ class EditRecordActivity : AppCompatActivity() {
                                 },
                                 modifier = Modifier.weight(3f)
                             ) {
-                                Text(getDateTimeString(startTime))
+                                Text(TimeUtils.getDateTimeString(startTime))
                             }
                         }
                         Row(
@@ -187,7 +186,7 @@ class EditRecordActivity : AppCompatActivity() {
                                 },
                                 modifier = Modifier.weight(3f)
                             ) {
-                                Text(getDateTimeString(endTime))
+                                Text(TimeUtils.getDateTimeString(endTime))
                             }
                         }
                         Button(onClick = {
@@ -217,28 +216,28 @@ class EditRecordActivity : AppCompatActivity() {
                         confirmButton = {},
                         text = {
                             LazyColumn {
-                                items(App.projects.toList()) {
+                                items(DataModel.dataModel.projects.values.toList()) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.clickable {
-                                            viewModel.setProject(it.first)
+                                            viewModel.setProject(it.name)
                                             isModified = viewModel.isModified()
                                             showProjectsDialog = false
                                         }
                                     ) {
                                         RadioButton(
-                                            selected = project == it.first,
+                                            selected = project == it.name,
                                             colors = RadioButtonDefaults.colors(
-                                                selectedColor = Color(it.second),
-                                                unselectedColor = Color(it.second)
+                                                selectedColor = Color(it.color),
+                                                unselectedColor = Color(it.color)
                                             ),
                                             onClick = {
-                                                viewModel.setProject(it.first)
+                                                viewModel.setProject(it.name)
                                                 isModified = viewModel.isModified()
                                                 showProjectsDialog = false
                                             }
                                         )
-                                        Text(it.first, Modifier.fillMaxWidth())
+                                        Text(it.name, Modifier.fillMaxWidth())
                                     }
                                 }
                             }

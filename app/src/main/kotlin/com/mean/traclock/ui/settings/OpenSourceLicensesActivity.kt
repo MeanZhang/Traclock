@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.utils.Config
+import com.mean.traclock.utils.Constants
 
 class OpenSourceLicensesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ fun LicenseItem(context: Context?, license: License) {
                 context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
             }
             .fillMaxWidth()
-            .padding(horizontal = Config.HORIZONTAL_MARGIN, 12.dp)
+            .padding(horizontal = Constants.HORIZONTAL_MARGIN, 12.dp)
     ) {
         Text(
             license.name,

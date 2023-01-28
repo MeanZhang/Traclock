@@ -3,8 +3,8 @@ package com.mean.traclock.viewmodels
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Project
-import com.mean.traclock.utils.Database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -33,7 +33,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
     fun updateProject(): Int {
         return when {
             _name.value != initialName -> { // 项目名发生变化
-                if (Database.updateProject(
+                if (DataModel.dataModel.updateProject(
                         initialName,
                         Project(_name.value, _color.value.toArgb())
                     )
@@ -44,7 +44,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
                 }
             }
             _color.value != initialColor -> { // 项目名没变，颜色变化
-                Database.updateProject(Project(initialName, _color.value.toArgb()))
+                DataModel.dataModel.updateProject(Project(initialName, _color.value.toArgb()))
                 1
             }
             else -> {

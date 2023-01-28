@@ -1,10 +1,9 @@
 package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.mean.traclock.App
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Record
-import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.getIntDate
+import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -29,12 +28,12 @@ class EditRecordViewModel(val record: Record) : ViewModel() {
             return if (_project.value.isBlank()) {
                 -1 // 项目名为空
             } else {
-                if (_project.value in App.projects) {
+                if (_project.value in DataModel.dataModel.projects) {
                     record.project = _project.value
                     record.startTime = startTime.value
                     record.endTime = endTime.value
-                    record.date = getIntDate(record.startTime)
-                    Database.updateRecord(record)
+                    record.date = TimeUtils.getIntDate(record.startTime)
+                    DataModel.dataModel.updateRecord(record)
                     1
                 } else {
                     -2 // 项目不存在

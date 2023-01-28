@@ -1,19 +1,37 @@
-package com.mean.traclock.utils
+package com.mean.traclock.data
 
+import android.content.Context
 import com.elvishew.xlog.XLog
-import com.mean.traclock.App
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 
-/**
- * 数据库的相关操作
- */
-object Database {
-    private val recordDao = AppDatabase.getDatabase(App.context).recordDao()
-    private val projectDao = AppDatabase.getDatabase(App.context).projectDao()
-    private val projectsList = App.projects
+internal class DatabaseModel(
+    mContext: Context
+) {
+    private val recordDao = AppDatabase.getDatabase(mContext).recordDao()
+    private val projectDao = AppDatabase.getDatabase(mContext).projectDao()
+
+    /** 所有的项目 */
+    private val mProjects: MutableMap<String, Project> = runBlocking(Dispatchers.IO) {
+        projectDao.getAll()
+            .associateBy { it.name }
+            .toMutableMap()
+    }
+
+    val projects: Map<String, Project>
+        get() = mProjects
+
+    fun removeProject(projectName: String) {
+        mProjects.remove(projectName)
+    }
+
+    fun addProject(project: Project) {
+        mProjects[project.name] = project
+    }
 
     /**
      * 删除记录
@@ -30,7 +48,7 @@ object Database {
      * @param project 要删除的项目
      */
     fun deleteProject(project: Project) {
-        projectsList.remove(project.name)
+        DataModel.dataModel.removeProject(project.name)
         thread {
             projectDao.delete(project)
             recordDao.deleteByProject(project.name)
@@ -42,8 +60,8 @@ object Database {
      * @param project 要增加的项目
      */
     fun insertProject(project: Project) {
-        if (project.name !in projectsList) {
-            projectsList[project.name] = project.color
+        if (project.name !in projects) {
+            DataModel.dataModel.addProject(project)
             thread {
                 projectDao.insert(project)
             }
@@ -56,7 +74,7 @@ object Database {
      * @return 是否插入成功
      */
     fun insertRecord(record: Record): Boolean {
-        if (record.project in projectsList) {
+        if (record.project in projects) {
             thread {
                 recordDao.insert(record)
             }
@@ -71,7 +89,7 @@ object Database {
      * @return 是否更新成功
      */
     fun updateRecord(record: Record): Boolean {
-        if (record.project in projectsList) {
+        if (record.project in projects) {
             thread {
                 recordDao.update(record)
             }
@@ -82,14 +100,14 @@ object Database {
 
     /**
      * 更新项目（同时更新该项目的所有记录）
-     * @param oldProject 旧项目
+     * @param oldProject 旧项目名
      * @param newProject 新项目
      * @return 是否更新成功
      */
     fun updateProject(oldProject: String, newProject: Project): Boolean {
-        if (newProject.name !in projectsList) {
-            projectsList.remove(oldProject)
-            projectsList[newProject.name] = newProject.color
+        if (newProject.name !in projects) {
+            DataModel.dataModel.removeProject(oldProject)
+            DataModel.dataModel.addProject(newProject)
             thread {
                 try {
                     projectDao.insert(newProject)
@@ -112,7 +130,7 @@ object Database {
      * @param project 要更新的项目
      */
     fun updateProject(project: Project) {
-        projectsList[project.name] = project.color
+        DataModel.dataModel.addProject(project)
         thread {
             projectDao.update(project)
         }

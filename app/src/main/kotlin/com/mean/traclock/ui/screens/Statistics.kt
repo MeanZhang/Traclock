@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -45,12 +44,12 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.mean.traclock.App
 import com.mean.traclock.R
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.NoData
-import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
-import com.mean.traclock.utils.getDurationString
-import com.mean.traclock.utils.getIntDate
+import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.time.ZoneId
@@ -58,7 +57,7 @@ import java.time.ZonedDateTime
 
 @Composable
 fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
-    val date = getIntDate(System.currentTimeMillis())
+    val date = TimeUtils.getIntDate(System.currentTimeMillis())
     Content(
         AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDay(date),
         contentPadding
@@ -71,7 +70,6 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }
-    val state = rememberTopAppBarState()
 
     if (duration > 0) {
         Column(
@@ -86,7 +84,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(stringResource(R.string.records_duration))
-                Text(getDurationString(duration))
+                Text(TimeUtils.getDurationString(duration))
             }
             AndroidView(
                 modifier = Modifier
@@ -124,7 +122,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                         Icon(
                             imageVector = Icons.Default.Circle,
                             contentDescription = null,
-                            tint = Color(App.projects[project.project] ?: 0),
+                            tint = Color(DataModel.dataModel.projects[project.project]?.color ?: 0),
                             modifier = Modifier
                                 .size(20.dp)
                                 .padding(horizontal = 4.dp)
@@ -136,7 +134,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                         )
                     }
                     Text(
-                        getDurationString(project.startTime, project.endTime),
+                        TimeUtils.getDurationString(project.startTime, project.endTime),
                         fontWeight = fontWeight,
                         color = color
                     )
@@ -157,7 +155,7 @@ fun setPieChart(
     chart.minimumHeight = chart.width // 宽高相同
     chart.description.isEnabled = false // 不显示description
     chart.setHoleColor(Color.Transparent.toArgb()) // 中间圆孔设为透明
-    chart.centerText = getDurationString(duration)
+    chart.centerText = TimeUtils.getDurationString(duration)
     chart.legend.isEnabled = false // 不显示图例
     chart.setUsePercentValues(true)
     chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
@@ -174,7 +172,7 @@ fun setPieChart(
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, App.context.getString(R.string.records_duration))
-    dataset.colors = projectsTime.map { App.projects[it.project] }
+    dataset.colors = projectsTime.map { DataModel.dataModel.projects[it.project]?.color }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)

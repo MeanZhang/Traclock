@@ -41,12 +41,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.getDataString
+import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.ProjectViewModel
 import com.mean.traclock.viewmodels.ProjectViewModelFactory
 
@@ -138,7 +138,7 @@ class ProjectActivity : ComponentActivity() {
                         records.forEach { (date, data) ->
                             stickyHeader {
                                 DateTitle(
-                                    date = getDataString(date),
+                                    date = TimeUtils.getDataString(date),
                                     duration = time[date] ?: 0L
                                 )
                             }
@@ -159,7 +159,7 @@ class ProjectActivity : ComponentActivity() {
                             confirmButton = {
                                 TextButton(
                                     onClick = {
-                                        Database.deleteProject(Project(projectName))
+                                        DataModel.dataModel.deleteProject(Project(projectName))
                                         finish()
                                     }
                                 ) {

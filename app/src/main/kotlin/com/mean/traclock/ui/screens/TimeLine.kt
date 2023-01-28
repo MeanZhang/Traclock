@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,12 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.App
+import com.mean.traclock.data.DataModel
+import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
-import com.mean.traclock.utils.getDataString
+import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,15 +43,15 @@ fun TimeLine(
         recordsFlow,
         viewModel.timeOfDays,
         detailView,
-        App.isTiming,
-        App.projectName,
-        App.startTime,
-        App.projects,
+        DataModel.dataModel.isRunning,
+        DataModel.dataModel.projectName,
+        DataModel.dataModel.startTime,
+        DataModel.dataModel.projects,
         contentPadding
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(
     context: Context?,
@@ -59,9 +59,9 @@ private fun Content(
     timeFlow: Flow<Map<Int, Long>>,
     detailView: Boolean,
     isTimingFlow: StateFlow<Boolean>,
-    timingProjectFlow: MutableStateFlow<String>,
-    startTimeFlow: MutableStateFlow<Long>,
-    projects: MutableMap<String, Int>,
+    timingProjectFlow: StateFlow<String>,
+    startTimeFlow: StateFlow<Long>,
+    projects: Map<String, Project>,
     contentPadding: PaddingValues
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
@@ -85,7 +85,7 @@ private fun Content(
         records.forEach { (date, data) ->
             stickyHeader {
                 DateTitle(
-                    date = getDataString(date),
+                    date = TimeUtils.getDataString(date),
                     duration = time[date] ?: 0L
                 )
             }
@@ -93,7 +93,7 @@ private fun Content(
                 RecordItem(
                     context = context,
                     record = record,
-                    color = Color(projects[record.project] ?: 0),
+                    color = Color(projects[record.project]?.color ?: 0),
                     detailView = detailView,
                     listState = listState
                 )
@@ -106,12 +106,12 @@ private fun Content(
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewTimeline() {
-    val projects = mutableMapOf(
-        Pair("测试1", Color.Black.toArgb()),
-        Pair("测试2", Color.Blue.toArgb()),
-        Pair("测试3", Color.Cyan.toArgb()),
-        Pair("测试4", Color.DarkGray.toArgb())
-    )
+    val projects = listOf(
+        Project("测试1", Color.Black.toArgb()),
+        Project("测试2", Color.Blue.toArgb()),
+        Project("测试3", Color.Cyan.toArgb()),
+        Project("测试4", Color.DarkGray.toArgb())
+    ).associateBy { it.name }
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
     for (i in 0..10) {

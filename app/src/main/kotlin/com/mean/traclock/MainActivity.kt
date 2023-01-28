@@ -36,13 +36,13 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.mean.traclock.test.TestActivity
+import com.mean.traclock.ui.Destinations
 import com.mean.traclock.ui.EditProjectActivity
 import com.mean.traclock.ui.screens.Projects
 import com.mean.traclock.ui.screens.Settings
 import com.mean.traclock.ui.screens.Statistics
 import com.mean.traclock.ui.screens.TimeLine
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.ui.utils.Destinations
 import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 

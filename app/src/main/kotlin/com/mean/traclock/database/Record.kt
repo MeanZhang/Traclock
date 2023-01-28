@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Fts4
 import androidx.room.PrimaryKey
-import com.mean.traclock.utils.getIntDate
+import com.mean.traclock.utils.TimeUtils
 
 /**
  * @param project 项目
@@ -19,7 +19,7 @@ data class Record(
     var project: String,
     var startTime: Long,
     var endTime: Long,
-    var date: Int = getIntDate(startTime)
+    var date: Int = TimeUtils.getIntDate(startTime)
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")

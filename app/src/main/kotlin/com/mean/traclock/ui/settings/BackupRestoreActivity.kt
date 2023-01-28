@@ -34,6 +34,7 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
 import com.mean.traclock.ui.components.SettingItemWinthoutIcon
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.BackupRestoreViewModel
 
 class BackupRestoreActivity : ComponentActivity() {
@@ -98,7 +99,7 @@ class BackupRestoreActivity : ComponentActivity() {
                         SettingItemWinthoutIcon(
                             title = stringResource(R.string.backup),
                             description = stringResource(R.string.backup_locally),
-                            onClick = { backupLauncher.launch(BuildConfig.APPLICATION_ID + "_backup.csv") }
+                            onClick = { backupLauncher.launch(getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv") }
                         )
 
                         SettingGroupTitleWithoutIcon(stringResource(R.string.restore))

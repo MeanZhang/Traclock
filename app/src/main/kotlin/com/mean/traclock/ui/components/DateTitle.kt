@@ -8,16 +8,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
-import com.mean.traclock.utils.getDurationString
+import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.TimeUtils
 
 @Composable
 fun DateTitle(date: String, duration: Long) {
@@ -35,7 +35,7 @@ fun DateTitle(date: String, duration: Long) {
 //            style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                getDurationString(duration),
+                TimeUtils.getDurationString(duration),
                 color = MaterialTheme.colorScheme.primary
 //            style = MaterialTheme.typography.headlineSmall
             )
@@ -47,7 +47,7 @@ fun DateTitle(date: String, duration: Long) {
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun DateTitlePreview() {
-    Scaffold(topBar = { SmallTopAppBar(title = { Text(text = "DateTitle") }) }) {
+    Scaffold(topBar = { TopAppBar(title = { Text(text = "DateTitle") }) }) {
         LazyColumn(contentPadding = it) {
             item {
                 DateTitle(date = "今天", duration = 80)

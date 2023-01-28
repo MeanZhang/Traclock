@@ -48,7 +48,7 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
 
 class AboutActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)

@@ -1,14 +1,12 @@
 package com.mean.traclock.ui.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,7 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.App
+import com.mean.traclock.data.DataModel
+import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
@@ -39,30 +38,28 @@ fun Projects(
 ) {
     Content(
         context,
-        App.projectName,
+        DataModel.dataModel.projectName,
         viewModel.projectsTime,
-        App.isTiming,
-        App.startTime,
-        App.projects,
+        DataModel.dataModel.isRunning,
+        DataModel.dataModel.startTime,
+        DataModel.dataModel.projects,
         contentPadding
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun Content(
     context: Context?,
-    timingProjectFlow: MutableStateFlow<String>,
+    timingProjectFlow: StateFlow<String>,
     projectsTimeFlow: Flow<List<Record>>,
     isTimingFlow: StateFlow<Boolean>,
-    startTimeFlow: MutableStateFlow<Long>,
-    projects: MutableMap<String, Int>,
+    startTimeFlow: StateFlow<Long>,
+    projects: Map<String, Project>,
     contentPadding: PaddingValues
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
-    val state = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
 
     LazyColumn(contentPadding = contentPadding, modifier = Modifier.fillMaxSize()) {
         item {
@@ -74,7 +71,7 @@ private fun Content(
         }
         projectsTime.forEach {
             item {
-                RecordItem(context, it, Color(projects[it.project] ?: 0), false)
+                RecordItem(context, it, Color(projects[it.project] ?.color ?: 0), false)
             }
         }
     }
@@ -84,12 +81,12 @@ private fun Content(
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewProjects() {
-    val projects = mutableMapOf(
-        Pair("测试1", Color.Black.toArgb()),
-        Pair("测试2", Color.Blue.toArgb()),
-        Pair("测试3", Color.Cyan.toArgb()),
-        Pair("测试4", Color.DarkGray.toArgb())
-    )
+    val projects = listOf(
+        Project("测试1", Color.Black.toArgb()),
+        Project("测试2", Color.Blue.toArgb()),
+        Project("测试3", Color.Cyan.toArgb()),
+        Project("测试4", Color.DarkGray.toArgb())
+    ).associateBy { it.name }
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
     for (i in 0..10) {

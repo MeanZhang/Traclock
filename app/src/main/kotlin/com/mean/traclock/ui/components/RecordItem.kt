@@ -3,6 +3,7 @@ package com.mean.traclock.ui.components
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,19 +31,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.mean.traclock.R
+import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.EditRecordActivity
 import com.mean.traclock.ui.ProjectActivity
-import com.mean.traclock.utils.Config.HORIZONTAL_MARGIN
-import com.mean.traclock.utils.Database
-import com.mean.traclock.utils.Timer
-import com.mean.traclock.utils.getDurationString
-import com.mean.traclock.utils.getTimeString
+import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun RecordItem(
     context: Context?,
@@ -51,11 +52,16 @@ fun RecordItem(
     detailView: Boolean = true,
     listState: LazyListState? = null
 ) {
-    val startTime = getTimeString(record.startTime)
-    val endTime = getTimeString(record.endTime)
+    val startTime = TimeUtils.getTimeString(record.startTime)
+    val endTime = TimeUtils.getTimeString(record.endTime)
     val projectName = record.project
     var showMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,26 +105,26 @@ fun RecordItem(
                     Text(projectName)
                     Text(
                         if (detailView) "$startTime - $endTime"
-                        else getDurationString(record.startTime, record.endTime, false),
+                        else TimeUtils.getDurationString(record.startTime, record.endTime, false),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
             SmallOutlinedButton(
-                text = getDurationString(record.startTime, record.endTime, detailView),
-                onClick = {
-                    scope.launch {
-                        Timer.startRecord(projectName)
-                        listState?.animateScrollToItem(0)
-                    }
+                text = TimeUtils.getDurationString(record.startTime, record.endTime, detailView)
+            ) {
+                scope.launch {
+                    notificationPermissionState?.launchPermissionRequest()
+                    DataModel.dataModel.startTimer(record.project)
+                    listState?.animateScrollToItem(0)
                 }
-            )
+            }
         }
         DropdownMenu(showMenu, { showMenu = false }) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
-                onClick = { showMenu = false; Database.deleteRecord(record) }
+                onClick = { showMenu = false; DataModel.dataModel.deleteRecord(record) }
             )
         }
     }

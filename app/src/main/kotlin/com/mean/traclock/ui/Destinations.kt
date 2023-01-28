@@ -1,4 +1,4 @@
-package com.mean.traclock.ui.utils
+package com.mean.traclock.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
