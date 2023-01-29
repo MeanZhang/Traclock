@@ -25,7 +25,7 @@
     <string name="please_enter_a_project_name">Please enter a project name</string>
     <string name="new_project">New Project</string>
     <string name="change_view">Change view</string>
-    <string name="is_tracking">There is a tracking project, please stop it.</string>
+    <string name="is_running_description">There is a tracking project, please stop it.</string>
     <string name="confirm_delete_project">Are you sure you want to delete this project? The operation is irreversible.</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_test">Test</string>
@@ -71,4 +71,5 @@
     <string name="ok">OK</string>
     <string name="please_wait">Please wait.</string>
     <string name="title_activity_open_source_licenses">Open Source Licenses</string>
+    <string name="restore_failed">Restore Failed</string>
 </resources>

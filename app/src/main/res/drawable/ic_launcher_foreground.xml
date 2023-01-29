@@ -3,10 +3,10 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-  <group android:scaleX="0.11329662"
-      android:scaleY="0.11329662"
-      android:translateX="35.31512"
-      android:translateY="34.56">
+  <group android:scaleX="0.1006993"
+      android:scaleY="0.1006993"
+      android:translateX="37.39267"
+      android:translateY="36.72">
     <path
         android:pathData="M294.42,16 L164.92,163 35.42,16Z"
         android:strokeWidth="32"
@@ -14,7 +14,7 @@
         android:strokeColor="#000"/>
     <path
         android:fillColor="#FF000000"
-        android:pathData="M35.42,327.17l129.5,-147 129.5,147Z"
+        android:pathData="M35.42,327.2l129.5,-147 129.5,147Z"
         android:strokeWidth="32"
         android:strokeColor="#000"/>
   </group>

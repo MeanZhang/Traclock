@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.mean.traclock">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".App"
@@ -14,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Traclock"
-        tools:targetApi="31">
+        tools:targetApi="32">
+        <service
+            android:name=".timer.TimerService"
+            android:directBootAware="true" />
+
         <activity
             android:name=".ui.settings.OpenSourceLicensesActivity"
             android:exported="false"
@@ -32,27 +37,22 @@
             android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".ui.ProjectActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_project"
             android:theme="@style/Theme.Traclock" />
         <activity
             android:name=".ui.settings.BackupRestoreActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_backup_restore"
             android:theme="@style/Theme.Traclock" />
         <activity
-            android:name=".test.TestActivity"
-            android:exported="true"
-            android:label="@string/title_activity_test"
+            android:name=".ui.EditRecordActivity"
+            android:exported="false"
+            android:label="@string/title_activity_edit_record"
             android:theme="@style/Theme.Traclock" />
         <activity
-            android:name=".ui.EditRecordActivity"
-            android:exported="true"
-            android:label="@string/title_activity_edit_record"
-            android:theme="@style/Theme.Traclock.NoActionBar" />
-        <activity
             android:name=".ui.EditProjectActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_edit_project"
             android:theme="@style/Theme.Traclock" />
         <activity
@@ -61,7 +61,6 @@
             android:theme="@style/Theme.Traclock">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
