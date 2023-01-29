@@ -101,7 +101,7 @@ fun RecordItem(
                         .padding(end = 8.dp)
                         .size(20.dp)
                 )
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(projectName)
                     Text(
                         if (detailView) "$startTime - $endTime"

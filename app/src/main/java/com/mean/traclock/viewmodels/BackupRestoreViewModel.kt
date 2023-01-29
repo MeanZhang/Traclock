@@ -82,7 +82,7 @@ class BackupRestoreViewModel : ViewModel() {
                 BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
                     writer.write("Project,Start Time,End Time\n")
                     for (project in DataModel.dataModel.projects) {
-                        writer.write(project.key + ",-1," + project.value.color + "\n")
+                        writer.write(project.key + ",-1," + project.value + "\n")
                         setProgress(completed++.toFloat() / size)
                     }
                     for (record in records) {

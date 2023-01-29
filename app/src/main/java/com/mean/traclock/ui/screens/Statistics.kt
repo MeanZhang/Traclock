@@ -123,7 +123,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                         Icon(
                             imageVector = Icons.Default.Circle,
                             contentDescription = null,
-                            tint = Color(DataModel.dataModel.projects[project.project]?.color ?: 0),
+                            tint = Color(DataModel.dataModel.projects[project.project] ?: 0),
                             modifier = Modifier
                                 .size(20.dp)
                                 .padding(horizontal = 4.dp)
@@ -143,7 +143,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
             }
         }
     } else {
-        NoData(Modifier.padding(contentPadding))
+        NoData(stringResource(R.string.no_record), Modifier.padding(contentPadding))
     }
 }
 
@@ -174,7 +174,7 @@ fun setPieChart(
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, context.getString(R.string.records_duration))
-    dataset.colors = projectsTime.map { DataModel.dataModel.projects[it.project]?.color }
+    dataset.colors = projectsTime.map { DataModel.dataModel.projects[it.project] }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)

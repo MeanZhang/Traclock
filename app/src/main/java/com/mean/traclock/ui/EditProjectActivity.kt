@@ -62,7 +62,7 @@ class EditProjectActivity : ComponentActivity() {
         setContent {
             TraclockTheme {
                 val name by viewModel.name.collectAsState("")
-                val color by viewModel.color.collectAsState(Color.Blue)
+                val color by viewModel.color.collectAsState()
 
                 val state = rememberTopAppBarState()
                 val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
@@ -107,10 +107,10 @@ class EditProjectActivity : ComponentActivity() {
                                 isModified = viewModel.isModified()
                             })
                         }
-                        ColorPicker(onColorSelected = {
+                        ColorPicker(color = viewModel.color.value) {
                             viewModel.setColor(it)
                             isModified = viewModel.isModified()
-                        })
+                        }
                     }
                 }
                 if (showDialog.value) {

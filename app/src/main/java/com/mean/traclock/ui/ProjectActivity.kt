@@ -42,6 +42,7 @@ import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Project
 import com.mean.traclock.ui.components.DateTitle
+import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.TimeUtils
@@ -133,20 +134,23 @@ class ProjectActivity : ComponentActivity() {
                         modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
                         contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding())
                     ) {
-                        records.forEach { (date, data) ->
-                            stickyHeader {
-                                DateTitle(
-                                    date = TimeUtils.getDataString(date),
-                                    duration = time[date] ?: 0L
-                                )
+                        if (records.isNotEmpty()) {
+                            records.forEach { (date, data) ->
+                                stickyHeader {
+                                    DateTitle(
+                                        date = TimeUtils.getDataString(date),
+                                        duration = time[date] ?: 0L
+                                    )
+                                }
+                                items(data) {
+                                    RecordItem(
+                                        record = it,
+                                        color = Color(DataModel.dataModel.projects[projectName]!!)
+                                    )
+                                }
                             }
-                            items(data) {
-                                RecordItem(
-//                                    context = this@ProjectActivity,
-                                    record = it,
-                                    color = Color.Cyan
-                                )
-                            }
+                        } else {
+                            item { NoData(stringResource(R.string.no_record)) }
                         }
                     }
 

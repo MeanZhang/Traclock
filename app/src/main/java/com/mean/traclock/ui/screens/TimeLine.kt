@@ -1,6 +1,5 @@
 package com.mean.traclock.ui.screens
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -15,12 +14,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.DateTitle
+import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.utils.TimeUtils
@@ -34,14 +36,12 @@ import java.time.ZonedDateTime
 
 @Composable
 fun TimeLine(
-    context: Context,
     viewModel: MainViewModel,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val detailView by viewModel.detailView.collectAsState()
     val recordsFlow = if (detailView) viewModel.records else viewModel.projectsTimeOfDays
     Content(
-        context,
         recordsFlow,
         viewModel.timeOfDays,
         detailView,
@@ -56,14 +56,13 @@ fun TimeLine(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(
-    context: Context?,
     recordsFlow: Flow<Map<Int, List<Record>>>,
     timeFlow: Flow<Map<Int, Long>>,
     detailView: Boolean,
     isTimingFlow: StateFlow<Boolean>,
     timingProjectFlow: StateFlow<String>,
     startTimeFlow: StateFlow<Long>,
-    projects: Map<String, Project>,
+    projects: Map<String, Int>,
     contentPadding: PaddingValues
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
@@ -84,20 +83,26 @@ private fun Content(
                 isTiming
             )
         }
-        records.forEach { (date, data) ->
-            stickyHeader {
-                DateTitle(
-                    date = TimeUtils.getDataString(date),
-                    duration = time[date] ?: 0L
-                )
+        if (records.isNotEmpty()) {
+            records.forEach { (date, data) ->
+                stickyHeader {
+                    DateTitle(
+                        date = TimeUtils.getDataString(date),
+                        duration = time[date] ?: 0L
+                    )
+                }
+                items(data) { record ->
+                    RecordItem(
+                        record = record,
+                        color = Color(projects[record.project] ?: 0),
+                        detailView = detailView,
+                        listState = listState
+                    )
+                }
             }
-            items(data) { record ->
-                RecordItem(
-                    record = record,
-                    color = Color(projects[record.project]?.color ?: 0),
-                    detailView = detailView,
-                    listState = listState
-                )
+        } else {
+            item {
+                NoData(stringResource(R.string.no_record))
             }
         }
     }
@@ -112,7 +117,7 @@ fun PreviewTimeline() {
         Project("测试2", Color.Blue.toArgb()),
         Project("测试3", Color.Cyan.toArgb()),
         Project("测试4", Color.DarkGray.toArgb())
-    ).associateBy { it.name }
+    ).associate { Pair(it.name, it.color) }
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
     for (i in 0..10) {
@@ -141,7 +146,6 @@ fun PreviewTimeline() {
     val timingProjectFlow = MutableStateFlow(projects.keys.elementAt(0))
     val startTimeFlow = MutableStateFlow(System.currentTimeMillis() - 1000 * 10)
     Content(
-        context = null,
         recordsFlow = recordsFlow,
         timeFlow = timeFlow,
         detailView = true,

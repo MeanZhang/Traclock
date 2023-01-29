@@ -71,14 +71,12 @@ class MainActivity : ComponentActivity() {
                     AnimatedNavHost(navController, Destinations.TIMELINE.route) {
                         composable(Destinations.TIMELINE.route) {
                             TimeLine(
-                                this@MainActivity,
                                 viewModel,
                                 contentPadding
                             )
                         }
                         composable(Destinations.PROJECTS.route) {
                             Projects(
-                                this@MainActivity,
                                 viewModel,
                                 contentPadding
                             )

@@ -1,7 +1,6 @@
 package com.mean.traclock.ui.screens
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,12 +31,10 @@ import java.time.ZonedDateTime
 @DelicateCoroutinesApi
 @Composable
 fun Projects(
-    context: Context,
     viewModel: MainViewModel,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     Content(
-        context,
         DataModel.dataModel.projectName,
         viewModel.projectsTime,
         DataModel.dataModel.isRunning,
@@ -50,12 +47,11 @@ fun Projects(
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun Content(
-    context: Context?,
     timingProjectFlow: StateFlow<String>,
     projectsTimeFlow: Flow<List<Record>>,
     isTimingFlow: StateFlow<Boolean>,
     startTimeFlow: StateFlow<Long>,
-    projects: Map<String, Project>,
+    projects: Map<String, Int>,
     contentPadding: PaddingValues
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
@@ -71,7 +67,7 @@ private fun Content(
         }
         projectsTime.forEach {
             item {
-                RecordItem(it, Color(projects[it.project] ?.color ?: 0), false)
+                RecordItem(it, Color(projects[it.project] ?: 0), false)
             }
         }
     }
@@ -86,7 +82,7 @@ fun PreviewProjects() {
         Project("测试2", Color.Blue.toArgb()),
         Project("测试3", Color.Cyan.toArgb()),
         Project("测试4", Color.DarkGray.toArgb())
-    ).associateBy { it.name }
+    ).associate { Pair(it.name, it.color) }
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
     for (i in 0..10) {
@@ -115,7 +111,6 @@ fun PreviewProjects() {
     val isTimingFlow = MutableStateFlow(true)
     val startTimeFlow = MutableStateFlow(System.currentTimeMillis() - 1000 * 10)
     Content(
-        context = null,
         timingProjectFlow = timingProjectFlow,
         projectsTimeFlow = projectsTimeFlow,
         isTimingFlow = isTimingFlow,

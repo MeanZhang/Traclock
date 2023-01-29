@@ -46,23 +46,8 @@ class DataModel private constructor() {
     }
 
     /** 所有项目 */
-    val projects: Map<String, Project>
+    val projects: Map<String, Int>
         get() = mDatabaseModel!!.projects
-
-    /**
-     * 删除项目
-     *
-     * @param projectName 项目名称
-     */
-    fun removeProject(projectName: String) {
-        Utils.enforceMainLooper()
-        mDatabaseModel!!.removeProject(projectName)
-    }
-
-    /** 添加项目 */
-    fun addProject(project: Project) {
-        mDatabaseModel!!.addProject(project)
-    }
 
     /** 当前的项目名称 */
     val projectName: StateFlow<String>

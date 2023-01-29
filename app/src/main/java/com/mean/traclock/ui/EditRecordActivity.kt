@@ -216,28 +216,28 @@ class EditRecordActivity : AppCompatActivity() {
                         confirmButton = {},
                         text = {
                             LazyColumn {
-                                items(DataModel.dataModel.projects.values.toList()) {
+                                items(DataModel.dataModel.projects.keys.toList()) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.clickable {
-                                            viewModel.setProject(it.name)
+                                            viewModel.setProject(it)
                                             isModified = viewModel.isModified()
                                             showProjectsDialog = false
                                         }
                                     ) {
                                         RadioButton(
-                                            selected = project == it.name,
+                                            selected = project == it,
                                             colors = RadioButtonDefaults.colors(
-                                                selectedColor = Color(it.color),
-                                                unselectedColor = Color(it.color)
+                                                selectedColor = Color(DataModel.dataModel.projects[it]!!),
+                                                unselectedColor = Color(DataModel.dataModel.projects[it]!!)
                                             ),
                                             onClick = {
-                                                viewModel.setProject(it.name)
+                                                viewModel.setProject(it)
                                                 isModified = viewModel.isModified()
                                                 showProjectsDialog = false
                                             }
                                         )
-                                        Text(it.name, Modifier.fillMaxWidth())
+                                        Text(it, Modifier.fillMaxWidth())
                                     }
                                 }
                             }

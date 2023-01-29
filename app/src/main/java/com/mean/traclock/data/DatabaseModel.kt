@@ -16,22 +16,14 @@ internal class DatabaseModel(
     private val projectDao = AppDatabase.getDatabase(mContext).projectDao()
 
     /** 所有的项目 */
-    private val mProjects: MutableMap<String, Project> = runBlocking(Dispatchers.IO) {
+    private val _projects: MutableMap<String, Int> = runBlocking(Dispatchers.IO) {
         projectDao.getAll()
-            .associateBy { it.name }
-            .toMutableMap()
+            .associate { Pair(it.name, it.color) }.toMutableMap()
     }
 
-    val projects: Map<String, Project>
-        get() = mProjects
-
-    fun removeProject(projectName: String) {
-        mProjects.remove(projectName)
-    }
-
-    fun addProject(project: Project) {
-        mProjects[project.name] = project
-    }
+    /** 所有项目 */
+    val projects: Map<String, Int>
+        get() = _projects
 
     /**
      * 删除记录
@@ -48,7 +40,7 @@ internal class DatabaseModel(
      * @param project 要删除的项目
      */
     fun deleteProject(project: Project) {
-        DataModel.dataModel.removeProject(project.name)
+        _projects.remove(project.name)
         thread {
             projectDao.delete(project)
             recordDao.deleteByProject(project.name)
@@ -61,7 +53,6 @@ internal class DatabaseModel(
      */
     fun insertProject(project: Project) {
         if (project.name !in projects) {
-            DataModel.dataModel.addProject(project)
             thread {
                 projectDao.insert(project)
             }
@@ -105,9 +96,8 @@ internal class DatabaseModel(
      * @return 是否更新成功
      */
     fun updateProject(oldProject: String, newProject: Project): Boolean {
+        _projects[newProject.name] = newProject.color
         if (newProject.name !in projects) {
-            DataModel.dataModel.removeProject(oldProject)
-            DataModel.dataModel.addProject(newProject)
             thread {
                 try {
                     projectDao.insert(newProject)
@@ -130,7 +120,7 @@ internal class DatabaseModel(
      * @param project 要更新的项目
      */
     fun updateProject(project: Project) {
-        DataModel.dataModel.addProject(project)
+        _projects[project.name] = project.color
         thread {
             projectDao.update(project)
         }
@@ -142,6 +132,5 @@ internal class DatabaseModel(
     fun getTimeOfDays() = recordDao.getTimeOfDays()
     fun getProjectsTime() = recordDao.getProjectsTime()
     fun getRecordsOfDays(projectName: String) = recordDao.getRecordsOfDays(projectName)
-
     fun getTimeOfDays(projectName: String) = recordDao.getTimeOfDays(projectName)
 }
