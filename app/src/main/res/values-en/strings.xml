@@ -71,4 +71,5 @@
     <string name="ok">OK</string>
     <string name="please_wait">Please wait.</string>
     <string name="title_activity_open_source_licenses">Open Source Licenses</string>
+    <string name="restore_failed">Restore Failed</string>
 </resources>

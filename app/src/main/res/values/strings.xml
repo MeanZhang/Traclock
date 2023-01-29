@@ -74,4 +74,5 @@
     <string name="title_activity_open_source_licenses">开放源代码许可</string>
     <string name="github_page" translatable="false">https://github.com/MeanZhang</string>
     <string name="default_label" translatable="false">Traclock</string>
+    <string name="restore_failed">恢复失败</string>
 </resources>
