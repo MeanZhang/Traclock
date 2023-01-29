@@ -63,6 +63,6 @@ footer: Copyright © 2021-2023 Mean
 
 | 时间线                                                       | 时间线                                                       | 项目                                                      | 统计                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------ |
-| ![timeline-detail](images/ui/timeline-detail.png) | ![timeline](images/ui/timeline.png)    | ![projects](images/ui/projects.png) | ![statistics](images/ui/statistics.png) |
+| ![timeline-detail](./images/ui/timeline-detail.png) | ![timeline](./images/ui/timeline.png)    | ![projects](./images/ui/projects.png) | ![statistics](./images/ui/statistics.png) |
 | 设置                                                         | 通知                                                         | 深色                                                      | 恢复                                                         |
-| ![settings](images/ui/settings.png)    | ![notification](images/ui/notification.png) | ![dark](images/ui/dark.png)         | ![restore](images/ui/restore.png)      |
+| ![settings](./images/ui/settings.png)    | ![notification](./images/ui/notification.png) | ![dark](./images/ui/dark.png)         | ![restore](./images/ui/restore.png)      |
