@@ -71,7 +71,7 @@ private fun Content(
         }
         projectsTime.forEach {
             item {
-                RecordItem(context, it, Color(projects[it.project] ?.color ?: 0), false)
+                RecordItem(it, Color(projects[it.project] ?.color ?: 0), false)
             }
         }
     }

@@ -1,9 +1,5 @@
 package com.mean.traclock.utils
 
-// import java.time.Instant
-// import java.time.ZoneId
-// import java.time.ZonedDateTime
-// import java.time.format.DateTimeFormatter
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
@@ -11,11 +7,17 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.abs
 
+/* 预览时使用 */
+// import java.time.Instant
+// import java.time.ZoneId
+// import java.time.ZonedDateTime
+// import java.time.format.DateTimeFormatter
+
 object TimeUtils {
     /**
      * 获取以整数表示的日期
-     * @param timestamp 时间戳（毫秒）
-     * @return 以整数表示的日期，例如20211231
+     * @param timestamp 时间戳，以毫秒为单位
+     * @return 以整数表示的日期，例如 `20000101`
      */
     fun getIntDate(timestamp: Long = System.currentTimeMillis()): Int {
         val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
@@ -25,7 +27,7 @@ object TimeUtils {
     /**
      * 获取日期时间字符串
      * @param timestamp 时间戳（毫秒）
-     * @return 日期时间字符串，格式为系统时区的“yyyy-MM-dd HH:mm:ss”
+     * @return 日期时间字符串，格式为系统时区的 `yyyy-MM-dd HH:mm:ss`
      */
     fun getDateTimeString(timestamp: Long): String {
         val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
@@ -33,9 +35,9 @@ object TimeUtils {
     }
 
     /**
-     * 获取精确到分时间字符串
+     * 获取精确到分的时间字符串
      * @param timestamp 时间戳（毫秒）
-     * @return 精确到分的时间字符串，格式为系统时区的“HH:mm”
+     * @return 精确到分的时间字符串，格式为系统时区的 `HH:mm`
      */
     fun getTimeString(timestamp: Long): String {
         val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
@@ -46,7 +48,7 @@ object TimeUtils {
      * 获取时长字符串
      * @param startTime 开始时间的时间戳（秒）
      * @param endTime 结束时间的时间戳（秒）
-     * @return 精确到秒的时间字符串，格式为“HH:mm:ss”
+     * @return 精确到秒的时间字符串，格式为 `HH:mm:ss`
      */
     fun getMillisecondDurationString(startTime: Long, endTime: Long): String {
         val last = abs(startTime - endTime)
@@ -61,7 +63,7 @@ object TimeUtils {
      * @param startTime 开始时间的时间戳
      * @param endTime 结束时间的时间戳
      * @param useMillisecond 时间戳单位是否为毫秒
-     * @return 精确到秒的时间字符串，格式为“HH:mm:ss”
+     * @return 精确到秒的时间字符串，格式为 `HH:mm:ss`
      */
     fun getDurationString(startTime: Long, endTime: Long, useMillisecond: Boolean = true): String {
         val last = if (useMillisecond) abs(startTime - endTime) / 1000 else abs(startTime - endTime)
@@ -74,7 +76,7 @@ object TimeUtils {
     /**
      * 获取时长字符串
      * @param duration 时长秒数
-     * @return 精确到秒的时间字符串，格式为“HH:mm:ss”
+     * @return 精确到秒的时间字符串，格式为`HH:mm:ss`
      */
     fun getDurationString(duration: Long): String {
         val s = duration % 60
@@ -104,7 +106,7 @@ object TimeUtils {
     /**
      * 获取日期字符串
      * @param date 以整数表示的日期，例如20211231
-     * @return
+     * @return 日期字符串，格式为系统时区的日期
      */
     fun getDataString(date: Int): String {
         val year = date / 10000
@@ -125,7 +127,7 @@ object TimeUtils {
     /**
      * 获取精确到秒的时间
      * @param timestamp 时间戳（毫秒）
-     * @return 精确到秒的时间字符串，格式为“HH:mm:ss”
+     * @return 精确到秒的时间字符串，格式为 `HH:mm:ss`
      */
     fun getTimeWithSeconds(timestamp: Long): String {
         val time = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
@@ -136,6 +138,7 @@ object TimeUtils {
 
     /**
      * 获取当前日期时间
+     * @return 日期时间字符串，格式为 `yyyyMMddHHmmss`
      */
     fun getDateTime(): String {
         val time = ZonedDateTime.now(ZoneId.systemDefault())

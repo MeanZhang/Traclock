@@ -156,6 +156,15 @@ class DataModel private constructor() {
      */
     fun updateRecord(record: Record) = mDatabaseModel!!.updateRecord(record)
 
+    fun getProjectsTimeOfDay(date: Int) = mDatabaseModel!!.getProjectsTimeOfDay(date)
+    fun getRecordsOfDays() = mDatabaseModel!!.getRecordsOfDays()
+    fun getProjectsTimeOfDays() = mDatabaseModel!!.getProjectsTimeOfDays()
+    fun getTimeOfDays() = mDatabaseModel!!.getTimeOfDays()
+    fun getProjectsTime() = mDatabaseModel!!.getProjectsTime()
+    fun getRecordsOfDays(projectName: String) = mDatabaseModel!!.getRecordsOfDays(projectName)
+
+    fun getTimeOfDays(projectName: String) = mDatabaseModel!!.getTimeOfDays(projectName)
+
     companion object {
         @SuppressLint("StaticFieldLeak")
         val sDataModel = DataModel()

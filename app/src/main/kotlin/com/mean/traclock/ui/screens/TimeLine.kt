@@ -93,7 +93,6 @@ private fun Content(
             }
             items(data) { record ->
                 RecordItem(
-                    context = context,
                     record = record,
                     color = Color(projects[record.project]?.color ?: 0),
                     detailView = detailView,

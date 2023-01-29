@@ -1,5 +1,6 @@
 package com.mean.traclock.ui.screens
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,10 +44,8 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.mean.traclock.App
 import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
-import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
@@ -59,7 +59,7 @@ import java.time.ZonedDateTime
 fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val date = TimeUtils.getIntDate(System.currentTimeMillis())
     Content(
-        AppDatabase.getDatabase(App.context).recordDao().getProjectsTimeOfDay(date),
+        DataModel.dataModel.getProjectsTimeOfDay(date),
         contentPadding
     )
 }
@@ -70,6 +70,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }
+    val context = LocalContext.current
 
     if (duration > 0) {
         Column(
@@ -93,10 +94,10 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                     .padding(horizontal = HORIZONTAL_MARGIN),
                 factory = { context ->
                     PieChart(context).apply {
-                        setPieChart(this, projectsTime, duration, selected)
+                        setPieChart(context, this, projectsTime, duration, selected)
                     }
                 },
-                update = { chart -> setPieChart(chart, projectsTime, duration, selected) }
+                update = { chart -> setPieChart(context, chart, projectsTime, duration, selected) }
             )
             for ((index, project) in projectsTime.withIndex()) {
                 var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
@@ -147,6 +148,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
 }
 
 fun setPieChart(
+    context: Context,
     chart: PieChart,
     projectsTime: List<Record>,
     duration: Long,
@@ -171,7 +173,7 @@ fun setPieChart(
     })
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
-    val dataset = PieDataSet(list, App.context.getString(R.string.records_duration))
+    val dataset = PieDataSet(list, context.getString(R.string.records_duration))
     dataset.colors = projectsTime.map { DataModel.dataModel.projects[it.project]?.color }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)

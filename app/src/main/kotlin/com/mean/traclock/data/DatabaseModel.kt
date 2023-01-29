@@ -135,4 +135,13 @@ internal class DatabaseModel(
             projectDao.update(project)
         }
     }
+
+    fun getProjectsTimeOfDay(date: Int) = recordDao.getProjectsTimeOfDay(date)
+    fun getRecordsOfDays() = recordDao.getRecordsOfDays()
+    fun getProjectsTimeOfDays() = recordDao.getProjectsTimeOfDays()
+    fun getTimeOfDays() = recordDao.getTimeOfDays()
+    fun getProjectsTime() = recordDao.getProjectsTime()
+    fun getRecordsOfDays(projectName: String) = recordDao.getRecordsOfDays(projectName)
+
+    fun getTimeOfDays(projectName: String) = recordDao.getTimeOfDays(projectName)
 }

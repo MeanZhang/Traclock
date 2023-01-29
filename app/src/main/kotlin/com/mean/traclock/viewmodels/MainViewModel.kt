@@ -1,17 +1,15 @@
 package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.mean.traclock.App
-import com.mean.traclock.database.AppDatabase
+import com.mean.traclock.data.DataModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class MainViewModel : ViewModel() {
-    private val recordDao = AppDatabase.getDatabase(App.context).recordDao()
-    val records = recordDao.getRecordsOfDays()
-    val projectsTimeOfDays = recordDao.getProjectsTimeOfDays()
-    val timeOfDays = recordDao.getTimeOfDays()
-    val projectsTime = recordDao.getProjectsTime()
+    val records = DataModel.dataModel.getRecordsOfDays()
+    val projectsTimeOfDays = DataModel.dataModel.getProjectsTimeOfDays()
+    val timeOfDays = DataModel.dataModel.getTimeOfDays()
+    val projectsTime = DataModel.dataModel.getProjectsTime()
 
     private val _detailView = MutableStateFlow(true)
     val detailView: StateFlow<Boolean>

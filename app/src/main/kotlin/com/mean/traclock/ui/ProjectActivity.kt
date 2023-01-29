@@ -142,7 +142,7 @@ class ProjectActivity : ComponentActivity() {
                             }
                             items(data) {
                                 RecordItem(
-                                    context = this@ProjectActivity,
+//                                    context = this@ProjectActivity,
                                     record = it,
                                     color = Color.Cyan
                                 )

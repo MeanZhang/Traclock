@@ -1,7 +1,6 @@
 package com.mean.traclock.ui.components
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -29,7 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -46,7 +47,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun RecordItem(
-    context: Context?,
     record: Record,
     color: Color,
     detailView: Boolean = true,
@@ -57,27 +57,27 @@ fun RecordItem(
     val projectName = record.project
     var showMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
-    } else {
-        null
-    }
+    val context = LocalContext.current
+    val notificationPermissionState =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            null
+        }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {
-                    context?.let {
-                        val activity =
-                            if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
-                        val intent = Intent(context, activity)
-                        if (detailView) {
-                            putRecord(intent, record)
-                        } else {
-                            intent.putExtra("projectName", record.project)
-                        }
-                        context.startActivity(intent)
+                    val activity =
+                        if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
+                    val intent = Intent(context, activity)
+                    if (detailView) {
+                        putRecord(intent, record)
+                    } else {
+                        intent.putExtra("projectName", record.project)
                     }
+                    context.startActivity(intent)
                 },
                 onLongClick = if (detailView) {
                     { showMenu = true }
@@ -136,4 +136,18 @@ fun putRecord(intent: Intent, record: Record) {
     intent.putExtra("startTime", record.startTime)
     intent.putExtra("endTime", record.endTime)
     intent.putExtra("date", record.date)
+}
+
+@Preview
+@Composable
+fun RecordItemPreview() {
+    RecordItem(
+        record = Record(
+            project = "Project",
+            startTime = 0,
+            endTime = 0,
+            date = 0
+        ),
+        color = Color.Red
+    )
 }
