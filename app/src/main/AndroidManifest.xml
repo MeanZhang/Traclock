@@ -46,11 +46,6 @@
             android:label="@string/title_activity_backup_restore"
             android:theme="@style/Theme.Traclock" />
         <activity
-            android:name=".test.TestActivity"
-            android:exported="false"
-            android:label="@string/title_activity_test"
-            android:theme="@style/Theme.Traclock" />
-        <activity
             android:name=".ui.EditRecordActivity"
             android:exported="false"
             android:label="@string/title_activity_edit_record"

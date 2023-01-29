@@ -5,12 +5,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,7 +74,7 @@ private fun Content(
     val timingProject by timingProjectFlow.collectAsState()
     val startTime by startTimeFlow.collectAsState()
     LazyColumn(
-        contentPadding = contentPadding,
+        Modifier.padding(contentPadding),
         state = listState
     ) {
         item {

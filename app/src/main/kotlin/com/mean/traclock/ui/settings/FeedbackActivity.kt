@@ -1,7 +1,5 @@
 package com.mean.traclock.ui.settings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +26,7 @@ import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.theme.TraclockTheme
+import com.mean.traclock.utils.openURL
 
 class FeedbackActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -58,20 +58,17 @@ class FeedbackActivity : ComponentActivity() {
                             icon = Icons.Outlined.HelpOutline,
                             title = stringResource(R.string.help),
                             onClick = {
-                                val uri = Uri.parse(getString(R.string.doc_url))
-                                val intent = Intent(Intent.ACTION_VIEW, uri)
-                                startActivity(intent)
+                                openURL(getString(R.string.doc_url))
                             }
                         )
 
+                        Divider()
                         SettingGroupTitle(stringResource(R.string.feedback))
                         SettingItem(
                             icon = Icons.Outlined.Feedback,
                             title = stringResource(R.string.feedback),
                             onClick = {
-                                val uri = Uri.parse(getString(R.string.feedback_url))
-                                val intent = Intent(Intent.ACTION_VIEW, uri)
-                                startActivity(intent)
+                                openURL(getString(R.string.feedback_url))
                             }
                         )
                     }

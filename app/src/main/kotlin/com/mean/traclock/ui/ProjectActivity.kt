@@ -8,9 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -132,8 +130,8 @@ class ProjectActivity : ComponentActivity() {
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     LazyColumn(
-                        modifier = Modifier.padding(contentPadding),
-                        contentPadding = WindowInsets.navigationBars.asPaddingValues()
+                        modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
+                        contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding())
                     ) {
                         records.forEach { (date, data) ->
                             stickyHeader {

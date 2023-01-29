@@ -3,8 +3,14 @@ package com.mean.traclock.utils
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Looper
+
+fun Context.openURL(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    startActivity(intent)
+}
 
 object Utils {
 

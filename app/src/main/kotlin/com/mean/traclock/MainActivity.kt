@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,7 +34,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.mean.traclock.test.TestActivity
 import com.mean.traclock.ui.Destinations
 import com.mean.traclock.ui.EditProjectActivity
 import com.mean.traclock.ui.screens.Projects
@@ -131,13 +129,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }) {
                             Icon(Icons.Default.Add, stringResource(R.string.new_project))
-                        }
-                    }
-                    Destinations.SETTINGS.route -> {
-                        IconButton(onClick = {
-                            startActivity(Intent(this@MainActivity, TestActivity::class.java))
-                        }) {
-                            Icon(Icons.Default.MoreHoriz, "test")
                         }
                     }
                 }

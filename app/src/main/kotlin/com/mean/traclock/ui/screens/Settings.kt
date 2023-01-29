@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +24,7 @@ import com.mean.traclock.ui.settings.AboutActivity
 import com.mean.traclock.ui.settings.BackupRestoreActivity
 import com.mean.traclock.ui.settings.FeedbackActivity
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues()) {
     Column(
@@ -30,26 +33,28 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
             .verticalScroll(rememberScrollState())
     ) {
         SettingGroupTitle(stringResource(R.string.normal))
+
         SettingItem(
-            Icons.Outlined.SettingsBackupRestore,
             stringResource(R.string.title_activity_backup_restore),
+            Icons.Outlined.SettingsBackupRestore,
             stringResource(R.string.settings_description_backup_restore),
             onClick = {
                 context?.startActivity(Intent(context, BackupRestoreActivity::class.java))
             }
         )
+        Divider()
         SettingGroupTitle(stringResource(R.string.others))
         SettingItem(
-            Icons.Outlined.Feedback,
             stringResource(R.string.title_activity_feedback),
+            Icons.Outlined.Feedback,
             stringResource(R.string.settings_description_feedback),
             onClick = {
                 context?.startActivity(Intent(context, FeedbackActivity::class.java))
             }
         )
         SettingItem(
-            Icons.Outlined.Info,
             stringResource(R.string.title_activity_about),
+            Icons.Outlined.Info,
             stringResource(R.string.settings_description_about),
             onClick = {
                 context?.startActivity(Intent(context, AboutActivity::class.java))

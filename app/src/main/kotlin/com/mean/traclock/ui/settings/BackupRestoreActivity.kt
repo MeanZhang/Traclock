@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
-import com.mean.traclock.ui.components.SettingItemWinthoutIcon
+import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.BackupRestoreViewModel
@@ -95,14 +96,15 @@ class BackupRestoreActivity : ComponentActivity() {
                 ) { contentPadding ->
                     Column(modifier = Modifier.padding(contentPadding)) {
                         SettingGroupTitleWithoutIcon(stringResource(R.string.backup))
-                        SettingItemWinthoutIcon(
+                        SettingItem(
                             title = stringResource(R.string.backup),
                             description = stringResource(R.string.backup_locally),
                             onClick = { backupLauncher.launch(getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv") }
                         )
 
+                        Divider()
                         SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
-                        SettingItemWinthoutIcon(
+                        SettingItem(
                             title = stringResource(R.string.restore_from_file),
                             description = stringResource(R.string.settings_description_restore_from_file),
                             onClick = {
