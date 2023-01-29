@@ -1,4 +1,4 @@
-<img src="docs/.vuepress/public/images/logo.svg" alt="logo" width="100" height="100" align="right" />
+<img src="docs/images/logo.svg" alt="logo" width="100" height="100" align="right" />
 
 # 时迹
 
@@ -57,6 +57,6 @@
 
 | 时间线                                                       | 时间线                                                       | 项目                                                      | 统计                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------ |
-| ![timeline-detail](docs/.vuepress/public/images/ui/timeline-detail.png) | ![timeline](docs/.vuepress/public/images/ui/timeline.png)    | ![projects](docs/.vuepress/public/images/ui/projects.png) | ![statistics](docs/.vuepress/public/images/ui/statistics.png) |
+| ![timeline-detail](docs/images/ui/timeline-detail.png) | ![timeline](docs/images/ui/timeline.png)    | ![projects](docs/images/ui/projects.png) | ![statistics](docs/images/ui/statistics.png) |
 | 设置                                                         | 通知                                                         | 深色                                                      | 恢复                                                         |
-| ![settings](docs/.vuepress/public/images/ui/settings.png)    | ![notification](docs/.vuepress/public/images/ui/notification.png) | ![dark](docs/.vuepress/public/images/ui/dark.png)         | ![restore](docs/.vuepress/public/images/ui/restore.png)      |
+| ![settings](docs/images/ui/settings.png)    | ![notification](docs/images/ui/notification.png) | ![dark](docs/images/ui/dark.png)         | ![restore](docs/images/ui/restore.png)      |
