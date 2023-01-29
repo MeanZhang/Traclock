@@ -1,4 +1,5 @@
 import { defaultTheme, defineUserConfig } from "vuepress";
+import taskLists from "markdown-it-task-lists";
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -44,12 +45,7 @@ export default defineUserConfig({
     ],
   }),
 
-  // plugins: [
-  //     [
-  //         '@vuepress/pwa',
-  //         {
-  //             skipWaiting: true,
-  //         },
-  //     ],
-  // ],
+  extendsMarkdown: (md) => {
+    md.use(taskLists);
+  },
 });
