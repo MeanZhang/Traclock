@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
 
 @Composable

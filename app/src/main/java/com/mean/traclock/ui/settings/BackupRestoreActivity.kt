@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
-import com.mean.traclock.ui.components.SettingGroupTitleWithoutIcon
+import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.ui.theme.TraclockTheme
 import com.mean.traclock.utils.TimeUtils
@@ -88,7 +88,7 @@ class BackupRestoreActivity : ComponentActivity() {
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     Column(modifier = Modifier.padding(contentPadding)) {
-                        SettingGroupTitleWithoutIcon(stringResource(R.string.backup))
+                        SettingGroupTitle(stringResource(R.string.backup))
                         SettingItem(
                             title = stringResource(R.string.backup),
                             description = stringResource(R.string.backup_locally),
@@ -96,7 +96,7 @@ class BackupRestoreActivity : ComponentActivity() {
                         )
 
                         Divider()
-                        SettingGroupTitleWithoutIcon(stringResource(R.string.restore))
+                        SettingGroupTitle(stringResource(R.string.restore))
                         SettingItem(
                             title = stringResource(R.string.restore_from_file),
                             description = stringResource(R.string.settings_description_restore_from_file),

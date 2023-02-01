@@ -1,4 +1,4 @@
-package com.mean.traclock.utils
+package com.mean.traclock.ui
 
 import androidx.compose.ui.unit.dp
 

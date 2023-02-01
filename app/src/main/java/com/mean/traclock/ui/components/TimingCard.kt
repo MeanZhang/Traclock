@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
-import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

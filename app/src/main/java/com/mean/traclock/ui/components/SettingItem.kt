@@ -17,12 +17,18 @@ fun SettingItem(
     description: String? = null,
     onClick: () -> Unit = {}
 ) {
-    ListItem(
-        headlineText = { Text(title) },
-        supportingText = { description?.let { Text(description) } },
-        leadingContent = {
-            icon?.let { Icon(it, contentDescription = title) }
-        },
-        modifier = Modifier.clickable { onClick() }
-    )
+    if (icon != null) {
+        ListItem(
+            headlineText = { Text(title) },
+            supportingText = { description?.let { Text(it) } },
+            leadingContent = { Icon(icon, title) },
+            modifier = Modifier.clickable { onClick() }
+        )
+    } else {
+        ListItem(
+            headlineText = { Text(title) },
+            supportingText = { description?.let { Text(it) } },
+            modifier = Modifier.clickable { onClick() }
+        )
+    }
 }

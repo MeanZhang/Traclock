@@ -47,8 +47,8 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Record
+import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.components.NoData
-import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.traclock.R
+import com.mean.traclock.ui.Constants
 import com.mean.traclock.ui.theme.TraclockTheme
-import com.mean.traclock.utils.Constants
 
 class OpenSourceLicensesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
