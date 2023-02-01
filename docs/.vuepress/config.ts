@@ -27,6 +27,7 @@ export default defineUserConfig({
 
   theme: defaultTheme({
     logo: "/images/logo.svg",
+    logoDark: "/images/logo-dark.svg",
     repo: "MeanZhang/Traclock",
     docsBranch: "main",
     docsDir: "docs",

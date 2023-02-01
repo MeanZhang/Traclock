@@ -55,8 +55,8 @@
 
 ## 截图
 
-| 时间线                                                       | 时间线                                                       | 项目                                                      | 统计                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------ |
-| ![timeline-detail](docs/images/ui/timeline-detail.png) | ![timeline](docs/images/ui/timeline.png)    | ![projects](docs/images/ui/projects.png) | ![statistics](docs/images/ui/statistics.png) |
-| 设置                                                         | 通知                                                         | 深色                                                      | 恢复                                                         |
-| ![settings](docs/images/ui/settings.png)    | ![notification](docs/images/ui/notification.png) | ![dark](docs/images/ui/dark.png)         | ![restore](docs/images/ui/restore.png)      |
+| 时间线                                                 | 时间线                                           | 项目                                     | 统计                                         |
+| ------------------------------------------------------ | ------------------------------------------------ | ---------------------------------------- | -------------------------------------------- |
+| ![timeline-detail](docs/images/ui/timeline-detail.png) | ![timeline](docs/images/ui/timeline.png)         | ![projects](docs/images/ui/projects.png) | ![statistics](docs/images/ui/statistics.png) |
+| 设置                                                   | 通知                                             | 深色                                     | 恢复                                         |
+| ![settings](docs/images/ui/settings.png)               | ![notification](docs/images/ui/notification.png) | ![dark](docs/images/ui/dark.png)         | ![restore](docs/images/ui/restore.png)       |
