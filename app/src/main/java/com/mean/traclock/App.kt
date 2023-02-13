@@ -7,7 +7,6 @@ import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
-import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mean.traclock.data.DataModel
 
 class App : Application() {
@@ -21,7 +20,6 @@ class App : Application() {
 
         context = applicationContext
         initXLog()
-        AndroidThreeTen.init(this)
         val prefs = getDefaultSharedPreferences(applicationContext)
         DataModel.dataModel.init(applicationContext, prefs)
         initNotification()

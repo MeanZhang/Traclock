@@ -25,14 +25,12 @@ import com.mean.traclock.utils.Utils
 /** 构建计时通知 */
 internal class TimerNotificationBuilder {
     fun buildChannel(context: Context, notificationManager: NotificationManagerCompat) {
-        if (Utils.isOOrLater) {
-            val channel = NotificationChannel(
-                TIMER_NOTIFICATION_CHANNEL_ID,
-                context.getString(R.string.default_label),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            TIMER_NOTIFICATION_CHANNEL_ID,
+            context.getString(R.string.default_label),
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
     }
 
     @SuppressLint("LaunchActivityFromNotification")

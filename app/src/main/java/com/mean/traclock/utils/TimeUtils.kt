@@ -1,17 +1,11 @@
 package com.mean.traclock.utils
 
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.abs
-
-/* 预览时使用 */
-// import java.time.Instant
-// import java.time.ZoneId
-// import java.time.ZonedDateTime
-// import java.time.format.DateTimeFormatter
 
 object TimeUtils {
     /**
