@@ -75,7 +75,7 @@ android {
 
 dependencies {
     def room_version = "2.5.0"
-    def accompanist_version = "0.28.0"
+    def accompanist_version = "0.30.1"
 
     // MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
