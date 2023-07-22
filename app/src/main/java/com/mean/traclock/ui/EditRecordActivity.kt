@@ -69,7 +69,7 @@ class EditRecordActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val viewModel by viewModels<EditRecordViewModel> {
             EditRecordViewModelFactory(
-                getRecord(intent)
+                getRecord(intent),
             )
         }
         isModified = viewModel.isModified()
@@ -104,53 +104,53 @@ class EditRecordActivity : AppCompatActivity() {
                                 }
                                 DropdownMenu(
                                     expanded = showMenu.value,
-                                    onDismissRequest = { showMenu.value = false }
+                                    onDismissRequest = { showMenu.value = false },
                                 ) {
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.delete)) },
                                         onClick = {
                                             DataModel.dataModel.deleteRecord(viewModel.record)
                                             super.finish()
-                                        }
+                                        },
                                     )
                                 }
                             },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     Column(
                         modifier = Modifier
                             .padding(contentPadding)
                             .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 stringResource(R.string.project),
                                 style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             )
                             OutlinedButton(
                                 onClick = { showProjectsDialog = true },
-                                modifier = Modifier.weight(3f)
+                                modifier = Modifier.weight(3f),
                             ) {
                                 Text(project)
                             }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 stringResource(R.string.start),
                                 style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             )
                             OutlinedButton(
                                 onClick = {
@@ -161,19 +161,19 @@ class EditRecordActivity : AppCompatActivity() {
                                     }
                                     builder.build().show()
                                 },
-                                modifier = Modifier.weight(3f)
+                                modifier = Modifier.weight(3f),
                             ) {
                                 Text(TimeUtils.getDateTimeString(startTime))
                             }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 stringResource(R.string.end),
                                 style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             )
                             OutlinedButton(
                                 onClick = {
@@ -184,7 +184,7 @@ class EditRecordActivity : AppCompatActivity() {
                                     }
                                     builder.build().show()
                                 },
-                                modifier = Modifier.weight(3f)
+                                modifier = Modifier.weight(3f),
                             ) {
                                 Text(TimeUtils.getDateTimeString(endTime))
                             }
@@ -196,12 +196,12 @@ class EditRecordActivity : AppCompatActivity() {
                                 -1 -> Toast.makeText(
                                     this@EditRecordActivity,
                                     this@EditRecordActivity.getString(R.string.please_enter_a_project_name),
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                                 -2 -> Toast.makeText(
                                     this@EditRecordActivity,
                                     this@EditRecordActivity.getString(R.string.no_such_project),
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }) {
@@ -223,25 +223,25 @@ class EditRecordActivity : AppCompatActivity() {
                                             viewModel.setProject(it)
                                             isModified = viewModel.isModified()
                                             showProjectsDialog = false
-                                        }
+                                        },
                                     ) {
                                         RadioButton(
                                             selected = project == it,
                                             colors = RadioButtonDefaults.colors(
                                                 selectedColor = Color(DataModel.dataModel.projects[it]!!),
-                                                unselectedColor = Color(DataModel.dataModel.projects[it]!!)
+                                                unselectedColor = Color(DataModel.dataModel.projects[it]!!),
                                             ),
                                             onClick = {
                                                 viewModel.setProject(it)
                                                 isModified = viewModel.isModified()
                                                 showProjectsDialog = false
-                                            }
+                                            },
                                         )
                                         Text(it, Modifier.fillMaxWidth())
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
                 if (showDialogState) {
@@ -252,11 +252,11 @@ class EditRecordActivity : AppCompatActivity() {
                             TextButton(
                                 onClick = {
                                     showDialog.value = false
-                                }
+                                },
                             ) {
                                 Text(
                                     stringResource(R.string.keep_editing),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         },
@@ -264,15 +264,15 @@ class EditRecordActivity : AppCompatActivity() {
                             TextButton(
                                 onClick = {
                                     super.finish()
-                                }
+                                },
                             ) {
                                 Text(
                                     stringResource(R.string.discard),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         },
-                        text = { Text(stringResource(R.string.discard_text)) }
+                        text = { Text(stringResource(R.string.discard_text)) },
                     )
                 }
             }
@@ -292,7 +292,7 @@ class EditRecordActivity : AppCompatActivity() {
             intent.getStringExtra("project") ?: "",
             intent.getLongExtra("startTime", 0L),
             intent.getLongExtra("endTime", 0L),
-            intent.getIntExtra("date", 0)
+            intent.getIntExtra("date", 0),
         )
         record.id = intent.getIntExtra("id", 0)
         return record

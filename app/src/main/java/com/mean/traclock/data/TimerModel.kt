@@ -3,7 +3,6 @@ package com.mean.traclock.data
 import android.Manifest
 import android.app.Notification
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
@@ -11,12 +10,15 @@ import com.mean.traclock.database.Record
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /** 计时器数据的模型 */
 internal class TimerModel(
     private val mContext: Context,
-    private val mPrefs: SharedPreferences,
-    private val mNotificationModel: NotificationModel
+    private val mNotificationModel: NotificationModel,
 ) {
     private val mNotificationManager = NotificationManagerCompat.from(mContext)
     private val mNotificationBuilder = TimerNotificationBuilder()
@@ -25,11 +27,13 @@ internal class TimerModel(
     private var mStartTime: MutableStateFlow<Long>? = null
     private var mStoppedTime: Long? = null
 
+    private val mutex = Mutex()
+
     /** 当前的项目名称 */
     val projectName: StateFlow<String>
         get() {
             if (mProjectName == null) {
-                mProjectName = MutableStateFlow(TimerDAO.getProjectName(mPrefs))
+                mProjectName = MutableStateFlow(runBlocking { TimerDAO.projectNameFlow.first() })
             }
             return mProjectName!!
         }
@@ -38,7 +42,7 @@ internal class TimerModel(
     val isRunning: StateFlow<Boolean>
         get() {
             if (mIsRunning == null) {
-                mIsRunning = MutableStateFlow(TimerDAO.getIsRunning(mPrefs))
+                mIsRunning = MutableStateFlow(runBlocking { TimerDAO.isRunningFlow.first() })
             }
             return mIsRunning!!
         }
@@ -47,34 +51,35 @@ internal class TimerModel(
     val startTime: StateFlow<Long>
         get() {
             if (mStartTime == null) {
-                mStartTime = MutableStateFlow(TimerDAO.getStartTime(mPrefs))
+                mStartTime = MutableStateFlow(runBlocking { TimerDAO.startTimeFlow.first() })
             }
             return mStartTime!!
         }
 
-    private fun setTimer(
+    private suspend fun setTimer(
         projectName: String,
         isRunning: Boolean = true,
         startTime: Long = TimeUtils.now(),
-        stoppedTime: Long? = null
+        stoppedTime: Long? = null,
     ) {
-        if (mProjectName == null) {
-            mProjectName = MutableStateFlow(projectName)
+        mutex.withLock {
+            if (mProjectName == null) {
+                mProjectName = MutableStateFlow(projectName)
+            }
+            mProjectName!!.value = projectName
+            mIsRunning!!.value = isRunning
+            mStartTime!!.value = startTime
+            mStoppedTime = stoppedTime
+            TimerDAO.setTimer(
+                projectName,
+                isRunning,
+                startTime,
+            )
+            if (!isRunning) {
+                DataModel.dataModel.insertRecord(Record(projectName, startTime, stoppedTime!!))
+            }
+            updateNotification()
         }
-        mProjectName!!.value = projectName
-        mIsRunning!!.value = isRunning
-        mStartTime!!.value = startTime
-        mStoppedTime = stoppedTime
-        TimerDAO.setTimer(
-            mPrefs,
-            projectName,
-            isRunning,
-            startTime
-        )
-        if (!isRunning) {
-            DataModel.dataModel.insertRecord(Record(projectName, startTime, stoppedTime!!))
-        }
-        updateNotification()
     }
 
     /** 更新计时通知 */
@@ -84,12 +89,12 @@ internal class TimerModel(
                 mContext,
                 projectName.value,
                 isRunning.value,
-                startTime.value
+                startTime.value,
             )
         mNotificationBuilder.buildChannel(mContext, mNotificationManager)
         if (ActivityCompat.checkSelfPermission(
                 mContext,
-                Manifest.permission.POST_NOTIFICATIONS
+                Manifest.permission.POST_NOTIFICATIONS,
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return
@@ -101,22 +106,22 @@ internal class TimerModel(
      * 开始计时
      * @param projectName 计时的项目名称
      */
-    fun start(projectName: String? = null) {
+    suspend fun start(projectName: String? = null) {
         setTimer(
             projectName ?: this.projectName.value,
             true,
-            TimeUtils.now()
+            TimeUtils.now(),
         )
     }
 
     /** 停止计时 */
-    fun stop() {
+    suspend fun stop() {
         if (isRunning.value) {
             setTimer(
                 projectName.value,
                 false,
                 startTime.value,
-                TimeUtils.now()
+                TimeUtils.now(),
             )
         }
     }

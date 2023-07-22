@@ -50,7 +50,7 @@ fun RecordItem(
     record: Record,
     color: Color,
     detailView: Boolean = true,
-    listState: LazyListState? = null
+    listState: LazyListState? = null,
 ) {
     val startTime = TimeUtils.getTimeString(record.startTime)
     val endTime = TimeUtils.getTimeString(record.endTime)
@@ -81,16 +81,18 @@ fun RecordItem(
                 },
                 onLongClick = if (detailView) {
                     { showMenu = true }
-                } else null
+                } else {
+                    null
+                },
             )
             .padding(vertical = 12.dp, horizontal = HORIZONTAL_MARGIN),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -99,20 +101,23 @@ fun RecordItem(
                     tint = color,
                     modifier = Modifier
                         .padding(end = 8.dp)
-                        .size(20.dp)
+                        .size(20.dp),
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(projectName)
                     Text(
-                        if (detailView) "$startTime - $endTime"
-                        else TimeUtils.getDurationString(record.startTime, record.endTime, false),
+                        if (detailView) {
+                            "$startTime - $endTime"
+                        } else {
+                            TimeUtils.getDurationString(record.startTime, record.endTime, false)
+                        },
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
             SmallOutlinedButton(
-                text = TimeUtils.getDurationString(record.startTime, record.endTime, detailView)
+                text = TimeUtils.getDurationString(record.startTime, record.endTime, detailView),
             ) {
                 scope.launch {
                     notificationPermissionState?.launchPermissionRequest()
@@ -124,7 +129,7 @@ fun RecordItem(
         DropdownMenu(showMenu, { showMenu = false }) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
-                onClick = { showMenu = false; DataModel.dataModel.deleteRecord(record) }
+                onClick = { showMenu = false; DataModel.dataModel.deleteRecord(record) },
             )
         }
     }
@@ -146,8 +151,8 @@ fun RecordItemPreview() {
             project = "Project",
             startTime = 0,
             endTime = 0,
-            date = 0
+            date = 0,
         ),
-        color = Color.Red
+        color = Color.Red,
     )
 }

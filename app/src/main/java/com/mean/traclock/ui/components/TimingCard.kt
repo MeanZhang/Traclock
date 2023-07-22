@@ -45,12 +45,12 @@ import kotlinx.coroutines.launch
 fun TimingCard(
     project: String,
     startTime: Long,
-    isTiming: Boolean
+    isTiming: Boolean,
 ) {
     AnimatedVisibility(
         visible = isTiming,
         enter = expandVertically(),
-        exit = shrinkVertically()
+        exit = shrinkVertically(),
     ) {
         var now by remember {
             mutableStateOf(System.currentTimeMillis())
@@ -69,13 +69,13 @@ fun TimingCard(
                 .padding(vertical = 16.dp, horizontal = HORIZONTAL_MARGIN)
                 .fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-            shape = RoundedCornerShape(32.dp)
+            shape = RoundedCornerShape(32.dp),
         ) {
             Row(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 24.dp)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -83,14 +83,14 @@ fun TimingCard(
                         contentDescription = stringResource(R.string.tracking),
                         modifier = Modifier
                             .padding(end = 12.dp)
-                            .size(30.dp)
+                            .size(30.dp),
                     )
                     Column {
                         Text(project, style = MaterialTheme.typography.titleLarge)
                         Text(
                             TimeUtils.getDurationString(startTime, now),
                             style = MaterialTheme.typography.bodyMedium,
-                            fontFamily = FontFamily.Monospace
+                            fontFamily = FontFamily.Monospace,
                         )
                     }
                 }
@@ -102,7 +102,7 @@ fun TimingCard(
                     Icon(
                         Icons.Outlined.TimerOff,
                         contentDescription = stringResource(R.string.stop),
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(30.dp),
                     )
                 }
             }

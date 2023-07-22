@@ -1,48 +1,59 @@
 package com.mean.traclock.data
 
-import android.content.SharedPreferences
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.mean.traclock.App
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+private val Context.dataStore by preferencesDataStore("timer")
 
 /**
- * 该类封装 [TimerModel] 在 [SharedPreferences] 中的持久化存储
+ * 该类封装 [TimerModel] 在 [DataStore] 中的持久化存储
  */
 internal object TimerDAO {
-    private const val IS_RUNNING = "is_running"
-    private const val PROJECT_NAME = "project_name"
-    private const val START_TIME = "start_time"
+    private val dataStore = App.context.dataStore
 
-    /** @return 计时器的项目名称 */
-    fun getProjectName(prefs: SharedPreferences) = prefs.getString(PROJECT_NAME, "") ?: ""
+    private object PreferencesKeys {
+        val IS_RUNNING = booleanPreferencesKey("is_running")
+        val PROJECT_NAME = stringPreferencesKey("project_name")
+        val START_TIME = longPreferencesKey("start_time")
+    }
 
-    /** @return 计时器是否正在运行 */
-    fun getIsRunning(mPrefs: SharedPreferences) = mPrefs.getBoolean(IS_RUNNING, false)
+    /** 计时器的项目名称 */
+    val projectNameFlow: Flow<String> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.PROJECT_NAME] ?: ""
+    }
 
-    /** @return 计时器开始的时间，以毫秒为单位 */
-    fun getStartTime(mPrefs: SharedPreferences) = mPrefs.getLong(START_TIME, 0)
+    /** 计时器是否正在运行 */
+    val isRunningFlow: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.IS_RUNNING] ?: false
+    }
+
+    /** 计时器开始的时间，以毫秒为单位 */
+    val startTimeFlow: Flow<Long> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.START_TIME] ?: 0
+    }
 
     /**
-     * @param prefs [SharedPreferences] 对象
      * @param projectName 项目名称
      * @param isRunning 计时器是否正在运行
      * @param startTime 计时器开始的时间，以毫秒为单位
      */
-    fun setTimer(
-        prefs: SharedPreferences,
+    suspend fun setTimer(
         projectName: String,
         isRunning: Boolean,
-        startTime: Long
+        startTime: Long,
     ) {
-        val editor: SharedPreferences.Editor = prefs.edit()
-
-        if (isRunning) {
-            editor.putString(PROJECT_NAME, projectName)
-                .putBoolean(IS_RUNNING, true)
-                .putLong(START_TIME, startTime)
-        } else {
-            editor.remove(PROJECT_NAME)
-                .remove(IS_RUNNING)
-                .remove(START_TIME)
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.PROJECT_NAME] = projectName
+            preferences[PreferencesKeys.IS_RUNNING] = isRunning
+            preferences[PreferencesKeys.START_TIME] = startTime
         }
-
-        editor.apply()
     }
 }

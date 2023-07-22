@@ -13,5 +13,5 @@ enum class Destinations(val route: String, @StringRes val titleId: Int, val icon
     TIMELINE("timeline", R.string.timeline, Icons.Outlined.Timeline),
     PROJECTS("projects", R.string.projects, Icons.Outlined.Assignment),
     STATISTICS("statistics", R.string.statistics, Icons.Outlined.Analytics),
-    SETTINGS("settings", R.string.settings, Icons.Outlined.Settings);
+    SETTINGS("settings", R.string.settings, Icons.Outlined.Settings),
 }

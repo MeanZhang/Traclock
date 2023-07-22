@@ -48,9 +48,9 @@ class FeedbackActivity : ComponentActivity() {
                                     Icon(Icons.Filled.ArrowBack, getString(R.string.back))
                                 }
                             },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
-                    }
+                    },
                 ) {
                     Column(Modifier.padding(it)) {
                         SettingGroupTitle(stringResource(R.string.help))
@@ -59,7 +59,7 @@ class FeedbackActivity : ComponentActivity() {
                             title = stringResource(R.string.help),
                             onClick = {
                                 openURL(getString(R.string.doc_url))
-                            }
+                            },
                         )
 
                         Divider()
@@ -69,7 +69,7 @@ class FeedbackActivity : ComponentActivity() {
                             title = stringResource(R.string.feedback),
                             onClick = {
                                 openURL(getString(R.string.feedback_url))
-                            }
+                            },
                         )
                     }
                 }

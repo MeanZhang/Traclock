@@ -37,7 +37,7 @@ import java.time.ZonedDateTime
 @Composable
 fun TimeLine(
     viewModel: MainViewModel,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val detailView by viewModel.detailView.collectAsState()
     val recordsFlow = if (detailView) viewModel.records else viewModel.projectsTimeOfDays
@@ -49,7 +49,7 @@ fun TimeLine(
         DataModel.dataModel.projectName,
         DataModel.dataModel.startTime,
         DataModel.dataModel.projects,
-        contentPadding
+        contentPadding,
     )
 }
 
@@ -63,7 +63,7 @@ private fun Content(
     timingProjectFlow: StateFlow<String>,
     startTimeFlow: StateFlow<Long>,
     projects: Map<String, Int>,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
     val records by recordsFlow.collectAsState(mapOf())
@@ -74,13 +74,13 @@ private fun Content(
     val startTime by startTimeFlow.collectAsState()
     LazyColumn(
         Modifier.padding(contentPadding),
-        state = listState
+        state = listState,
     ) {
         item {
             TimingCard(
                 timingProject,
                 startTime,
-                isTiming
+                isTiming,
             )
         }
         if (records.isNotEmpty()) {
@@ -88,7 +88,7 @@ private fun Content(
                 stickyHeader {
                     DateTitle(
                         date = TimeUtils.getDataString(date),
-                        duration = time[date] ?: 0L
+                        duration = time[date] ?: 0L,
                     )
                 }
                 items(data) { record ->
@@ -96,7 +96,7 @@ private fun Content(
                         record = record,
                         color = Color(projects[record.project] ?: 0),
                         detailView = detailView,
-                        listState = listState
+                        listState = listState,
                     )
                 }
             }
@@ -116,7 +116,7 @@ fun PreviewTimeline() {
         Project("测试1", Color.Black.toArgb()),
         Project("测试2", Color.Blue.toArgb()),
         Project("测试3", Color.Cyan.toArgb()),
-        Project("测试4", Color.DarkGray.toArgb())
+        Project("测试4", Color.DarkGray.toArgb()),
     ).associate { Pair(it.name, it.color) }
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
@@ -131,8 +131,8 @@ fun PreviewTimeline() {
                 Record(
                     projects.keys.elementAt(j % projects.size),
                     startTime.toInstant().toEpochMilli(),
-                    endTime.toInstant().toEpochMilli()
-                )
+                    endTime.toInstant().toEpochMilli(),
+                ),
             )
         }
     }
@@ -153,6 +153,6 @@ fun PreviewTimeline() {
         timingProjectFlow = timingProjectFlow,
         startTimeFlow = startTimeFlow,
         projects,
-        contentPadding = PaddingValues()
+        contentPadding = PaddingValues(),
     )
 }

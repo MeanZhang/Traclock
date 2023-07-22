@@ -9,7 +9,10 @@ import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.utils.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 /**
  * 所有应用程序范围的数据都可以通过该单例访问。
@@ -28,12 +31,12 @@ class DataModel private constructor() {
     /**
      * 初始化数据模型、[Context] 和 [SharedPreferences]
      */
-    fun init(context: Context, prefs: SharedPreferences) {
+    fun init(context: Context) {
         if (mContext !== context) {
             mContext = context.applicationContext
             mNotificationModel = NotificationModel()
             mDatabaseModel = DatabaseModel(mContext!!)
-            mTimerModel = TimerModel(mContext!!, prefs, mNotificationModel!!)
+            mTimerModel = TimerModel(mContext!!, mNotificationModel!!)
         }
     }
 
@@ -77,17 +80,21 @@ class DataModel private constructor() {
             Toast.makeText(
                 mContext,
                 mContext!!.getText(R.string.is_running_description),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
         } else {
-            mTimerModel!!.start(projectName)
+            CoroutineScope(Dispatchers.IO).launch {
+                mTimerModel!!.start(projectName)
+            }
         }
     }
 
     /** 停止计时 */
     fun stopTimer() {
         Utils.enforceMainLooper()
-        mTimerModel!!.stop()
+        CoroutineScope(Dispatchers.IO).launch {
+            mTimerModel!!.stop()
+        }
     }
 
     //

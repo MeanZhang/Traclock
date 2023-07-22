@@ -28,7 +28,7 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
     Column(
         modifier = Modifier
             .padding(contentPadding)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
     ) {
         SettingGroupTitle(stringResource(R.string.normal))
 
@@ -38,7 +38,7 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
             stringResource(R.string.settings_description_backup_restore),
             onClick = {
                 context?.startActivity(Intent(context, BackupRestoreActivity::class.java))
-            }
+            },
         )
         Divider()
         SettingGroupTitle(stringResource(R.string.others))
@@ -48,7 +48,7 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
             stringResource(R.string.settings_description_feedback),
             onClick = {
                 context?.startActivity(Intent(context, FeedbackActivity::class.java))
-            }
+            },
         )
         SettingItem(
             stringResource(R.string.title_activity_about),
@@ -56,7 +56,7 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
             stringResource(R.string.settings_description_about),
             onClick = {
                 context?.startActivity(Intent(context, AboutActivity::class.java))
-            }
+            },
         )
     }
 }

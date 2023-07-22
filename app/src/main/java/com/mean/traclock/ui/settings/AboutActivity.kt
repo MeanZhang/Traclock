@@ -67,17 +67,17 @@ class AboutActivity : ComponentActivity() {
                                 }
                             },
                             title = { Text(text = getString(R.string.about)) },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) {
                     Column(
                         Modifier
                             .verticalScroll(rememberScrollState())
                             .padding(it)
-                            .padding(WindowInsets.navigationBars.asPaddingValues())
+                            .padding(WindowInsets.navigationBars.asPaddingValues()),
                     ) {
                         AsyncImage(
                             R.drawable.ic_logo,
@@ -87,33 +87,33 @@ class AboutActivity : ComponentActivity() {
                                 .padding(vertical = 24.dp)
                                 .size(72.dp)
                                 .fillMaxWidth(),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
                         )
                         Text(
                             stringResource(R.string.app_name),
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                         Text(
                             stringResource(R.string.version) + BuildConfig.VERSION_NAME,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                         SettingGroupTitle(stringResource(R.string.developer))
                         ListItem(
-                            headlineText = { Text("Mean") },
-                            supportingText = { Text(stringResource(R.string.developer_introduction)) },
+                            headlineContent = { Text("Mean") },
+                            supportingContent = { Text(stringResource(R.string.developer_introduction)) },
                             leadingContent = {
                                 Image(
                                     painterResource(R.drawable.avatar),
                                     "开发者头像",
                                     modifier = Modifier
                                         .height(24.dp)
-                                        .clip(CircleShape)
+                                        .clip(CircleShape),
                                 )
                             },
-                            modifier = Modifier.clickable { openURL(getString(R.string.github_page)) }
+                            modifier = Modifier.clickable { openURL(getString(R.string.github_page)) },
                         )
 
                         Divider()
@@ -124,10 +124,10 @@ class AboutActivity : ComponentActivity() {
                             onClick = {
                                 val intent = Intent(
                                     this@AboutActivity,
-                                    OpenSourceLicensesActivity::class.java
+                                    OpenSourceLicensesActivity::class.java,
                                 )
                                 startActivity(intent)
-                            }
+                            },
                         )
                     }
                 }

@@ -32,7 +32,7 @@ import java.time.ZonedDateTime
 @Composable
 fun Projects(
     viewModel: MainViewModel,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     Content(
         DataModel.dataModel.projectName,
@@ -40,7 +40,7 @@ fun Projects(
         DataModel.dataModel.isRunning,
         DataModel.dataModel.startTime,
         DataModel.dataModel.projects,
-        contentPadding
+        contentPadding,
     )
 }
 
@@ -52,7 +52,7 @@ private fun Content(
     isTimingFlow: StateFlow<Boolean>,
     startTimeFlow: StateFlow<Long>,
     projects: Map<String, Int>,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
@@ -62,7 +62,7 @@ private fun Content(
             TimingCard(
                 timingProjectFlow.value,
                 startTimeFlow.value,
-                isTiming
+                isTiming,
             )
         }
         projectsTime.forEach {
@@ -81,7 +81,7 @@ fun PreviewProjects() {
         Project("测试1", Color.Black.toArgb()),
         Project("测试2", Color.Blue.toArgb()),
         Project("测试3", Color.Cyan.toArgb()),
-        Project("测试4", Color.DarkGray.toArgb())
+        Project("测试4", Color.DarkGray.toArgb()),
     ).associate { Pair(it.name, it.color) }
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
@@ -96,8 +96,8 @@ fun PreviewProjects() {
                 Record(
                     projects.keys.elementAt(j % projects.size),
                     startTime.toInstant().toEpochMilli(),
-                    endTime.toInstant().toEpochMilli()
-                )
+                    endTime.toInstant().toEpochMilli(),
+                ),
             )
         }
     }
@@ -106,7 +106,7 @@ fun PreviewProjects() {
         records.groupBy { it.project }
             .mapValues { (key, value) ->
                 Record(key, 0, value.sumOf { (it.endTime - it.startTime) / 1000 }, 0)
-            }.values.toList()
+            }.values.toList(),
     )
     val isTimingFlow = MutableStateFlow(true)
     val startTimeFlow = MutableStateFlow(System.currentTimeMillis() - 1000 * 10)
@@ -116,6 +116,6 @@ fun PreviewProjects() {
         isTimingFlow = isTimingFlow,
         startTimeFlow = startTimeFlow,
         projects = projects,
-        contentPadding = PaddingValues()
+        contentPadding = PaddingValues(),
     )
 }

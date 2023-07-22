@@ -54,21 +54,21 @@ fun LicenseItem(context: Context?, license: License) {
                 context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
             }
             .fillMaxWidth()
-            .padding(horizontal = Constants.HORIZONTAL_MARGIN, 12.dp)
+            .padding(horizontal = Constants.HORIZONTAL_MARGIN, 12.dp),
     ) {
         Text(
             license.name,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
         Text(
             license.url,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             license.license,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -87,14 +87,14 @@ fun Content(activity: OpenSourceLicensesActivity?) {
                     }
                 },
                 title = { Text(stringResource(R.string.title_activity_open_source_licenses)) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
         modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         LazyColumn(
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
         ) {
             items(LICENSES) {
                 LicenseItem(activity, it)
@@ -107,58 +107,58 @@ private val LICENSES = listOf(
     License(
         "Android Jetpack",
         "https://github.com/androidx/androidx",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "Accompanist",
         "https://github.com/google/accompanist",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "Kotlin",
         "https://github.com/JetBrains/kotlin",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "MPAndroidChart",
         "https://github.com/PhilJay/MPAndroidChart",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "LeakCanary",
         "https://github.com/square/leakcanary",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "Lottie",
         "https://github.com/airbnb/lottie-android",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "DateTimePicker",
         "https://github.com/loperSeven/DateTimePicker",
-        "MIT License"
+        "MIT License",
     ),
     License(
         "Material Components for Android",
         "https://github.com/material-components/material-components-android",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "ThreeTen Android Backport",
         "https://github.com/JakeWharton/ThreeTenABP",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "Coil",
         "https://github.com/coil-kt/coil",
-        "Apache License 2.0"
+        "Apache License 2.0",
     ),
     License(
         "XLog",
         "https://github.com/elvishew/xLog",
-        "Apache License 2.0"
-    )
+        "Apache License 2.0",
+    ),
 ).sortedBy { it.name }
 
 data class License(val name: String, val url: String, val license: String)

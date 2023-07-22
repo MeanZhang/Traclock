@@ -59,28 +59,28 @@ fun SmallOutlinedButton(text: String, onClick: () -> Unit = {}) {
         colors = ChipDefaults.chipColors(
             backgroundColor = MaterialTheme.colorScheme.inverseOnSurface,
             contentColor = MaterialTheme.colorScheme.outline.copy(0.2f),
-            leadingIconContentColor = MaterialTheme.colorScheme.outline.copy(0.2f)
+            leadingIconContentColor = MaterialTheme.colorScheme.outline.copy(0.2f),
         ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.PlayArrow,
                 contentDescription = stringResource(R.string.start),
                 modifier = Modifier.padding(start = 6.dp).size(16.dp),
-                tint = MaterialTheme.colorScheme.outline
+                tint = MaterialTheme.colorScheme.outline,
             )
         },
         border = BorderStroke(
             width = 1.dp,
             // 边框颜色
-            color = MaterialTheme.colorScheme.outline.copy(0.2f)
-        )
+            color = MaterialTheme.colorScheme.outline.copy(0.2f),
+        ),
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.labelMedium,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outline,
         )
     }
 }

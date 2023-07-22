@@ -54,7 +54,7 @@ class EditProjectActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val viewModel by viewModels<EditProjectViewModel> {
             EditProjectViewModelFactory(
-                intent.getStringExtra("projectName") ?: ""
+                intent.getStringExtra("projectName") ?: "",
             )
         }
         isModified = viewModel.isModified()
@@ -82,10 +82,10 @@ class EditProjectActivity : ComponentActivity() {
                                     }
                                 }
                             },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
                     },
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     Column(Modifier.padding(contentPadding)) {
                         Box(
@@ -97,10 +97,10 @@ class EditProjectActivity : ComponentActivity() {
                                     Brush.verticalGradient(
                                         listOf(
                                             color,
-                                            Color.Black
-                                        )
-                                    )
-                                )
+                                            Color.Black,
+                                        ),
+                                    ),
+                                ),
                         ) {
                             OutlinedTextField(value = name, onValueChange = {
                                 viewModel.setName(it)
@@ -123,7 +123,7 @@ class EditProjectActivity : ComponentActivity() {
                             }) {
                                 Text(
                                     stringResource(R.string.keep_editing),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         },
@@ -133,11 +133,11 @@ class EditProjectActivity : ComponentActivity() {
                             }) {
                                 Text(
                                     stringResource(R.string.discard),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
                         },
-                        text = { Text(stringResource(R.string.discard_text)) }
+                        text = { Text(stringResource(R.string.discard_text)) },
                     )
                 }
             }
@@ -164,7 +164,7 @@ class EditProjectActivity : ComponentActivity() {
             -1 -> Toast.makeText(
                 this@EditProjectActivity,
                 getString((R.string.project_exists)),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             0 -> super.finish() // 项目信息没变
         }

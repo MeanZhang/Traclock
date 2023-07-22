@@ -23,14 +23,14 @@ fun NoData(text: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(50.dp)
+            .padding(50.dp),
     ) {
         LottieWorkingLoadingView()
         Text(
             text = text,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -44,6 +44,6 @@ fun LottieWorkingLoadingView() {
             .fillMaxWidth()
             .height(250.dp)
             .defaultMinSize(300.dp),
-        iterations = LottieConstants.IterateForever
+        iterations = LottieConstants.IterateForever,
     )
 }

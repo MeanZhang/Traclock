@@ -81,18 +81,18 @@ class BackupRestoreActivity : ComponentActivity() {
                                 }
                             },
                             title = { Text(getString(R.string.title_activity_backup_restore)) },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     Column(modifier = Modifier.padding(contentPadding)) {
                         SettingGroupTitle(stringResource(R.string.backup))
                         SettingItem(
                             title = stringResource(R.string.backup),
                             description = stringResource(R.string.backup_locally),
-                            onClick = { backupLauncher.launch(getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv") }
+                            onClick = { backupLauncher.launch(getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv") },
                         )
 
                         Divider()
@@ -102,7 +102,7 @@ class BackupRestoreActivity : ComponentActivity() {
                             description = stringResource(R.string.settings_description_restore_from_file),
                             onClick = {
                                 restoreLauncher.launch(arrayOf("text/*"))
-                            }
+                            },
                         )
                     }
                 }
@@ -124,7 +124,7 @@ class BackupRestoreActivity : ComponentActivity() {
                             TextButton(onClick = { viewModel.setShowConfirmDialog(false) }) {
                                 Text(stringResource(R.string.cancel).uppercase())
                             }
-                        }
+                        },
                     )
                 }
                 if (showBackupDialog) {
@@ -137,11 +137,11 @@ class BackupRestoreActivity : ComponentActivity() {
                         confirmButton = {
                             TextButton(
                                 enabled = !backingUp,
-                                onClick = { viewModel.setShowingBackupDialog(false) }
+                                onClick = { viewModel.setShowingBackupDialog(false) },
                             ) {
                                 Text(stringResource(R.string.ok))
                             }
-                        }
+                        },
                     )
                 }
                 if (showRestoreDialog) {
@@ -154,8 +154,8 @@ class BackupRestoreActivity : ComponentActivity() {
                                         RestoreState.SUCCESS -> R.string.restore_completed
                                         RestoreState.FAILED -> R.string.restore_failed
                                         RestoreState.RESTORING -> R.string.restoring
-                                    }
-                                )
+                                    },
+                                ),
                             )
                         },
                         text = {
@@ -165,12 +165,12 @@ class BackupRestoreActivity : ComponentActivity() {
                                         progress = progress,
                                         modifier = Modifier
                                             .weight(1f)
-                                            .padding(end = 4.dp)
+                                            .padding(end = 4.dp),
                                     )
                                     Text(
                                         "${(progress * 100).toInt()}%".padStart(4),
                                         maxLines = 1,
-                                        fontFamily = FontFamily.Monospace
+                                        fontFamily = FontFamily.Monospace,
                                     )
                                 }
                             } else {
@@ -180,11 +180,11 @@ class BackupRestoreActivity : ComponentActivity() {
                         confirmButton = {
                             TextButton(
                                 enabled = restoreState != RestoreState.RESTORING,
-                                onClick = { viewModel.setShowRestoreDialog(false) }
+                                onClick = { viewModel.setShowRestoreDialog(false) },
                             ) {
                                 Text(stringResource(R.string.ok))
                             }
-                        }
+                        },
                     )
                 }
             }

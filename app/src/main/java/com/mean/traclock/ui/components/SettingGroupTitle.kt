@@ -19,8 +19,8 @@ fun SettingGroupTitle(title: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .padding(
-                horizontal = HORIZONTAL_MARGIN
+                horizontal = HORIZONTAL_MARGIN,
             )
-            .padding(top = TOP_MARGIN, bottom = BOTTOM_MARGIN)
+            .padding(top = TOP_MARGIN, bottom = BOTTOM_MARGIN),
     )
 }

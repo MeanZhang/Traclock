@@ -3,7 +3,6 @@ package com.mean.traclock
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
@@ -20,8 +19,7 @@ class App : Application() {
 
         context = applicationContext
         initXLog()
-        val prefs = getDefaultSharedPreferences(applicationContext)
-        DataModel.dataModel.init(applicationContext, prefs)
+        DataModel.dataModel.init(applicationContext)
         initNotification()
     }
 

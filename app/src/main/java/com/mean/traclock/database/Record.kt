@@ -19,7 +19,7 @@ data class Record(
     var project: String,
     var startTime: Long,
     var endTime: Long,
-    var date: Int = TimeUtils.getIntDate(startTime)
+    var date: Int = TimeUtils.getIntDate(startTime),
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")

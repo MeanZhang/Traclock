@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(
         DelicateCoroutinesApi::class,
         ExperimentalAnimationApi::class,
-        ExperimentalMaterial3Api::class
+        ExperimentalMaterial3Api::class,
     )
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,19 +66,19 @@ class MainActivity : ComponentActivity() {
                     topBar = { HomeTopBar(navController, scrollBehavior) },
                     bottomBar = { HomeBottomBar(navController) },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     AnimatedNavHost(navController, Destinations.TIMELINE.route) {
                         composable(Destinations.TIMELINE.route) {
                             TimeLine(
                                 viewModel,
-                                contentPadding
+                                contentPadding,
                             )
                         }
                         composable(Destinations.PROJECTS.route) {
                             Projects(
                                 viewModel,
-                                contentPadding
+                                contentPadding,
                             )
                         }
                         composable(Destinations.STATISTICS.route) {
@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun HomeTopBar(
         navController: NavHostController,
-        scrollBehavior: TopAppBarScrollBehavior
+        scrollBehavior: TopAppBarScrollBehavior,
     ) {
         val currentDestination = navController.currentBackStackEntryAsState().value?.destination
         val title = when (currentDestination?.route) {
@@ -122,15 +122,15 @@ class MainActivity : ComponentActivity() {
                             startActivity(
                                 Intent(
                                     this@MainActivity,
-                                    EditProjectActivity::class.java
-                                )
+                                    EditProjectActivity::class.java,
+                                ),
                             )
                         }) {
                             Icon(Icons.Default.Add, stringResource(R.string.new_project))
                         }
                     }
                 }
-            }
+            },
         )
     }
 
@@ -153,7 +153,7 @@ class MainActivity : ComponentActivity() {
                     },
                     icon = { Icon(destination.icon, stringResource(destination.titleId)) },
                     label = { Text(stringResource(destination.titleId)) },
-                    alwaysShowLabel = false
+                    alwaysShowLabel = false,
                 )
             }
         }

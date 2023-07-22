@@ -60,7 +60,7 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val date = TimeUtils.getIntDate(System.currentTimeMillis())
     Content(
         DataModel.dataModel.getProjectsTimeOfDay(date),
-        contentPadding
+        contentPadding,
     )
 }
 
@@ -76,13 +76,13 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
         Column(
             Modifier
                 .padding(contentPadding)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
         ) {
             Row(
                 Modifier
                     .padding(horizontal = HORIZONTAL_MARGIN)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(stringResource(R.string.records_duration))
                 Text(TimeUtils.getDurationString(duration))
@@ -97,7 +97,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                         setPieChart(context, this, projectsTime, duration, selected)
                     }
                 },
-                update = { chart -> setPieChart(context, chart, projectsTime, duration, selected) }
+                update = { chart -> setPieChart(context, chart, projectsTime, duration, selected) },
             )
             for ((index, project) in projectsTime.withIndex()) {
                 var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
@@ -114,11 +114,11 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                         .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Circle,
@@ -126,18 +126,18 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                             tint = Color(DataModel.dataModel.projects[project.project] ?: 0),
                             modifier = Modifier
                                 .size(20.dp)
-                                .padding(horizontal = 4.dp)
+                                .padding(horizontal = 4.dp),
                         )
                         Text(
                             project.project,
                             fontWeight = fontWeight,
-                            color = color
+                            color = color,
                         )
                     }
                     Text(
                         TimeUtils.getDurationString(project.startTime, project.endTime),
                         fontWeight = fontWeight,
-                        color = color
+                        color = color,
                     )
                 }
             }
@@ -152,7 +152,7 @@ fun setPieChart(
     chart: PieChart,
     projectsTime: List<Record>,
     duration: Long,
-    selected: MutableState<Int>
+    selected: MutableState<Int>,
 ) {
     chart.minimumHeight = chart.width // 宽高相同
     chart.description.isEnabled = false // 不显示description
@@ -188,7 +188,7 @@ fun PreviewStatistics() {
         Pair("测试1", Color.Black.toArgb()),
         Pair("测试2", Color.Blue.toArgb()),
         Pair("测试3", Color.Cyan.toArgb()),
-        Pair("测试4", Color.DarkGray.toArgb())
+        Pair("测试4", Color.DarkGray.toArgb()),
     )
     val records = mutableListOf<Record>()
     val now = ZonedDateTime.now(ZoneId.systemDefault())
@@ -203,8 +203,8 @@ fun PreviewStatistics() {
                 Record(
                     projects.keys.elementAt(j % projects.size),
                     startTime.toInstant().toEpochMilli(),
-                    endTime.toInstant().toEpochMilli()
-                )
+                    endTime.toInstant().toEpochMilli(),
+                ),
             )
         }
     }
@@ -212,7 +212,7 @@ fun PreviewStatistics() {
         records.groupBy { it.project }
             .mapValues { (key, value) ->
                 Record(key, 0, value.sumOf { (it.endTime - it.startTime) / 1000 }, 0)
-            }.values.toList()
+            }.values.toList(),
     )
     Content(projectsTimeFlow = projectsTimeFlow, contentPadding = PaddingValues())
 }

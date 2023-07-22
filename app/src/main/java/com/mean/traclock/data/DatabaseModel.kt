@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 
 internal class DatabaseModel(
-    mContext: Context
+    mContext: Context,
 ) {
     private val recordDao = AppDatabase.getDatabase(mContext).recordDao()
     private val projectDao = AppDatabase.getDatabase(mContext).projectDao()
@@ -96,8 +96,8 @@ internal class DatabaseModel(
      * @return 是否更新成功
      */
     fun updateProject(oldProject: String, newProject: Project): Boolean {
-        _projects[newProject.name] = newProject.color
         if (newProject.name !in projects) {
+            _projects[newProject.name] = newProject.color
             thread {
                 try {
                     projectDao.insert(newProject)
@@ -110,9 +110,10 @@ internal class DatabaseModel(
                 }
             }
             return true
+        } else {
+            XLog.d("项目已存在：%s", newProject.name)
+            return false
         }
-        XLog.d("项目已存在：%s", newProject.name)
-        return false
     }
 
     /**

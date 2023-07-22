@@ -25,19 +25,19 @@ enum class ProjectColor(val color: Color) {
     Purple(Color(0xFF6200EE)),
     Red(Color.Red),
     Teal(Color(0xFF03DAC6)),
-    Yellow(Color.Yellow)
+    Yellow(Color.Yellow),
 }
 
 @Composable
 fun ColorPicker(
     color: Color,
-    onColorSelected: (Color) -> Unit
+    onColorSelected: (Color) -> Unit,
 ) {
     val defaultColor = ProjectColor.values().find { it.color == color } ?: ProjectColor.values()[0]
     var selected by remember { mutableStateOf(defaultColor) }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(60.dp),
-        contentPadding = PaddingValues(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp)
+        contentPadding = PaddingValues(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp),
     ) {
         items(ProjectColor.values()) { color ->
             RadioButton(
@@ -48,8 +48,8 @@ fun ColorPicker(
                 },
                 colors = RadioButtonDefaults.colors(
                     selectedColor = color.color,
-                    unselectedColor = color.color
-                )
+                    unselectedColor = color.color,
+                ),
             )
         }
     }

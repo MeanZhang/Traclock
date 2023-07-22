@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationCompat.Builder
 import androidx.core.app.NotificationManagerCompat
-import com.elvishew.xlog.XLog
 import com.mean.traclock.R
 import com.mean.traclock.timer.TimerService
 import com.mean.traclock.utils.TimeUtils
@@ -28,7 +27,7 @@ internal class TimerNotificationBuilder {
         val channel = NotificationChannel(
             TIMER_NOTIFICATION_CHANNEL_ID,
             context.getString(R.string.default_label),
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_DEFAULT,
         )
         notificationManager.createNotificationChannel(channel)
     }
@@ -38,9 +37,8 @@ internal class TimerNotificationBuilder {
         context: Context,
         projectName: String,
         isRunning: Boolean,
-        startTime: Long
+        startTime: Long,
     ): Notification {
-        XLog.d(isRunning)
         /** 点击通知时打开应用的 Intent */
         val showApp: Intent = Intent(context, TimerService::class.java)
             .setAction(TimerService.ACTION_SHOW_APP)
@@ -84,7 +82,7 @@ internal class TimerNotificationBuilder {
         }
         val notification: Builder = Builder(
             context,
-            TIMER_NOTIFICATION_CHANNEL_ID
+            TIMER_NOTIFICATION_CHANNEL_ID,
         )
             .setLocalOnly(true)
             .setOngoing(isRunning)

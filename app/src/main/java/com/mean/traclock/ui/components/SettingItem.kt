@@ -15,20 +15,20 @@ fun SettingItem(
     title: String,
     icon: ImageVector? = null,
     description: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     if (icon != null) {
         ListItem(
-            headlineText = { Text(title) },
-            supportingText = { description?.let { Text(it) } },
+            headlineContent = { Text(title) },
+            supportingContent = { description?.let { Text(it) } },
             leadingContent = { Icon(icon, title) },
-            modifier = Modifier.clickable { onClick() }
+            modifier = Modifier.clickable { onClick() },
         )
     } else {
         ListItem(
-            headlineText = { Text(title) },
-            supportingText = { description?.let { Text(it) } },
-            modifier = Modifier.clickable { onClick() }
+            headlineContent = { Text(title) },
+            supportingContent = { description?.let { Text(it) } },
+            modifier = Modifier.clickable { onClick() },
         )
     }
 }

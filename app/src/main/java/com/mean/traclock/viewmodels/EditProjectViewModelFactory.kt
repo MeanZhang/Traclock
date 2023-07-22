@@ -14,8 +14,8 @@ class EditProjectViewModelFactory(private val projectName: String) :
         return EditProjectViewModel(
             projectName,
             Color(
-                DataModel.dataModel.projects[projectName] ?: ProjectColor.values()[0].color.toArgb()
-            )
+                DataModel.dataModel.projects[projectName] ?: ProjectColor.values()[0].color.toArgb(),
+            ),
         ) as T
     }
 }

@@ -27,16 +27,16 @@ fun DateTitle(date: String, duration: Long) {
                 .fillMaxWidth()
                 .padding(vertical = 6.dp, horizontal = HORIZONTAL_MARGIN),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 date,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
 //            style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 TimeUtils.getDurationString(duration),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
 //            style = MaterialTheme.typography.headlineSmall
             )
         }

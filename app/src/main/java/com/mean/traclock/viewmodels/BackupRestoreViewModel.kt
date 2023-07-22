@@ -221,6 +221,6 @@ class BackupRestoreViewModel : ViewModel() {
         END_TIME_ERROR,
         COLOR_ERROR,
         INSERT_ERROR,
-        NO_ERROR
+        NO_ERROR,
     }
 }

@@ -1,0 +1,82 @@
+[versions]
+# 默认
+agp = "8.0.2"
+material = "1.9.0"
+org-jetbrains-kotlin-android = "1.8.22"
+core-ktx = "1.10.1"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+lifecycle-runtime-ktx = "2.6.1"
+activity-compose = "1.7.2"
+compose-bom = "2023.06.01"
+# 插件
+spotless = "6.18.0"
+hilt = "2.46.1"
+ksp = "1.8.22-1.0.11"
+# 自定义
+material-components = "1.9.0"
+room = "2.5.1"
+xlog = "1.11.0"
+leakcanary = "2.11"
+hilt-navigation-compose = "1.0.0"
+preference-ktx = "1.2.0"
+navigation-compose = "2.5.3"
+datastore-preferences = "1.0.0"
+threetenabp = "1.4.6"
+accompanist = "0.30.1"
+glance = "1.1.0"
+coil = "2.4.0"
+mpandroidchart = "3.1.0"
+lottie-compose = "6.0.0"
+appcompat = "1.6.1"
+androidx-navigation-compose = "2.5.3"
+datetimepicker = "0.6.2"
+
+[libraries]
+# 默认
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+material3 = { group = "androidx.compose.material3", name = "material3" }
+# 自定义
+accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
+accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+glance = { group = "com.guolindev.glance", name = "glance", version.ref = "glance" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-compose" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation-compose" }
+datetimepicker = { group = "com.github.loperSeven", name = "DateTimePicker", version.ref = "datetimepicker" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+compose-material = { group = "androidx.compose.material", name = "material" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-preferences" }
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "agp" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+[bundles]
+

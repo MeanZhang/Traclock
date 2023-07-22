@@ -53,8 +53,8 @@ class ProjectActivity : ComponentActivity() {
     private val viewModel by viewModels<ProjectViewModel> {
         ProjectViewModelFactory(
             intent.getStringExtra(
-                "projectName"
-            ) ?: ""
+                "projectName",
+            ) ?: "",
         )
     }
     private val editProjectLauncher =
@@ -101,7 +101,7 @@ class ProjectActivity : ComponentActivity() {
                                 }
                                 DropdownMenu(
                                     expanded = showMenu.value,
-                                    onDismissRequest = { showMenu.value = false }
+                                    onDismissRequest = { showMenu.value = false },
                                 ) {
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.edit)) },
@@ -110,42 +110,42 @@ class ProjectActivity : ComponentActivity() {
 
                                             val intent = Intent(
                                                 this@ProjectActivity,
-                                                EditProjectActivity::class.java
+                                                EditProjectActivity::class.java,
                                             ).apply { putExtra("projectName", projectName) }
                                             editProjectLauncher.launch(intent)
-                                        }
+                                        },
                                     )
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.delete)) },
                                         onClick = {
                                             showMenu.value = false
                                             showDialog = true
-                                        }
+                                        },
                                     )
                                 }
                             },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
                     },
                     modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     LazyColumn(
                         modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
-                        contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding())
+                        contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
                     ) {
                         if (records.isNotEmpty()) {
                             records.forEach { (date, data) ->
                                 stickyHeader {
                                     DateTitle(
                                         date = TimeUtils.getDataString(date),
-                                        duration = time[date] ?: 0L
+                                        duration = time[date] ?: 0L,
                                     )
                                 }
                                 items(data) {
                                     RecordItem(
                                         record = it,
-                                        color = Color(DataModel.dataModel.projects[projectName]!!)
+                                        color = Color(DataModel.dataModel.projects[projectName]!!),
                                     )
                                 }
                             }
@@ -163,25 +163,25 @@ class ProjectActivity : ComponentActivity() {
                                     onClick = {
                                         DataModel.dataModel.deleteProject(Project(projectName))
                                         finish()
-                                    }
+                                    },
                                 ) {
                                     Text(
                                         stringResource(R.string.delete).uppercase(),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
                                     )
                                 }
                             },
                             dismissButton = {
                                 TextButton(
-                                    onClick = { showDialog = false }
+                                    onClick = { showDialog = false },
                                 ) {
                                     Text(
                                         stringResource(R.string.cancel).uppercase(),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
                                     )
                                 }
                             },
-                            text = { Text(stringResource(R.string.confirm_delete_project)) }
+                            text = { Text(stringResource(R.string.confirm_delete_project)) },
                         )
                     }
                 }

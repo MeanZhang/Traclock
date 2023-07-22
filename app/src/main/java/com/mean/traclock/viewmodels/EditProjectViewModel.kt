@@ -35,7 +35,7 @@ class EditProjectViewModel(private val initialName: String, private val initialC
             _name.value != initialName -> { // 项目名发生变化
                 if (DataModel.dataModel.updateProject(
                         initialName,
-                        Project(_name.value, _color.value.toArgb())
+                        Project(_name.value, _color.value.toArgb()),
                     )
                 ) {
                     1
