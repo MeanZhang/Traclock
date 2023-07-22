@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.abiOf
-
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
@@ -10,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("../traclock.jks")
+            storePassword = env.fetch("KEYSTORE_PASSWORD")
+            keyPassword = env.fetch("KEY_PASSWORD")
+            keyAlias = env.fetch("KEY_ALIAS")
+        }
+    }
     namespace = "com.mean.traclock"
     compileSdk = 34
 
@@ -40,10 +46,12 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
