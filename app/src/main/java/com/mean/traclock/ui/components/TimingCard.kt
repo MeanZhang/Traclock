@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.outlined.TimerOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,11 +38,10 @@ import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun TimingCard(
-    project: String,
+    projectId: Int?,
     startTime: Long,
     isTiming: Boolean,
 ) {
@@ -86,7 +84,10 @@ fun TimingCard(
                             .size(30.dp),
                     )
                     Column {
-                        Text(project, style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            DataModel.dataModel.projects[projectId]?.name ?: "",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
                         Text(
                             TimeUtils.getDurationString(startTime, now),
                             style = MaterialTheme.typography.bodyMedium,

@@ -22,20 +22,20 @@ internal class TimerModel(
 ) {
     private val mNotificationManager = NotificationManagerCompat.from(mContext)
     private val mNotificationBuilder = TimerNotificationBuilder()
-    private var mProjectName: MutableStateFlow<String>? = null
+    private var mProjectId: MutableStateFlow<Int?> = MutableStateFlow(null)
     private var mIsRunning: MutableStateFlow<Boolean>? = null
     private var mStartTime: MutableStateFlow<Long>? = null
     private var mStoppedTime: Long? = null
 
     private val mutex = Mutex()
 
-    /** 当前的项目名称 */
-    val projectName: StateFlow<String>
+    /** 当前的项目 id */
+    val projectId: StateFlow<Int?>
         get() {
-            if (mProjectName == null) {
-                mProjectName = MutableStateFlow(runBlocking { TimerDAO.projectNameFlow.first() })
+            if (mProjectId.value == null) {
+                mProjectId.value = runBlocking { TimerDAO.projectIdFlow.first() }
             }
-            return mProjectName!!
+            return mProjectId
         }
 
     /** 计时器是否正在运行 */
@@ -57,26 +57,26 @@ internal class TimerModel(
         }
 
     private suspend fun setTimer(
-        projectName: String,
+        projectId: Int,
         isRunning: Boolean = true,
         startTime: Long = TimeUtils.now(),
         stoppedTime: Long? = null,
     ) {
         mutex.withLock {
-            if (mProjectName == null) {
-                mProjectName = MutableStateFlow(projectName)
+            if (mProjectId.value == null) {
+                mProjectId.value = projectId
             }
-            mProjectName!!.value = projectName
+            mProjectId.value = projectId
             mIsRunning!!.value = isRunning
             mStartTime!!.value = startTime
             mStoppedTime = stoppedTime
             TimerDAO.setTimer(
-                projectName,
+                projectId,
                 isRunning,
                 startTime,
             )
             if (!isRunning) {
-                DataModel.dataModel.insertRecord(Record(projectName, startTime, stoppedTime!!))
+                DataModel.dataModel.insertRecord(Record(projectId, startTime, stoppedTime!!))
             }
             updateNotification()
         }
@@ -84,31 +84,33 @@ internal class TimerModel(
 
     /** 更新计时通知 */
     fun updateNotification() {
-        val notification: Notification =
-            mNotificationBuilder.build(
-                mContext,
-                projectName.value,
-                isRunning.value,
-                startTime.value,
-            )
-        mNotificationBuilder.buildChannel(mContext, mNotificationManager)
-        if (ActivityCompat.checkSelfPermission(
-                mContext,
-                Manifest.permission.POST_NOTIFICATIONS,
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
+        if (projectId.value != null) {
+            val notification: Notification =
+                mNotificationBuilder.build(
+                    mContext,
+                    DataModel.dataModel.projects[projectId.value]?.name ?: "",
+                    isRunning.value,
+                    startTime.value,
+                )
+            mNotificationBuilder.buildChannel(mContext, mNotificationManager)
+            if (ActivityCompat.checkSelfPermission(
+                    mContext,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            mNotificationManager.notify(mNotificationModel.timerNotificationId, notification)
         }
-        mNotificationManager.notify(mNotificationModel.timerNotificationId, notification)
     }
 
     /**
      * 开始计时
-     * @param projectName 计时的项目名称
+     * @param projectId 计时的项目 Id
      */
-    suspend fun start(projectName: String? = null) {
+    suspend fun start(projectId: Int? = null) {
         setTimer(
-            projectName ?: this.projectName.value,
+            projectId ?: mProjectId.value!!,
             true,
             TimeUtils.now(),
         )
@@ -118,7 +120,7 @@ internal class TimerModel(
     suspend fun stop() {
         if (isRunning.value) {
             setTimer(
-                projectName.value,
+                projectId.value!!,
                 false,
                 startTime.value,
                 TimeUtils.now(),

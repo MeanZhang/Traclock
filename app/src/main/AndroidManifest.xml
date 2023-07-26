@@ -21,41 +21,6 @@
             android:directBootAware="true" />
 
         <activity
-            android:name=".ui.settings.OpenSourceLicensesActivity"
-            android:exported="false"
-            android:label="@string/title_activity_open_source_licenses"
-            android:theme="@style/Theme.Traclock" />
-        <activity
-            android:name=".ui.settings.FeedbackActivity"
-            android:exported="false"
-            android:label="@string/title_activity_feedback"
-            android:theme="@style/Theme.Traclock" />
-        <activity
-            android:name=".ui.settings.AboutActivity"
-            android:exported="false"
-            android:label="@string/title_activity_about"
-            android:theme="@style/Theme.Traclock" />
-        <activity
-            android:name=".ui.ProjectActivity"
-            android:exported="false"
-            android:label="@string/title_activity_project"
-            android:theme="@style/Theme.Traclock" />
-        <activity
-            android:name=".ui.settings.BackupRestoreActivity"
-            android:exported="false"
-            android:label="@string/title_activity_backup_restore"
-            android:theme="@style/Theme.Traclock" />
-        <activity
-            android:name=".ui.EditRecordActivity"
-            android:exported="false"
-            android:label="@string/title_activity_edit_record"
-            android:theme="@style/Theme.Traclock" />
-        <activity
-            android:name=".ui.EditProjectActivity"
-            android:exported="false"
-            android:label="@string/title_activity_edit_project"
-            android:theme="@style/Theme.Traclock" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Traclock">

@@ -30,6 +30,9 @@ class BackupRestoreViewModel : ViewModel() {
     private val _restoreState = MutableStateFlow(RestoreState.RESTORING)
     private val _message = MutableStateFlow("")
 
+    private val projectToId =
+        DataModel.dataModel.projects.values.associate { it.name to it.id }.toMutableMap()
+
     val showConfirmDialog: StateFlow<Boolean>
         get() = _showConfirmDialog
     val backingUp: StateFlow<Boolean>
@@ -80,13 +83,13 @@ class BackupRestoreViewModel : ViewModel() {
             var completed = 0
             App.context.contentResolver.openOutputStream(uri).use { outputStream ->
                 BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
-                    writer.write("Project,Start Time,End Time\n")
+                    writer.write("Project, Start Time, End Time\n")
                     for (project in DataModel.dataModel.projects) {
-                        writer.write(project.key + ",-1," + project.value + "\n")
+                        writer.write(project.value.name + ",-1," + project.value.color + "\n")
                         setProgress(completed++.toFloat() / size)
                     }
                     for (record in records) {
-                        writer.write(record.project + "," + record.startTime + "," + record.endTime + "\n")
+                        writer.write(DataModel.dataModel.projects[record.project]!!.name + "," + record.startTime + "," + record.endTime + "\n")
                         setProgress(completed++.toFloat() / size)
                     }
                 }
@@ -147,7 +150,7 @@ class BackupRestoreViewModel : ViewModel() {
      * - [Project]：项目名,-1,颜色
      * - [Record]：项目名,开始时间,结束时间
      */
-    private fun restore(line: String, lineIndex: Int): RestoreError {
+    private suspend fun restore(line: String, lineIndex: Int): RestoreError {
         /**
          * 每行数据均为三列（[String], [Long], [Long]），有两种格式：
          * - [Project]：项目名,-1,颜色
@@ -183,7 +186,8 @@ class BackupRestoreViewModel : ViewModel() {
                 setErrorMessage("第${lineIndex}行颜色格式有误：${columns[2]}")
                 return RestoreError.COLOR_ERROR
             }
-            DataModel.dataModel.insertProject(Project(projectName, color))
+            val id = DataModel.dataModel.insertProject(Project(projectName, color))
+            projectToId[projectName] = id
         }
         // 记录
         else {
@@ -194,7 +198,7 @@ class BackupRestoreViewModel : ViewModel() {
                 setErrorMessage("第${lineIndex}行结束时间格式有误：${columns[2]}")
                 return RestoreError.END_TIME_ERROR
             }
-            val record = Record(projectName, startTime, endTime, date)
+            val record = Record(projectToId[projectName]!!, startTime, endTime, date)
             if (!DataModel.dataModel.insertRecord(record)) {
                 setErrorMessage("第${lineIndex}行记录插入失败：$record")
                 return RestoreError.INSERT_ERROR

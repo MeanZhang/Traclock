@@ -5,9 +5,10 @@ import com.elvishew.xlog.XLog
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlin.concurrent.thread
 
 internal class DatabaseModel(
     mContext: Context,
@@ -15,35 +16,41 @@ internal class DatabaseModel(
     private val recordDao = AppDatabase.getDatabase(mContext).recordDao()
     private val projectDao = AppDatabase.getDatabase(mContext).projectDao()
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     /** 所有的项目 */
-    private val _projects: MutableMap<String, Int> = runBlocking(Dispatchers.IO) {
-        projectDao.getAll()
-            .associate { Pair(it.name, it.color) }.toMutableMap()
-    }
+    private val _projects =
+        runBlocking(Dispatchers.IO) { projectDao.getAll().associateBy { it.id }.toMutableMap() }
 
     /** 所有项目 */
-    val projects: Map<String, Int>
+    val projects: Map<Int, Project>
         get() = _projects
+
+    /**
+     * 通过 id 获取记录
+     * @param id 记录的 id
+     */
+    suspend fun getRecord(id: Long) = recordDao.getRecord(id)
 
     /**
      * 删除记录
      * @param record 要删除的记录
      */
     fun deleteRecord(record: Record) {
-        thread {
+        scope.launch {
             recordDao.delete(record)
         }
     }
 
     /**
      * 删除项目（包括该项目的所有记录）
-     * @param project 要删除的项目
+     * @param projectId 要删除的项目 id
      */
-    fun deleteProject(project: Project) {
-        _projects.remove(project.name)
-        thread {
-            projectDao.delete(project)
-            recordDao.deleteByProject(project.name)
+    fun deleteProject(projectId: Int) {
+        _projects.remove(projectId)
+        scope.launch {
+            projectDao.delete(projectId)
+            recordDao.deleteByProject(projectId)
         }
     }
 
@@ -51,11 +58,14 @@ internal class DatabaseModel(
      * 增加项目
      * @param project 要增加的项目
      */
-    fun insertProject(project: Project) {
-        if (project.name !in projects) {
-            thread {
-                projectDao.insert(project)
-            }
+    suspend fun insertProject(project: Project): Int {
+        if (project.name in projects.map { it.value.name }) {
+            throw Exception("项目已存在")
+        } else {
+            val id = projectDao.insert(project)
+            project.id = id.toInt()
+            _projects[project.id] = project
+            return project.id
         }
     }
 
@@ -66,7 +76,7 @@ internal class DatabaseModel(
      */
     fun insertRecord(record: Record): Boolean {
         if (record.project in projects) {
-            thread {
+            scope.launch {
                 recordDao.insert(record)
             }
             return true
@@ -81,7 +91,7 @@ internal class DatabaseModel(
      */
     fun updateRecord(record: Record): Boolean {
         if (record.project in projects) {
-            thread {
+            scope.launch {
                 recordDao.update(record)
             }
             return true
@@ -91,20 +101,18 @@ internal class DatabaseModel(
 
     /**
      * 更新项目（同时更新该项目的所有记录）
-     * @param oldProject 旧项目名
+     * @param oldProjectId 旧项目 id
      * @param newProject 新项目
      * @return 是否更新成功
      */
-    fun updateProject(oldProject: String, newProject: Project): Boolean {
-        if (newProject.name !in projects) {
-            _projects[newProject.name] = newProject.color
-            thread {
+    fun updateProject(oldProjectId: Int, newProject: Project): Boolean {
+        if (newProject.id !in projects) {
+            _projects[newProject.id] = newProject
+            scope.launch {
                 try {
                     projectDao.insert(newProject)
-                    if (oldProject.isNotBlank()) {
-                        projectDao.delete(oldProject)
-                        recordDao.update(oldProject, newProject.name)
-                    }
+                    projectDao.delete(oldProjectId)
+                    recordDao.update(oldProjectId, newProject.id)
                 } catch (e: Exception) {
                     XLog.e("更新项目失败", e)
                 }
@@ -119,19 +127,20 @@ internal class DatabaseModel(
     /**
      * 更新项目颜色
      * @param project 要更新的项目
+     * @return 是否更新成功
      */
-    fun updateProject(project: Project) {
-        _projects[project.name] = project.color
-        thread {
-            projectDao.update(project)
-        }
+    suspend fun updateProject(project: Project): Boolean {
+        _projects[project.id] = project
+        return projectDao.update(project) == 1
     }
 
     fun getProjectsTimeOfDay(date: Int) = recordDao.getProjectsTimeOfDay(date)
     fun getRecordsOfDays() = recordDao.getRecordsOfDays()
+    fun getRecordsOfDays(projectId: Int) = recordDao.getRecordsOfDays(projectId)
     fun getProjectsTimeOfDays() = recordDao.getProjectsTimeOfDays()
     fun getTimeOfDays() = recordDao.getTimeOfDays()
+    fun getTimeOfDays(projectId: Int) = recordDao.getTimeOfDays(projectId)
     fun getProjectsTime() = recordDao.getProjectsTime()
-    fun getRecordsOfDays(projectName: String) = recordDao.getRecordsOfDays(projectName)
-    fun getTimeOfDays(projectName: String) = recordDao.getTimeOfDays(projectName)
+    suspend fun getProject(id: Int) = projectDao.getProject(id)
+    suspend fun getRecords(projectId: Int) = recordDao.getRecords(projectId)
 }

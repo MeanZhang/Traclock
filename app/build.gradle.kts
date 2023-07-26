@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.abiOf
-
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
@@ -10,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("../traclock.jks")
+            storePassword = env.fetch("KEYSTORE_PASSWORD")
+            keyPassword = env.fetch("KEY_PASSWORD")
+            keyAlias = env.fetch("KEY_ALIAS")
+        }
+    }
     namespace = "com.mean.traclock"
     compileSdk = 34
 
@@ -27,33 +33,20 @@ android {
         manifestPlaceholders["APP_NAME"] = "@string/app_name"
     }
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            //noinspection ChromeOsAbiSupport
-            include("arm64-v8a")
-            isUniversalApk = false
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["APP_NAME"] = "时迹（debug）"
-            splits {
-                abi {
-                    include("arm64-v8a", "x86_64")
-                }
-            }
         }
     }
     compileOptions {
@@ -127,6 +120,8 @@ dependencies {
     // ksp(libs.hilt.android.compiler)
     // TODO hilt支持ksp后，移除下面这行
     kapt(libs.hilt.android.compiler)
+    // Hilt Compose Navigation
+    implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.appcompat)
     // Material Icons Extended
     implementation(libs.material.icons.extended)

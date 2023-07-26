@@ -1,7 +1,6 @@
 package com.mean.traclock.ui.components
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -28,9 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -38,8 +35,6 @@ import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
-import com.mean.traclock.ui.EditRecordActivity
-import com.mean.traclock.ui.ProjectActivity
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.launch
 
@@ -51,13 +46,14 @@ fun RecordItem(
     color: Color,
     detailView: Boolean = true,
     listState: LazyListState? = null,
+    navToProject: (Int) -> Unit,
+    navToEditRecord: (Long) -> Unit,
 ) {
     val startTime = TimeUtils.getTimeString(record.startTime)
     val endTime = TimeUtils.getTimeString(record.endTime)
-    val projectName = record.project
+    val projectName = DataModel.dataModel.projects[record.project]?.name ?: ""
     var showMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val notificationPermissionState =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -69,15 +65,11 @@ fun RecordItem(
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {
-                    val activity =
-                        if (detailView) EditRecordActivity::class.java else ProjectActivity::class.java
-                    val intent = Intent(context, activity)
                     if (detailView) {
-                        putRecord(intent, record)
+                        navToEditRecord(record.id)
                     } else {
-                        intent.putExtra("projectName", record.project)
+                        navToProject(record.project)
                     }
-                    context.startActivity(intent)
                 },
                 onLongClick = if (detailView) {
                     { showMenu = true }
@@ -133,26 +125,4 @@ fun RecordItem(
             )
         }
     }
-}
-
-fun putRecord(intent: Intent, record: Record) {
-    intent.putExtra("id", record.id)
-    intent.putExtra("project", record.project)
-    intent.putExtra("startTime", record.startTime)
-    intent.putExtra("endTime", record.endTime)
-    intent.putExtra("date", record.date)
-}
-
-@Preview
-@Composable
-fun RecordItemPreview() {
-    RecordItem(
-        record = Record(
-            project = "Project",
-            startTime = 0,
-            endTime = 0,
-            date = 0,
-        ),
-        color = Color.Red,
-    )
 }

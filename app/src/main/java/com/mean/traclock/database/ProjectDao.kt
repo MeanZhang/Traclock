@@ -8,21 +8,24 @@ import androidx.room.Update
 
 @Dao
 interface ProjectDao {
+    @Query("SELECT *, rowid FROM Project WHERE rowid = :id")
+    suspend fun getProject(id: Int): Project
+
     @Insert
-    fun insert(project: Project)
+    suspend fun insert(project: Project): Long
 
     @Delete
     fun delete(project: Project)
 
-    @Query("DELETE FROM Project WHERE name LIKE :name")
-    fun delete(name: String)
+    @Query("DELETE FROM Project WHERE rowid = :id")
+    fun delete(id: Int)
 
     @Update
-    fun update(project: Project)
+    suspend fun update(project: Project): Int
 
-    @Query("SELECT * FROM Project")
+    @Query("SELECT *, rowid FROM Project")
     fun getAll(): List<Project>
 
-    @Query("SELECT * FROM Project WHERE name LIKE :name")
+    @Query("SELECT *, rowid FROM Project WHERE name LIKE :name")
     fun findByName(name: String): Project
 }

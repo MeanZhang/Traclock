@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android) apply false
     alias(libs.plugins.spotless)
     alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.dotenv)
 }
 
 spotless {

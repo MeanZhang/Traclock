@@ -1,11 +1,7 @@
-package com.mean.traclock.ui.settings
+package com.mean.traclock.ui.screens.settings
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,32 +22,50 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import com.mean.traclock.R
 import com.mean.traclock.ui.Constants
-import com.mean.traclock.ui.theme.TraclockTheme
+import java.util.Locale
 
-class OpenSourceLicensesActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContent {
-            TraclockTheme {
-                Content(this)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OpenSourceLicenses(navBack: () -> Unit) {
+    val state = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = navBack) {
+                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                    }
+                },
+                title = { Text(stringResource(R.string.title_activity_open_source_licenses)) },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { contentPadding ->
+        LazyColumn(
+            contentPadding = contentPadding,
+        ) {
+            items(LICENSES) {
+                LicenseItem(it)
             }
         }
     }
 }
 
 @Composable
-fun LicenseItem(context: Context?, license: License) {
+fun LicenseItem(license: License) {
+    val context = LocalContext.current
     Column(
         Modifier
             .clickable {
-                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
             }
             .fillMaxWidth()
             .padding(horizontal = Constants.HORIZONTAL_MARGIN, 12.dp),
@@ -70,36 +84,6 @@ fun LicenseItem(context: Context?, license: License) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Content(activity: OpenSourceLicensesActivity?) {
-    val state = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = { activity?.finish() }) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
-                    }
-                },
-                title = { Text(stringResource(R.string.title_activity_open_source_licenses)) },
-                scrollBehavior = scrollBehavior,
-            )
-        },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { contentPadding ->
-        LazyColumn(
-            contentPadding = contentPadding,
-        ) {
-            items(LICENSES) {
-                LicenseItem(activity, it)
-            }
-        }
     }
 }
 
@@ -145,11 +129,6 @@ private val LICENSES = listOf(
         "Apache License 2.0",
     ),
     License(
-        "ThreeTen Android Backport",
-        "https://github.com/JakeWharton/ThreeTenABP",
-        "Apache License 2.0",
-    ),
-    License(
         "Coil",
         "https://github.com/coil-kt/coil",
         "Apache License 2.0",
@@ -159,12 +138,36 @@ private val LICENSES = listOf(
         "https://github.com/elvishew/xLog",
         "Apache License 2.0",
     ),
-).sortedBy { it.name }
+    License(
+        "Spotless",
+        "https://github.com/diffplug/spotless",
+        "Apache License 2.0",
+    ),
+    License(
+        "ktlint",
+        "https://pinterest.github.io/ktlint",
+        "MIT License",
+    ),
+    License(
+        "Kotlin Symbol Processing",
+        "https://github.com/google/ksp",
+        "Apache License 2.0",
+    ),
+    License(
+        "Dotenv Gradle",
+        "https://github.com/uzzu/dotenv-gradle",
+        "Apache License 2.0",
+    ),
+    License(
+        "Hilt",
+        "https://dagger.dev/hilt",
+        "Apache License 2.0",
+    ),
+    License(
+        "Glance",
+        "https://github.com/guolindev/Glance",
+        "Apache License 2.0",
+    ),
+).sortedBy { it.name.lowercase(Locale.getDefault()) }
 
 data class License(val name: String, val url: String, val license: String)
-
-@Composable
-@Preview(showSystemUi = true)
-fun PreviewOSS() {
-    Content(null)
-}

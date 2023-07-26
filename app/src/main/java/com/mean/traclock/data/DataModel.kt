@@ -34,8 +34,8 @@ class DataModel private constructor() {
     fun init(context: Context) {
         if (mContext !== context) {
             mContext = context.applicationContext
-            mNotificationModel = NotificationModel()
             mDatabaseModel = DatabaseModel(mContext!!)
+            mNotificationModel = NotificationModel()
             mTimerModel = TimerModel(mContext!!, mNotificationModel!!)
         }
     }
@@ -49,14 +49,14 @@ class DataModel private constructor() {
     }
 
     /** 所有项目 */
-    val projects: Map<String, Int>
+    val projects: Map<Int, Project>
         get() = mDatabaseModel!!.projects
 
-    /** 当前的项目名称 */
-    val projectName: StateFlow<String>
+    /** 当前的项目 id */
+    val projectId: StateFlow<Int?>
         get() {
             Utils.enforceMainLooper()
-            return mTimerModel!!.projectName
+            return mTimerModel!!.projectId
         }
 
     /** 计时器是否在运行 */
@@ -74,7 +74,7 @@ class DataModel private constructor() {
         }
 
     /** 开始计时 */
-    fun startTimer(projectName: String? = null) {
+    fun startTimer(projectId: Int? = null) {
         Utils.enforceMainLooper()
         if (isRunning.value) {
             Toast.makeText(
@@ -84,7 +84,7 @@ class DataModel private constructor() {
             ).show()
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                mTimerModel!!.start(projectName)
+                mTimerModel!!.start(projectId)
             }
         }
     }
@@ -102,6 +102,12 @@ class DataModel private constructor() {
     //
 
     /**
+     * 通过 id 获取记录
+     * @param id 记录的 id
+     */
+    suspend fun getRecord(id: Long) = mDatabaseModel!!.getRecord(id)
+
+    /**
      * 增加记录
      * @param record 要增加的记录
      * @return 是否插入成功
@@ -116,30 +122,21 @@ class DataModel private constructor() {
 
     /**
      * 删除项目（包括该项目的所有记录）
-     * @param project 要删除的项目
+     * @param projectId 要删除的项目 id
      */
-    fun deleteProject(project: Project) = mDatabaseModel!!.deleteProject(project)
+    fun deleteProject(projectId: Int) = mDatabaseModel!!.deleteProject(projectId)
 
     /**
      * 增加项目
      * @param project 要增加的项目
      */
-    fun insertProject(project: Project) = mDatabaseModel!!.insertProject(project)
+    suspend fun insertProject(project: Project) = mDatabaseModel!!.insertProject(project)
 
     /**
-     * 更新项目（同时更新该项目的所有记录）
-     * @param oldProjectName 旧项目名
-     * @param newProject 新项目
-     * @return 是否更新成功
-     */
-    fun updateProject(oldProjectName: String, newProject: Project) =
-        mDatabaseModel!!.updateProject(oldProjectName, newProject)
-
-    /**
-     * 更新项目颜色
+     * 更新项目
      * @param project 要更新的项目
      */
-    fun updateProject(project: Project) = mDatabaseModel!!.updateProject(project)
+    suspend fun updateProject(project: Project) = mDatabaseModel!!.updateProject(project)
 
     /**
      * 更新记录
@@ -150,16 +147,18 @@ class DataModel private constructor() {
 
     fun getProjectsTimeOfDay(date: Int) = mDatabaseModel!!.getProjectsTimeOfDay(date)
     fun getRecordsOfDays() = mDatabaseModel!!.getRecordsOfDays()
+    fun getRecordsOfDays(projectId: Int) = mDatabaseModel!!.getRecordsOfDays(projectId)
     fun getProjectsTimeOfDays() = mDatabaseModel!!.getProjectsTimeOfDays()
     fun getTimeOfDays() = mDatabaseModel!!.getTimeOfDays()
-    fun getProjectsTime() = mDatabaseModel!!.getProjectsTime()
-    fun getRecordsOfDays(projectName: String) = mDatabaseModel!!.getRecordsOfDays(projectName)
+    fun getTimeOfDays(projectId: Int) = mDatabaseModel!!.getTimeOfDays(projectId)
 
-    fun getTimeOfDays(projectName: String) = mDatabaseModel!!.getTimeOfDays(projectName)
+    fun getProjectsTime() = mDatabaseModel!!.getProjectsTime()
+    suspend fun getProject(id: Int): Project = mDatabaseModel!!.getProject(id)
+    suspend fun getRecords(projectId: Int) = mDatabaseModel!!.getRecords(projectId)
 
     companion object {
         @SuppressLint("StaticFieldLeak")
-        val sDataModel = DataModel()
+        private val sDataModel = DataModel()
 
         @get:JvmStatic
         @get:Keep

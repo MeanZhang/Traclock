@@ -106,3 +106,5 @@ node_modules
 dist
 app/release
 app/debug
+
+.env

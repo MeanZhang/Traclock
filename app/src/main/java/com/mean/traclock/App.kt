@@ -7,7 +7,9 @@ import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
 import com.mean.traclock.data.DataModel
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class App : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -16,7 +18,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         context = applicationContext
         initXLog()
         DataModel.dataModel.init(applicationContext)

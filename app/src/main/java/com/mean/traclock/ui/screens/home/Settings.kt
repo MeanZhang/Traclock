@@ -1,7 +1,5 @@
-package com.mean.traclock.ui.screens
+package com.mean.traclock.ui.screens.home
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -19,12 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
-import com.mean.traclock.ui.settings.AboutActivity
-import com.mean.traclock.ui.settings.BackupRestoreActivity
-import com.mean.traclock.ui.settings.FeedbackActivity
 
 @Composable
-fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues()) {
+fun Settings(
+    navToBackupRestore: () -> Unit,
+    navToFeddback: () -> Unit,
+    navToAbout: () -> Unit,
+    contentPadding: PaddingValues = PaddingValues(),
+) {
     Column(
         modifier = Modifier
             .padding(contentPadding)
@@ -36,9 +36,7 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
             stringResource(R.string.title_activity_backup_restore),
             Icons.Outlined.SettingsBackupRestore,
             stringResource(R.string.settings_description_backup_restore),
-            onClick = {
-                context?.startActivity(Intent(context, BackupRestoreActivity::class.java))
-            },
+            onClick = navToBackupRestore,
         )
         Divider()
         SettingGroupTitle(stringResource(R.string.others))
@@ -46,17 +44,13 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
             stringResource(R.string.title_activity_feedback),
             Icons.Outlined.Feedback,
             stringResource(R.string.settings_description_feedback),
-            onClick = {
-                context?.startActivity(Intent(context, FeedbackActivity::class.java))
-            },
+            onClick = navToFeddback,
         )
         SettingItem(
             stringResource(R.string.title_activity_about),
             Icons.Outlined.Info,
             stringResource(R.string.settings_description_about),
-            onClick = {
-                context?.startActivity(Intent(context, AboutActivity::class.java))
-            },
+            onClick = navToAbout,
         )
     }
 }
@@ -64,5 +58,5 @@ fun Settings(context: Context?, contentPadding: PaddingValues = PaddingValues())
 @Composable
 @Preview(showSystemUi = true)
 fun PreviewSettings() {
-    Settings(context = null)
+    Settings({}, {}, {})
 }
