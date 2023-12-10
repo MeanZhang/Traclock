@@ -11,7 +11,7 @@ lifecycle-runtime-ktx = "2.6.1"
 activity-compose = "1.7.2"
 compose-bom = "2023.06.01"
 # 插件
-spotless = "6.18.0"
+spotless = "6.23.3"
 hilt = "2.46.1"
 ksp = "1.8.22-1.0.11"
 dotenv = "2.0.0"
