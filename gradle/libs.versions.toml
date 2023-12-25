@@ -18,7 +18,7 @@ dotenv = "2.0.0"
 # 自定义
 room = "2.5.2"
 xlog = "1.11.0"
-leakcanary = "2.11"
+leakcanary = "2.12"
 hilt-navigation-compose = "1.0.0"
 datastore-preferences = "1.0.0"
 accompanist = "0.30.1"
