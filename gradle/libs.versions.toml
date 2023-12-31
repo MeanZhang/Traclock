@@ -14,7 +14,7 @@ compose-bom = "2023.06.01"
 spotless = "6.18.0"
 hilt = "2.46.1"
 ksp = "1.8.22-1.0.11"
-dotenv = "2.0.0"
+dotenv = "4.0.0"
 # 自定义
 room = "2.5.2"
 xlog = "1.11.0"
