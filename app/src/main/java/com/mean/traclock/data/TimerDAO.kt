@@ -26,19 +26,22 @@ internal object TimerDAO {
     }
 
     /** 计时器的项目id */
-    val projectIdFlow: Flow<Int?> = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.PROJECT_ID]
-    }
+    val projectIdFlow: Flow<Int?> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.PROJECT_ID]
+        }
 
     /** 计时器是否正在运行 */
-    val isRunningFlow: Flow<Boolean> = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.IS_RUNNING] ?: false
-    }
+    val isRunningFlow: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.IS_RUNNING] ?: false
+        }
 
     /** 计时器开始的时间，以毫秒为单位 */
-    val startTimeFlow: Flow<Long> = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.START_TIME] ?: 0
-    }
+    val startTimeFlow: Flow<Long> =
+        dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.START_TIME] ?: 0
+        }
 
     /**
      * @param projectId 项目 id

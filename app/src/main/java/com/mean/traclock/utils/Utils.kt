@@ -12,7 +12,6 @@ fun Context.openURL(url: String) {
 }
 
 object Utils {
-
     fun enforceMainLooper() {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             throw IllegalAccessError("May only call from main thread.")
@@ -27,7 +26,10 @@ object Utils {
      *
      * @return 将启动服务的 [PendingIntent]
      */
-    fun pendingServiceIntent(context: Context, intent: Intent): PendingIntent {
+    fun pendingServiceIntent(
+        context: Context,
+        intent: Intent,
+    ): PendingIntent {
         val flag = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         return PendingIntent.getService(context, 0, intent, flag)
     }

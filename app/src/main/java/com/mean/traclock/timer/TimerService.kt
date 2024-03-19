@@ -10,14 +10,18 @@ import com.mean.traclock.data.DataModel
 
 /** 时器通知服务 */
 class TimerService : Service() {
-
     override fun onBind(intent: Intent?): IBinder? = null
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent,
+        flags: Int,
+        startId: Int,
+    ): Int {
         when (intent.action) {
             ACTION_SHOW_APP -> {
-                val showApp: Intent = Intent(this, MainActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val showApp: Intent =
+                    Intent(this, MainActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(showApp)
             }
             // 开始

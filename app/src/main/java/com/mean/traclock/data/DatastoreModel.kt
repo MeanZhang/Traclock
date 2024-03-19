@@ -11,21 +11,25 @@ import javax.inject.Inject
 
 private val Context.dataStore by preferencesDataStore("traclock")
 
-class DatastoreModel @Inject constructor(@ApplicationContext appContext: Context) {
+class DatastoreModel
+    @Inject
+    constructor(
+        @ApplicationContext appContext: Context,
+    ) {
+        private val dataStore = appContext.dataStore
 
-    private val dataStore = appContext.dataStore
-
-    private object PreferencesKeys {
-        val IP = stringPreferencesKey("ip")
-    }
-
-    suspend fun setIp(ip: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.IP] = ip
+        private object PreferencesKeys {
+            val IP = stringPreferencesKey("ip")
         }
-    }
 
-    val ipFlow: Flow<String> = dataStore.data.map { preferences ->
-        preferences[PreferencesKeys.IP] ?: "192.168.0.232"
+        suspend fun setIp(ip: String) {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.IP] = ip
+            }
+        }
+
+        val ipFlow: Flow<String> =
+            dataStore.data.map { preferences ->
+                preferences[PreferencesKeys.IP] ?: "192.168.0.232"
+            }
     }
-}

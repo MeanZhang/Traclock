@@ -60,7 +60,10 @@ fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: PaddingValues) {
+private fun Content(
+    projectsTimeFlow: Flow<List<Record>>,
+    contentPadding: PaddingValues,
+) {
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableStateOf(-1) }
@@ -82,10 +85,11 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                 Text(TimeUtils.getDurationString(duration))
             }
             AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .padding(horizontal = HORIZONTAL_MARGIN),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(horizontal = HORIZONTAL_MARGIN),
                 factory = { context ->
                     PieChart(context).apply {
                         setPieChart(context, this, projectsTime, duration, selected)
@@ -118,9 +122,10 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                             imageVector = Icons.Default.Circle,
                             contentDescription = null,
                             tint = Color(DataModel.dataModel.projects[project.project]?.color ?: 0),
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(horizontal = 4.dp),
+                            modifier =
+                                Modifier
+                                    .size(20.dp)
+                                    .padding(horizontal = 4.dp),
                         )
                         Text(
                             DataModel.dataModel.projects[project.project]?.name ?: "",
@@ -137,7 +142,7 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
             }
         }
     } else {
-        NoData(stringResource(R.string.no_record), Modifier.padding(contentPadding))
+        NoData(stringResource(R.string.no_record), modifier = Modifier.padding(contentPadding))
     }
 }
 
@@ -154,17 +159,22 @@ fun setPieChart(
     chart.centerText = TimeUtils.getDurationString(duration)
     chart.legend.isEnabled = false // 不显示图例
     chart.setUsePercentValues(true)
-    chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-        override fun onValueSelected(e: Entry?, h: Highlight?) {
-            if (h != null) {
-                selected.value = h.x.toInt()
+    chart.setOnChartValueSelectedListener(
+        object : OnChartValueSelectedListener {
+            override fun onValueSelected(
+                e: Entry?,
+                h: Highlight?,
+            ) {
+                if (h != null) {
+                    selected.value = h.x.toInt()
+                }
             }
-        }
 
-        override fun onNothingSelected() {
-            selected.value = -1
-        }
-    })
+            override fun onNothingSelected() {
+                selected.value = -1
+            }
+        },
+    )
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, context.getString(R.string.records_duration))

@@ -1,14 +1,17 @@
 package com.mean.traclock.ui.screens
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,9 +35,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,11 +52,17 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProject(navBack: () -> Unit, viewModel: EditProjectViewModel = viewModel()) {
+fun EditProject(
+    navBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: EditProjectViewModel = viewModel(),
+) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     var showDialog by remember {
         mutableStateOf(false)
     }
+
     fun back() {
         if (viewModel.isModified) {
             showDialog = true
@@ -62,7 +75,9 @@ fun EditProject(navBack: () -> Unit, viewModel: EditProjectViewModel = viewModel
     }
 
     val name by viewModel.name.collectAsState("")
-    val color by viewModel.color.collectAsState()
+    val colorValue by viewModel.color.collectAsState()
+    val color = Color(colorValue)
+    val contentColor = if (color.luminance() > 0.4f) Color.Black else Color.White
 
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
@@ -71,16 +86,25 @@ fun EditProject(navBack: () -> Unit, viewModel: EditProjectViewModel = viewModel
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = { back() }) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
-                title = { Text(name) },
+                title = {},
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        navigationIconContentColor = contentColor,
+                        actionIconContentColor = contentColor,
+                    ),
                 actions = {
                     if (name.isNotBlank()) {
                         IconButton(onClick = {
                             scope.launch {
-                                viewModel.updateProject()
-                                navBack()
+                                if (viewModel.updateProject() != -1) {
+                                    navBack()
+                                } else {
+                                    Toast.makeText(context, "项目已存在", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }) {
                             Icon(Icons.Filled.Check, stringResource(R.string.save))
@@ -90,28 +114,40 @@ fun EditProject(navBack: () -> Unit, viewModel: EditProjectViewModel = viewModel
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        Column(Modifier.padding(contentPadding)) {
+        Column(
+            Modifier.padding(
+                bottom = contentPadding.calculateBottomPadding(),
+                start = contentPadding.calculateStartPadding(LocalLayoutDirection.current),
+                end = contentPadding.calculateEndPadding(LocalLayoutDirection.current),
+            ),
+        ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(240.dp)
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                Color(color),
-                                Color.Black,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(240.dp + contentPadding.calculateTopPadding())
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(
+                                    color,
+                                    Color.Black,
+                                ),
                             ),
                         ),
-                    ),
             ) {
-                OutlinedTextField(value = name, onValueChange = {
-                    viewModel.setName(it)
-                })
+                OutlinedTextField(
+                    value = name,
+                    textStyle = TextStyle(color = contentColor),
+                    onValueChange = {
+                        viewModel.setName(it)
+                    },
+                    modifier = Modifier.padding(top = contentPadding.calculateTopPadding() / 2),
+                )
             }
-            ColorPicker(color = Color(color)) {
+            ColorPicker(color = color) {
                 viewModel.setColor(it.toArgb())
             }
         }

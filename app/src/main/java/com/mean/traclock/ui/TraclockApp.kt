@@ -1,6 +1,5 @@
 package com.mean.traclock.ui
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.SwapHoriz
@@ -16,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,12 +26,12 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.mean.traclock.R
 import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.ui.navigation.Route
@@ -51,33 +51,44 @@ import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.MainViewModel
 import com.mean.traclock.viewmodels.ProjectViewModel
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TraclockApp() {
-    val navController = rememberAnimatedNavController()
+fun TraclockApp(
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel = viewModel(),
+) {
+    val navController = rememberNavController()
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
-    val viewModel: MainViewModel = viewModel()
     Scaffold(
         topBar = {
             HomeTopBar(
-                viewModel,
                 navController,
                 scrollBehavior,
+                onChangeDetailView = { viewModel.changeDetailView() },
                 navToNewProject = { navController.navigate("${Route.EDIT_PROJECT}/0/true") },
             )
         },
         bottomBar = { HomeBottomBar(navController) },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        AnimatedNavHost(navController, Route.HOME) {
+        NavHost(navController, Route.HOME) {
             navigation(
                 startDestination = HomeRoute.TIMELINE.route,
                 route = Route.HOME,
             ) {
                 composable(HomeRoute.TIMELINE.route) {
+                    val detailView by viewModel.detailView.collectAsState()
+                    val records by viewModel.records.collectAsState(mapOf())
+                    val projectsTimeOfDays by viewModel.projectsTimeOfDays.collectAsState(mapOf())
+                    val timeOfDays by viewModel.timeOfDays.collectAsState(mapOf())
                     TimeLine(
+                        detailView = detailView,
+                        records = records,
+                        projectsTimeOfDays = projectsTimeOfDays,
+                        timeOfDays = timeOfDays,
                         navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                         navToEditRecord = { navController.navigate("${Route.EDIT_RECORD}/$it") },
                         contentPadding = contentPadding,
@@ -85,6 +96,7 @@ fun TraclockApp() {
                 }
                 composable(HomeRoute.PROJECTS.route) {
                     Projects(
+                        projectsTimeFlow = viewModel.projectsTime,
                         navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                         navToEditRecord = { navController.navigate("${Route.EDIT_RECORD}/$it") },
                         contentPadding = contentPadding,
@@ -104,9 +116,10 @@ fun TraclockApp() {
             }
             composable(
                 "${Route.PROJECT}/{id}",
-                arguments = listOf(
-                    navArgument("id") { type = NavType.IntType },
-                ),
+                arguments =
+                    listOf(
+                        navArgument("id") { type = NavType.IntType },
+                    ),
             ) {
                 Project(
                     navToProject = { navController.navigate("${Route.PROJECT}/$it") },
@@ -118,10 +131,11 @@ fun TraclockApp() {
             }
             composable(
                 "${Route.EDIT_PROJECT}/{id}/{isNew}",
-                arguments = listOf(
-                    navArgument("id") { type = NavType.IntType },
-                    navArgument("isNew") { type = NavType.BoolType },
-                ),
+                arguments =
+                    listOf(
+                        navArgument("id") { type = NavType.IntType },
+                        navArgument("isNew") { type = NavType.BoolType },
+                    ),
             ) {
                 EditProject(
                     navBack = { navController.navigateUp() },
@@ -130,9 +144,10 @@ fun TraclockApp() {
             }
             composable(
                 "${Route.EDIT_RECORD}/{id}",
-                arguments = listOf(
-                    navArgument("id") { type = NavType.LongType },
-                ),
+                arguments =
+                    listOf(
+                        navArgument("id") { type = NavType.LongType },
+                    ),
             ) {
                 EditRecord(
                     viewModel = hiltViewModel<EditRecordViewModel>(),
@@ -161,27 +176,28 @@ fun TraclockApp() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeTopBar(
-    viewModel: MainViewModel,
     navController: NavHostController,
     scrollBehavior: TopAppBarScrollBehavior,
+    onChangeDetailView: () -> Unit,
     navToNewProject: () -> Unit,
 ) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
-    val title = when (currentDestination?.route) {
-        HomeRoute.TIMELINE.route -> stringResource(id = R.string.timeline)
-        HomeRoute.PROJECTS.route -> stringResource(id = R.string.projects)
-        HomeRoute.STATISTICS.route -> stringResource(id = R.string.statistics)
-        HomeRoute.SETTINGS.route -> stringResource(id = R.string.settings)
-        else -> stringResource(id = R.string.app_name)
-    }
-    if (HomeRoute.values().map { it.route }.contains(currentDestination?.route)) {
+    val title =
+        when (currentDestination?.route) {
+            HomeRoute.TIMELINE.route -> stringResource(id = R.string.timeline)
+            HomeRoute.PROJECTS.route -> stringResource(id = R.string.projects)
+            HomeRoute.STATISTICS.route -> stringResource(id = R.string.statistics)
+            HomeRoute.SETTINGS.route -> stringResource(id = R.string.settings)
+            else -> stringResource(id = R.string.app_name)
+        }
+    if (HomeRoute.entries.map { it.route }.contains(currentDestination?.route)) {
         TopAppBar(
             title = { Text(title) },
             scrollBehavior = scrollBehavior,
             actions = {
                 when (currentDestination?.route) {
                     HomeRoute.TIMELINE.route -> {
-                        IconButton(onClick = { viewModel.changeDetailView() }) {
+                        IconButton(onClick = onChangeDetailView) {
                             Icon(Icons.Default.SwapHoriz, stringResource(R.string.change_view))
                         }
                     }
@@ -201,9 +217,9 @@ private fun HomeTopBar(
 private fun HomeBottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    if (HomeRoute.values().map { it.route }.contains(currentDestination?.route)) {
+    if (HomeRoute.entries.map { it.route }.contains(currentDestination?.route)) {
         NavigationBar {
-            HomeRoute.values().forEach { destination ->
+            HomeRoute.entries.forEach { destination ->
                 NavigationBarItem(
                     selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true,
                     onClick = {

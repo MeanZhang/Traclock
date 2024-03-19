@@ -12,6 +12,7 @@ import androidx.room.RoomDatabase
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao
+
     abstract fun recordDao(): RecordDao
 
     companion object {

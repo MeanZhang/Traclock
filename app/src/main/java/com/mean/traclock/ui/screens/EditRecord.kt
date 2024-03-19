@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.AlertDialog
@@ -52,7 +53,11 @@ import com.mean.traclock.viewmodels.EditRecordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditRecord(viewModel: EditRecordViewModel, navBack: () -> Unit) {
+fun EditRecord(
+    viewModel: EditRecordViewModel,
+    modifier: Modifier = Modifier,
+    navBack: () -> Unit,
+) {
     val context = LocalContext.current
     val projectId by viewModel.projectId.collectAsState()
     val startTime by viewModel.startTime.collectAsState(0L)
@@ -61,11 +66,13 @@ fun EditRecord(viewModel: EditRecordViewModel, navBack: () -> Unit) {
     var showMenu by remember { mutableStateOf(false) }
     var showProjectsDialog by remember { mutableStateOf(false) }
 
-    val builder = CardDatePickerDialog.builder(context).showBackNow(false)
-        .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
+    val builder =
+        CardDatePickerDialog.builder(context).showBackNow(false)
+            .setThemeColor(MaterialTheme.colorScheme.primary.toArgb())
 
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
+
     fun back() {
         if (viewModel.isModified) {
             showDialog = true
@@ -82,7 +89,7 @@ fun EditRecord(viewModel: EditRecordViewModel, navBack: () -> Unit) {
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = { back() }) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 title = { Text(stringResource(R.string.edit_record)) },
@@ -106,13 +113,15 @@ fun EditRecord(viewModel: EditRecordViewModel, navBack: () -> Unit) {
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         Column(
-            modifier = Modifier
-                .padding(contentPadding)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .padding(contentPadding)
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
@@ -179,17 +188,19 @@ fun EditRecord(viewModel: EditRecordViewModel, navBack: () -> Unit) {
                 when (viewModel.updateRecord()) {
                     2 -> navBack()
                     1 -> navBack()
-                    -1 -> Toast.makeText(
-                        context,
-                        context.getString(R.string.please_enter_a_project_name),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    -1 ->
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.please_enter_a_project_name),
+                            Toast.LENGTH_SHORT,
+                        ).show()
 
-                    -2 -> Toast.makeText(
-                        context,
-                        context.getString(R.string.no_such_project),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    -2 ->
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.no_such_project),
+                            Toast.LENGTH_SHORT,
+                        ).show()
                 }
             }) {
                 Text(stringResource(R.string.save))
@@ -206,17 +217,19 @@ fun EditRecord(viewModel: EditRecordViewModel, navBack: () -> Unit) {
                     items(DataModel.dataModel.projects.keys.toList()) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.clickable {
-                                viewModel.setProject(it)
-                                showProjectsDialog = false
-                            },
+                            modifier =
+                                Modifier.clickable {
+                                    viewModel.setProject(it)
+                                    showProjectsDialog = false
+                                },
                         ) {
                             RadioButton(
                                 selected = projectId == it,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = Color(DataModel.dataModel.projects[it]!!.color),
-                                    unselectedColor = Color(DataModel.dataModel.projects[it]!!.color),
-                                ),
+                                colors =
+                                    RadioButtonDefaults.colors(
+                                        selectedColor = Color(DataModel.dataModel.projects[it]!!.color),
+                                        unselectedColor = Color(DataModel.dataModel.projects[it]!!.color),
+                                    ),
                                 onClick = {
                                     viewModel.setProject(it)
                                     showProjectsDialog = false

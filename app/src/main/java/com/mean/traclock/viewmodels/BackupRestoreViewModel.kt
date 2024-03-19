@@ -89,7 +89,9 @@ class BackupRestoreViewModel : ViewModel() {
                         setProgress(completed++.toFloat() / size)
                     }
                     for (record in records) {
-                        writer.write(DataModel.dataModel.projects[record.project]!!.name + "," + record.startTime + "," + record.endTime + "\n")
+                        writer.write(
+                            DataModel.dataModel.projects[record.project]!!.name + "," + record.startTime + "," + record.endTime + "\n",
+                        )
                         setProgress(completed++.toFloat() / size)
                     }
                 }
@@ -150,7 +152,10 @@ class BackupRestoreViewModel : ViewModel() {
      * - [Project]：项目名,-1,颜色
      * - [Record]：项目名,开始时间,结束时间
      */
-    private suspend fun restore(line: String, lineIndex: Int): RestoreError {
+    private suspend fun restore(
+        line: String,
+        lineIndex: Int,
+    ): RestoreError {
         /**
          * 每行数据均为三列（[String], [Long], [Long]），有两种格式：
          * - [Project]：项目名,-1,颜色
@@ -172,32 +177,34 @@ class BackupRestoreViewModel : ViewModel() {
         }
 
         /** -1或开始时间，第二列 */
-        val startTime = try {
-            columns[1].toLong()
-        } catch (e: Exception) {
-            setErrorMessage("第${lineIndex}行开始时间格式有误：${columns[1]}")
-            return RestoreError.START_TIME_ERROR
-        }
+        val startTime =
+            try {
+                columns[1].toLong()
+            } catch (e: Exception) {
+                setErrorMessage("第${lineIndex}行开始时间格式有误：${columns[1]}")
+                return RestoreError.START_TIME_ERROR
+            }
         // 项目
         if (startTime == -1L) {
-            val color = try {
-                columns[2].toInt()
-            } catch (e: Exception) {
-                setErrorMessage("第${lineIndex}行颜色格式有误：${columns[2]}")
-                return RestoreError.COLOR_ERROR
-            }
+            val color =
+                try {
+                    columns[2].toInt()
+                } catch (e: Exception) {
+                    setErrorMessage("第${lineIndex}行颜色格式有误：${columns[2]}")
+                    return RestoreError.COLOR_ERROR
+                }
             val id = DataModel.dataModel.insertProject(Project(projectName, color))
             projectToId[projectName] = id
-        }
-        // 记录
-        else {
+        } else {
+            // 记录
             val date = TimeUtils.getIntDate(startTime)
-            val endTime = try {
-                columns[2].toLong()
-            } catch (e: Exception) {
-                setErrorMessage("第${lineIndex}行结束时间格式有误：${columns[2]}")
-                return RestoreError.END_TIME_ERROR
-            }
+            val endTime =
+                try {
+                    columns[2].toLong()
+                } catch (e: Exception) {
+                    setErrorMessage("第${lineIndex}行结束时间格式有误：${columns[2]}")
+                    return RestoreError.END_TIME_ERROR
+                }
             val record = Record(projectToId[projectName]!!, startTime, endTime, date)
             if (!DataModel.dataModel.insertRecord(record)) {
                 setErrorMessage("第${lineIndex}行记录插入失败：$record")

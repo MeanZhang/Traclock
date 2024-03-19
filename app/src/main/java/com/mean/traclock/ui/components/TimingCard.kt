@@ -22,7 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -44,6 +44,7 @@ fun TimingCard(
     projectId: Int?,
     startTime: Long,
     isTiming: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
         visible = isTiming,
@@ -51,7 +52,7 @@ fun TimingCard(
         exit = shrinkVertically(),
     ) {
         var now by remember {
-            mutableStateOf(System.currentTimeMillis())
+            mutableLongStateOf(System.currentTimeMillis())
         }
         val scope = rememberCoroutineScope()
         if (isTiming) {
@@ -63,25 +64,28 @@ fun TimingCard(
             }
         }
         Card(
-            modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = HORIZONTAL_MARGIN)
-                .fillMaxWidth(),
+            modifier =
+                modifier
+                    .padding(vertical = 16.dp, horizontal = HORIZONTAL_MARGIN)
+                    .fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
             shape = RoundedCornerShape(32.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 24.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 24.dp)
+                        .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         Icons.Default.AccessTime,
                         contentDescription = stringResource(R.string.tracking),
-                        modifier = Modifier
-                            .padding(end = 12.dp)
-                            .size(30.dp),
+                        modifier =
+                            Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp),
                     )
                     Column {
                         Text(

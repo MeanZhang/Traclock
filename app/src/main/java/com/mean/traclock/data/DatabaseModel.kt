@@ -5,6 +5,8 @@ import com.elvishew.xlog.XLog
 import com.mean.traclock.database.AppDatabase
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,8 +25,8 @@ internal class DatabaseModel(
         runBlocking(Dispatchers.IO) { projectDao.getAll().associateBy { it.id }.toMutableMap() }
 
     /** 所有项目 */
-    val projects: Map<Int, Project>
-        get() = _projects
+    val projects: ImmutableMap<Int, Project>
+        get() = _projects.toImmutableMap()
 
     /**
      * 通过 id 获取记录
@@ -59,13 +61,13 @@ internal class DatabaseModel(
      * @param project 要增加的项目
      */
     suspend fun insertProject(project: Project): Int {
-        if (project.name in projects.map { it.value.name }) {
-            throw Exception("项目已存在")
+        return if (project.name in projects.map { it.value.name }) {
+            -1
         } else {
             val id = projectDao.insert(project)
             project.id = id.toInt()
             _projects[project.id] = project
-            return project.id
+            project.id
         }
     }
 
@@ -105,7 +107,10 @@ internal class DatabaseModel(
      * @param newProject 新项目
      * @return 是否更新成功
      */
-    fun updateProject(oldProjectId: Int, newProject: Project): Boolean {
+    fun updateProject(
+        oldProjectId: Int,
+        newProject: Project,
+    ): Boolean {
         if (newProject.id !in projects) {
             _projects[newProject.id] = newProject
             scope.launch {
@@ -135,12 +140,20 @@ internal class DatabaseModel(
     }
 
     fun getProjectsTimeOfDay(date: Int) = recordDao.getProjectsTimeOfDay(date)
+
     fun getRecordsOfDays() = recordDao.getRecordsOfDays()
+
     fun getRecordsOfDays(projectId: Int) = recordDao.getRecordsOfDays(projectId)
+
     fun getProjectsTimeOfDays() = recordDao.getProjectsTimeOfDays()
+
     fun getTimeOfDays() = recordDao.getTimeOfDays()
+
     fun getTimeOfDays(projectId: Int) = recordDao.getTimeOfDays(projectId)
+
     fun getProjectsTime() = recordDao.getProjectsTime()
+
     suspend fun getProject(id: Int) = projectDao.getProject(id)
+
     suspend fun getRecords(projectId: Int) = recordDao.getRecords(projectId)
 }

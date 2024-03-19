@@ -20,24 +20,27 @@ import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
 
 @Composable
-fun DateTitle(date: String, duration: Long) {
-    Surface {
+fun DateTitle(
+    date: String,
+    duration: Long,
+    modifier: Modifier = Modifier,
+) {
+    Surface(modifier = modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = HORIZONTAL_MARGIN),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = HORIZONTAL_MARGIN),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 date,
                 color = MaterialTheme.colorScheme.primary,
-//            style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 TimeUtils.getDurationString(duration),
                 color = MaterialTheme.colorScheme.primary,
-//            style = MaterialTheme.typography.headlineSmall
             )
         }
     }
@@ -46,7 +49,7 @@ fun DateTitle(date: String, duration: Long) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun DateTitlePreview() {
+private fun DateTitlePreview() {
     Scaffold(topBar = { TopAppBar(title = { Text(text = "DateTitle") }) }) {
         LazyColumn(contentPadding = it) {
             item {

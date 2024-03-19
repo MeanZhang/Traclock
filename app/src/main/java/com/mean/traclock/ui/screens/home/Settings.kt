@@ -9,7 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,33 +23,35 @@ fun Settings(
     navToBackupRestore: () -> Unit,
     navToFeddback: () -> Unit,
     navToAbout: () -> Unit,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     Column(
-        modifier = Modifier
-            .padding(contentPadding)
-            .verticalScroll(rememberScrollState()),
+        modifier =
+            modifier
+                .padding(contentPadding)
+                .verticalScroll(rememberScrollState()),
     ) {
         SettingGroupTitle(stringResource(R.string.normal))
 
         SettingItem(
-            stringResource(R.string.title_activity_backup_restore),
-            Icons.Outlined.SettingsBackupRestore,
-            stringResource(R.string.settings_description_backup_restore),
+            title = stringResource(R.string.title_activity_backup_restore),
+            icon = Icons.Outlined.SettingsBackupRestore,
+            description = stringResource(R.string.settings_description_backup_restore),
             onClick = navToBackupRestore,
         )
-        Divider()
+        HorizontalDivider()
         SettingGroupTitle(stringResource(R.string.others))
         SettingItem(
-            stringResource(R.string.title_activity_feedback),
-            Icons.Outlined.Feedback,
-            stringResource(R.string.settings_description_feedback),
+            title = stringResource(R.string.title_activity_feedback),
+            icon = Icons.Outlined.Feedback,
+            description = stringResource(R.string.settings_description_feedback),
             onClick = navToFeddback,
         )
         SettingItem(
-            stringResource(R.string.title_activity_about),
-            Icons.Outlined.Info,
-            stringResource(R.string.settings_description_about),
+            title = stringResource(R.string.title_activity_about),
+            icon = Icons.Outlined.Info,
+            description = stringResource(R.string.settings_description_about),
             onClick = navToAbout,
         )
     }
@@ -57,6 +59,6 @@ fun Settings(
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSettings() {
+private fun PreviewSettings() {
     Settings({}, {}, {})
 }

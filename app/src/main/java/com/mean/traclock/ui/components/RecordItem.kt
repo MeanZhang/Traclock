@@ -44,9 +44,10 @@ import kotlinx.coroutines.launch
 fun RecordItem(
     record: Record,
     color: Color,
+    navToProject: (Int) -> Unit,
+    modifier: Modifier = Modifier,
     detailView: Boolean = true,
     listState: LazyListState? = null,
-    navToProject: (Int) -> Unit,
     navToEditRecord: (Long) -> Unit,
 ) {
     val startTime = TimeUtils.getTimeString(record.startTime)
@@ -61,23 +62,25 @@ fun RecordItem(
             null
         }
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .combinedClickable(
-                onClick = {
-                    if (detailView) {
-                        navToEditRecord(record.id)
-                    } else {
-                        navToProject(record.project)
-                    }
-                },
-                onLongClick = if (detailView) {
-                    { showMenu = true }
-                } else {
-                    null
-                },
-            )
-            .padding(vertical = 12.dp, horizontal = HORIZONTAL_MARGIN),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = {
+                        if (detailView) {
+                            navToEditRecord(record.id)
+                        } else {
+                            navToProject(record.project)
+                        }
+                    },
+                    onLongClick =
+                        if (detailView) {
+                            { showMenu = true }
+                        } else {
+                            null
+                        },
+                )
+                .padding(vertical = 12.dp, horizontal = HORIZONTAL_MARGIN),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -91,9 +94,10 @@ fun RecordItem(
                     imageVector = Icons.Default.Circle,
                     contentDescription = null,
                     tint = color,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(20.dp),
+                    modifier =
+                        Modifier
+                            .padding(end = 8.dp)
+                            .size(20.dp),
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(projectName)
@@ -121,7 +125,10 @@ fun RecordItem(
         DropdownMenu(showMenu, { showMenu = false }) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
-                onClick = { showMenu = false; DataModel.dataModel.deleteRecord(record) },
+                onClick = {
+                    showMenu = false
+                    DataModel.dataModel.deleteRecord(record)
+                },
             )
         }
     }

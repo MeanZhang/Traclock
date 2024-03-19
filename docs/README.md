@@ -7,12 +7,12 @@ tagline: 一款记录任务时间的时间管理应用
 actions:
   - text: 查看帮助
     link: /help
-footer: Copyright © 2021-2023 Mean
+footer: Copyright © 2021-2024 Mean
 ---
 
 <p align="center">
   <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.4.8-brightgreen?logo=android" />
+    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.5.8-brightgreen?logo=android" />
   </a>
   <a href="https://android-arsenal.com/api?level=26" alt="API">
     <img src="https://img.shields.io/badge/API-26%2B-blue?logo=android" />

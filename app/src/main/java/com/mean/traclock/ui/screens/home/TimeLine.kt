@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mean.traclock.R
 import com.mean.traclock.data.DataModel
 import com.mean.traclock.database.Project
@@ -23,22 +22,25 @@ import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.utils.TimeUtils
-import com.mean.traclock.viewmodels.MainViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun TimeLine(
-    viewModel: MainViewModel = viewModel(),
+    detailView: Boolean,
+    records: Map<Int, List<Record>>,
+    projectsTimeOfDays: Map<Int, List<Record>>,
+    timeOfDays: Map<Int, Long>,
     navToProject: (Int) -> Unit,
     navToEditRecord: (Long) -> Unit,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-    val detailView by viewModel.detailView.collectAsState()
-    val recordsFlow = if (detailView) viewModel.records else viewModel.projectsTimeOfDays
+    val data = if (detailView) records else projectsTimeOfDays
+
     Content(
-        recordsFlow,
-        viewModel.timeOfDays,
+        data,
+        timeOfDays,
         detailView,
         DataModel.dataModel.isRunning,
         DataModel.dataModel.projectId,
@@ -47,50 +49,50 @@ fun TimeLine(
         contentPadding,
         navToProject = navToProject,
         navToEditRecord = navToEditRecord,
+        modifier = modifier,
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(
-    recordsFlow: Flow<Map<Int, List<Record>>>,
-    timeFlow: Flow<Map<Int, Long>>,
+    records: Map<Int, List<Record>>,
+    time: Map<Int, Long>,
     detailView: Boolean,
     isTimingFlow: StateFlow<Boolean>,
     timingProjectFlow: StateFlow<Int?>,
     startTimeFlow: StateFlow<Long>,
-    projects: Map<Int, Project>,
+    projects: ImmutableMap<Int, Project>,
     contentPadding: PaddingValues,
     navToProject: (Int) -> Unit,
     navToEditRecord: (Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isTiming by isTimingFlow.collectAsState(false)
-    val records by recordsFlow.collectAsState(mapOf())
-    val time by timeFlow.collectAsState(mapOf())
 
     val listState = rememberLazyListState()
     val timingProject by timingProjectFlow.collectAsState()
     val startTime by startTimeFlow.collectAsState()
-    LazyColumn(
-        Modifier.padding(contentPadding),
-        state = listState,
-    ) {
-        item {
-            TimingCard(
-                timingProject,
-                startTime,
-                isTiming,
-            )
-        }
-        if (records.isNotEmpty()) {
+    if (records.isNotEmpty()) {
+        LazyColumn(
+            modifier.padding(contentPadding),
+            state = listState,
+        ) {
+            item {
+                TimingCard(
+                    timingProject,
+                    startTime,
+                    isTiming,
+                )
+            }
             records.forEach { (date, data) ->
-                stickyHeader {
+                stickyHeader(key = date) {
                     DateTitle(
                         date = TimeUtils.getDataString(date),
                         duration = time[date] ?: 0L,
                     )
                 }
-                items(data) { record ->
+                items(data, key = { it.id }) { record ->
                     RecordItem(
                         record = record,
                         color = Color(projects[record.project]?.color ?: 0),
@@ -101,10 +103,8 @@ private fun Content(
                     )
                 }
             }
-        } else {
-            item {
-                NoData(stringResource(R.string.no_record))
-            }
         }
+    } else {
+        NoData(stringResource(R.string.no_record), modifier = modifier.padding(contentPadding))
     }
 }

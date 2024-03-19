@@ -9,6 +9,7 @@ import com.mean.traclock.R
 import com.mean.traclock.database.Project
 import com.mean.traclock.database.Record
 import com.mean.traclock.utils.Utils
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +50,7 @@ class DataModel private constructor() {
     }
 
     /** 所有项目 */
-    val projects: Map<Int, Project>
+    val projects: ImmutableMap<Int, Project>
         get() = mDatabaseModel!!.projects
 
     /** 当前的项目 id */
@@ -146,14 +147,21 @@ class DataModel private constructor() {
     fun updateRecord(record: Record) = mDatabaseModel!!.updateRecord(record)
 
     fun getProjectsTimeOfDay(date: Int) = mDatabaseModel!!.getProjectsTimeOfDay(date)
+
     fun getRecordsOfDays() = mDatabaseModel!!.getRecordsOfDays()
+
     fun getRecordsOfDays(projectId: Int) = mDatabaseModel!!.getRecordsOfDays(projectId)
+
     fun getProjectsTimeOfDays() = mDatabaseModel!!.getProjectsTimeOfDays()
+
     fun getTimeOfDays() = mDatabaseModel!!.getTimeOfDays()
+
     fun getTimeOfDays(projectId: Int) = mDatabaseModel!!.getTimeOfDays(projectId)
 
     fun getProjectsTime() = mDatabaseModel!!.getProjectsTime()
+
     suspend fun getProject(id: Int): Project = mDatabaseModel!!.getProject(id)
+
     suspend fun getRecords(projectId: Int) = mDatabaseModel!!.getRecords(projectId)
 
     companion object {

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
@@ -47,6 +47,7 @@ fun Project(
     navToEditRecord: (Long) -> Unit,
     navBack: () -> Unit,
     viewModel: ProjectViewModel,
+    modifier: Modifier = Modifier,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -54,14 +55,14 @@ fun Project(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     val records by viewModel.records.collectAsState(mapOf())
     val time by viewModel.timeOfDays.collectAsState(mapOf())
-    val projectId by viewModel.projectIdFlow.collectAsState()
+    val projectId by viewModel.projectId.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = navBack) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 title = { Text(DataModel.dataModel.projects[projectId]?.name ?: "") },
@@ -92,14 +93,15 @@ fun Project(
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
-            contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
-        ) {
-            if (records.isNotEmpty()) {
+        if (records.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
+                contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
+            ) {
                 records.forEach { (date, data) ->
                     stickyHeader {
                         DateTitle(
@@ -116,41 +118,40 @@ fun Project(
                         )
                     }
                 }
-            } else {
-                item { NoData(stringResource(R.string.no_record)) }
             }
-        }
-
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text(stringResource(R.string.delete)) },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            showDialog = false
-                            DataModel.dataModel.deleteProject(projectId!!)
-                            navBack()
-                        },
-                    ) {
-                        Text(
-                            stringResource(R.string.delete).uppercase(),
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = { showDialog = false },
-                    ) {
-                        Text(
-                            stringResource(R.string.cancel).uppercase(),
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                },
-                text = { Text(stringResource(R.string.confirm_delete_project)) },
-            )
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = { Text(stringResource(R.string.delete)) },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                                DataModel.dataModel.deleteProject(projectId!!)
+                                navBack()
+                            },
+                        ) {
+                            Text(
+                                stringResource(R.string.delete).uppercase(),
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = { showDialog = false },
+                        ) {
+                            Text(
+                                stringResource(R.string.cancel).uppercase(),
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    },
+                    text = { Text(stringResource(R.string.confirm_delete_project)) },
+                )
+            }
+        } else {
+            NoData(stringResource(R.string.no_record), modifier = Modifier.padding(contentPadding))
         }
     }
 }

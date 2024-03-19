@@ -23,12 +23,16 @@ import com.mean.traclock.utils.Utils
 
 /** 构建计时通知 */
 internal class TimerNotificationBuilder {
-    fun buildChannel(context: Context, notificationManager: NotificationManagerCompat) {
-        val channel = NotificationChannel(
-            TIMER_NOTIFICATION_CHANNEL_ID,
-            context.getString(R.string.default_label),
-            NotificationManager.IMPORTANCE_DEFAULT,
-        )
+    fun buildChannel(
+        context: Context,
+        notificationManager: NotificationManagerCompat,
+    ) {
+        val channel =
+            NotificationChannel(
+                TIMER_NOTIFICATION_CHANNEL_ID,
+                context.getString(R.string.default_label),
+                NotificationManager.IMPORTANCE_DEFAULT,
+            )
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -40,8 +44,9 @@ internal class TimerNotificationBuilder {
         startTime: Long,
     ): Notification {
         /** 点击通知时打开应用的 Intent */
-        val showApp: Intent = Intent(context, TimerService::class.java)
-            .setAction(TimerService.ACTION_SHOW_APP)
+        val showApp: Intent =
+            Intent(context, TimerService::class.java)
+                .setAction(TimerService.ACTION_SHOW_APP)
 
         val pendingShowApp = Utils.pendingServiceIntent(context, showApp)
 
@@ -57,8 +62,9 @@ internal class TimerNotificationBuilder {
 
         if (isRunning) {
             // 停止按钮
-            val stop: Intent = Intent(context, TimerService::class.java)
-                .setAction(TimerService.ACTION_STOP_TIMER)
+            val stop: Intent =
+                Intent(context, TimerService::class.java)
+                    .setAction(TimerService.ACTION_STOP_TIMER)
 
             @DrawableRes val iconStop: Int = R.drawable.ic_logo
             val titleStop: CharSequence = res.getText(R.string.stop)
@@ -69,8 +75,9 @@ internal class TimerNotificationBuilder {
             content.setViewVisibility(R.id.project_name, VISIBLE)
         } else {
             // 开始按钮
-            val start: Intent = Intent(context, TimerService::class.java)
-                .setAction(TimerService.ACTION_START_TIMER)
+            val start: Intent =
+                Intent(context, TimerService::class.java)
+                    .setAction(TimerService.ACTION_START_TIMER)
 
             @DrawableRes val iconStart: Int = R.drawable.ic_logo
             val titleStart: CharSequence = res.getText(R.string.start)
@@ -80,18 +87,19 @@ internal class TimerNotificationBuilder {
             content.setTextViewText(R.id.project_name, projectName)
             content.setViewVisibility(R.id.project_name, VISIBLE)
         }
-        val notification: Builder = Builder(
-            context,
-            TIMER_NOTIFICATION_CHANNEL_ID,
-        )
-            .setLocalOnly(true)
-            .setOngoing(isRunning)
-            .setCustomContentView(content)
-            .setContentIntent(pendingShowApp)
-            .setAutoCancel(!isRunning)
-            .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
-            .setSmallIcon(R.drawable.ic_logo)
-            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+        val notification: Builder =
+            Builder(
+                context,
+                TIMER_NOTIFICATION_CHANNEL_ID,
+            )
+                .setLocalOnly(true)
+                .setOngoing(isRunning)
+                .setCustomContentView(content)
+                .setContentIntent(pendingShowApp)
+                .setAutoCancel(!isRunning)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
+                .setSmallIcon(R.drawable.ic_logo)
+                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
 
         for (action in actions) {
             notification.addAction(action)

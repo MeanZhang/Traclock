@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     // TODO hilt支持ksp后，移除下面这行
-    kotlin("kapt")
+//    kotlin("kapt")
 }
 
 android {
@@ -65,7 +65,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {
@@ -100,8 +100,6 @@ dependencies {
     // 日期时间选择器
     implementation(libs.material)
     implementation(libs.datetimepicker)
-    // Accompanist Navigation Animation
-    implementation(libs.accompanist.navigation.animation)
     // Accompanist Permissions
     implementation(libs.accompanist.permissions)
     // Room数据库
@@ -117,9 +115,7 @@ dependencies {
     implementation(libs.xlog)
     // Hilt
     implementation(libs.hilt.android)
-    // ksp(libs.hilt.android.compiler)
-    // TODO hilt支持ksp后，移除下面这行
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     // Hilt Compose Navigation
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.appcompat)
@@ -129,4 +125,6 @@ dependencies {
     implementation(libs.datastore.preferences)
     // Compose Material 2
     implementation(libs.compose.material)
+    // Immutable Collections
+    implementation(libs.kotlinx.collections.immutable)
 }
