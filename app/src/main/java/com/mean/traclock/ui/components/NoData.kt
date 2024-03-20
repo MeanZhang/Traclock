@@ -1,6 +1,7 @@
 package com.mean.traclock.ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,31 +20,40 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun NoData(text: String, modifier: Modifier = Modifier) {
+fun NoData(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(50.dp)
+        modifier =
+            modifier
+                .fillMaxSize(),
     ) {
+        Spacer(modifier = Modifier.weight(1f))
         LottieWorkingLoadingView()
         Text(
             text = text,
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 128.dp),
+            textAlign = TextAlign.Center,
         )
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-fun LottieWorkingLoadingView() {
+fun LottieWorkingLoadingView(modifier: Modifier = Modifier) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Asset("nodata.json"))
     LottieAnimation(
         composition,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .defaultMinSize(300.dp),
-        iterations = LottieConstants.IterateForever
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .defaultMinSize(300.dp),
+        iterations = LottieConstants.IterateForever,
     )
 }

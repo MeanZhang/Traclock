@@ -1,19 +1,17 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
+        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()
-        maven { url("https://maven.aliyun.com/repository/public") }
-        maven { url("https://maven.aliyun.com/repository/gradle-plugin") }
+        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()
-        maven { url("https://jitpack.io") }
-        maven { url("https://maven.aliyun.com/repository/public") }
     }
 }
 rootProject.name = "Traclock"

@@ -16,28 +16,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
 
 @Composable
-fun DateTitle(date: String, duration: Long) {
-    Surface {
+fun DateTitle(
+    date: String,
+    duration: Long,
+    modifier: Modifier = Modifier,
+) {
+    Surface(modifier = modifier) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp, horizontal = HORIZONTAL_MARGIN),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = HORIZONTAL_MARGIN),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 date,
-                color = MaterialTheme.colorScheme.primary
-//            style = MaterialTheme.typography.headlineSmall
+                color = MaterialTheme.colorScheme.primary,
             )
             Text(
                 TimeUtils.getDurationString(duration),
-                color = MaterialTheme.colorScheme.primary
-//            style = MaterialTheme.typography.headlineSmall
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
@@ -46,7 +49,7 @@ fun DateTitle(date: String, duration: Long) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun DateTitlePreview() {
+private fun DateTitlePreview() {
     Scaffold(topBar = { TopAppBar(title = { Text(text = "DateTitle") }) }) {
         LazyColumn(contentPadding = it) {
             item {

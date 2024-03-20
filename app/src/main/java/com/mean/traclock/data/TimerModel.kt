@@ -3,7 +3,6 @@ package com.mean.traclock.data
 import android.Manifest
 import android.app.Notification
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
@@ -11,34 +10,39 @@ import com.mean.traclock.database.Record
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /** 计时器数据的模型 */
 internal class TimerModel(
     private val mContext: Context,
-    private val mPrefs: SharedPreferences,
-    private val mNotificationModel: NotificationModel
+    private val mNotificationModel: NotificationModel,
 ) {
     private val mNotificationManager = NotificationManagerCompat.from(mContext)
     private val mNotificationBuilder = TimerNotificationBuilder()
-    private var mProjectName: MutableStateFlow<String>? = null
+    private var mProjectId: MutableStateFlow<Int?> = MutableStateFlow(null)
     private var mIsRunning: MutableStateFlow<Boolean>? = null
     private var mStartTime: MutableStateFlow<Long>? = null
     private var mStoppedTime: Long? = null
 
-    /** 当前的项目名称 */
-    val projectName: StateFlow<String>
+    private val mutex = Mutex()
+
+    /** 当前的项目 id */
+    val projectId: StateFlow<Int?>
         get() {
-            if (mProjectName == null) {
-                mProjectName = MutableStateFlow(TimerDAO.getProjectName(mPrefs))
+            if (mProjectId.value == null) {
+                mProjectId.value = runBlocking { TimerDAO.projectIdFlow.first() }
             }
-            return mProjectName!!
+            return mProjectId
         }
 
     /** 计时器是否正在运行 */
     val isRunning: StateFlow<Boolean>
         get() {
             if (mIsRunning == null) {
-                mIsRunning = MutableStateFlow(TimerDAO.getIsRunning(mPrefs))
+                mIsRunning = MutableStateFlow(runBlocking { TimerDAO.isRunningFlow.first() })
             }
             return mIsRunning!!
         }
@@ -47,76 +51,79 @@ internal class TimerModel(
     val startTime: StateFlow<Long>
         get() {
             if (mStartTime == null) {
-                mStartTime = MutableStateFlow(TimerDAO.getStartTime(mPrefs))
+                mStartTime = MutableStateFlow(runBlocking { TimerDAO.startTimeFlow.first() })
             }
             return mStartTime!!
         }
 
-    private fun setTimer(
-        projectName: String,
+    private suspend fun setTimer(
+        projectId: Int,
         isRunning: Boolean = true,
         startTime: Long = TimeUtils.now(),
-        stoppedTime: Long? = null
+        stoppedTime: Long? = null,
     ) {
-        if (mProjectName == null) {
-            mProjectName = MutableStateFlow(projectName)
+        mutex.withLock {
+            if (mProjectId.value == null) {
+                mProjectId.value = projectId
+            }
+            mProjectId.value = projectId
+            mIsRunning!!.value = isRunning
+            mStartTime!!.value = startTime
+            mStoppedTime = stoppedTime
+            TimerDAO.setTimer(
+                projectId,
+                isRunning,
+                startTime,
+            )
+            if (!isRunning) {
+                DataModel.dataModel.insertRecord(Record(projectId, startTime, stoppedTime!!))
+            }
+            updateNotification()
         }
-        mProjectName!!.value = projectName
-        mIsRunning!!.value = isRunning
-        mStartTime!!.value = startTime
-        mStoppedTime = stoppedTime
-        TimerDAO.setTimer(
-            mPrefs,
-            projectName,
-            isRunning,
-            startTime
-        )
-        if (!isRunning) {
-            DataModel.dataModel.insertRecord(Record(projectName, startTime, stoppedTime!!))
-        }
-        updateNotification()
     }
 
     /** 更新计时通知 */
     fun updateNotification() {
-        val notification: Notification =
-            mNotificationBuilder.build(
-                mContext,
-                projectName.value,
-                isRunning.value,
-                startTime.value
-            )
-        mNotificationBuilder.buildChannel(mContext, mNotificationManager)
-        if (ActivityCompat.checkSelfPermission(
-                mContext,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
+        if (projectId.value != null) {
+            val notification: Notification =
+                mNotificationBuilder.build(
+                    mContext,
+                    DataModel.dataModel.projects[projectId.value]?.name ?: "",
+                    isRunning.value,
+                    startTime.value,
+                )
+            mNotificationBuilder.buildChannel(mContext, mNotificationManager)
+            if (ActivityCompat.checkSelfPermission(
+                    mContext,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            mNotificationManager.notify(mNotificationModel.timerNotificationId, notification)
         }
-        mNotificationManager.notify(mNotificationModel.timerNotificationId, notification)
     }
 
     /**
      * 开始计时
-     * @param projectName 计时的项目名称
+     * @param projectId 计时的项目 Id
      */
-    fun start(projectName: String? = null) {
+    suspend fun start(projectId: Int? = null) {
         setTimer(
-            projectName ?: this.projectName.value,
+            projectId ?: mProjectId.value!!,
             true,
-            TimeUtils.now()
+            TimeUtils.now(),
         )
     }
 
     /** 停止计时 */
-    fun stop() {
+    suspend fun stop() {
         if (isRunning.value) {
             setTimer(
-                projectName.value,
+                projectId.value!!,
                 false,
                 startTime.value,
-                TimeUtils.now()
+                TimeUtils.now(),
             )
         }
     }

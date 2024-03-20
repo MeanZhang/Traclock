@@ -11,45 +11,38 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.utils.Constants.HORIZONTAL_MARGIN
-
-enum class ProjectColor(val color: Color) {
-    Blue(Color.Blue),
-    Brown(Color(0xFF795548)),
-    Green(Color.Green),
-    Indigo(Color(0xFF3F51B5)),
-    Orange(Color(0xFFE65100)),
-    Pink(Color(0xFFE91E63)),
-    Purple(Color(0xFF6200EE)),
-    Red(Color.Red),
-    Teal(Color(0xFF03DAC6)),
-    Yellow(Color.Yellow)
-}
+import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.ProjectColor
 
 @Composable
 fun ColorPicker(
     color: Color,
-    onColorSelected: (Color) -> Unit
+    modifier: Modifier = Modifier,
+    onColorSelected: (Color) -> Unit,
 ) {
-    val defaultColor = ProjectColor.values().find { it.color == color } ?: ProjectColor.values()[0]
+    val defaultColor =
+        ProjectColor.entries.find { it.color == color } ?: ProjectColor.entries.toTypedArray()[0]
     var selected by remember { mutableStateOf(defaultColor) }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(60.dp),
-        contentPadding = PaddingValues(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp)
+        contentPadding = PaddingValues(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp),
+        modifier = modifier,
     ) {
-        items(ProjectColor.values()) { color ->
+        items(ProjectColor.entries.toTypedArray()) { color ->
             RadioButton(
                 selected = selected == color,
                 onClick = {
                     onColorSelected(color.color)
                     selected = color
                 },
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = color.color,
-                    unselectedColor = color.color
-                )
+                colors =
+                    RadioButtonDefaults.colors(
+                        selectedColor = color.color,
+                        unselectedColor = color.color,
+                    ),
             )
         }
     }
