@@ -1,5 +1,6 @@
 package com.mean.traclock.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.SwapHoriz
@@ -92,6 +93,7 @@ fun TraclockApp(
                         navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                         navToEditRecord = { navController.navigate("${Route.EDIT_RECORD}/$it") },
                         contentPadding = contentPadding,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 composable(HomeRoute.PROJECTS.route) {
@@ -100,10 +102,11 @@ fun TraclockApp(
                         navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                         navToEditRecord = { navController.navigate("${Route.EDIT_RECORD}/$it") },
                         contentPadding = contentPadding,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 composable(HomeRoute.STATISTICS.route) {
-                    Statistics(contentPadding)
+                    Statistics(contentPadding, modifier = Modifier.fillMaxSize())
                 }
                 composable(HomeRoute.SETTINGS.route) {
                     Settings(
@@ -111,6 +114,7 @@ fun TraclockApp(
                         navToFeddback = { navController.navigate(Route.FEEDBACK) },
                         navToAbout = { navController.navigate(Route.ABOUT) },
                         contentPadding = contentPadding,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }

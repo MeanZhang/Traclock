@@ -3,9 +3,7 @@ package com.mean.traclock.ui.screens.settings
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -14,7 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -25,9 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
-import com.mean.traclock.ui.Constants
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +33,7 @@ fun OpenSourceLicenses(
     navBack: () -> Unit,
 ) {
     val state = rememberTopAppBarState()
+    val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     Scaffold(
         topBar = {
@@ -56,42 +53,24 @@ fun OpenSourceLicenses(
     ) { contentPadding ->
         LazyColumn(
             contentPadding = contentPadding,
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            items(LICENSES) {
-                LicenseItem(it)
+            items(LICENSES, key = { it.name }) {
+                ListItem(
+                    headlineContent = { Text(it.name) },
+                    supportingContent = { Text(it.url + "\n" + it.license) },
+                    modifier =
+                        modifier.clickable {
+                            context.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(it.url),
+                                ),
+                            )
+                        },
+                )
             }
         }
-    }
-}
-
-@Composable
-fun LicenseItem(
-    license: License,
-    modifier: Modifier = Modifier,
-) {
-    val context = LocalContext.current
-    Column(
-        modifier
-            .clickable {
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
-            }
-            .fillMaxWidth()
-            .padding(horizontal = Constants.HORIZONTAL_MARGIN, 12.dp),
-    ) {
-        Text(
-            license.name,
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Text(
-            license.url,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
-            license.license,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }
 
@@ -179,4 +158,4 @@ private val LICENSES =
         ),
     ).sortedBy { it.name.lowercase(Locale.getDefault()) }
 
-data class License(val name: String, val url: String, val license: String)
+private data class License(val name: String, val url: String, val license: String)

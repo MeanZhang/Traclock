@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,28 +50,32 @@ import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
+fun Statistics(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    modifier: Modifier = Modifier,
+) {
     val date = TimeUtils.getIntDate(System.currentTimeMillis())
     Content(
         DataModel.dataModel.getProjectsTimeOfDay(date),
         contentPadding,
+        modifier = modifier,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
     projectsTimeFlow: Flow<List<Record>>,
     contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
-    val selected = remember { mutableStateOf(-1) }
+    val selected = remember { mutableIntStateOf(-1) }
     val context = LocalContext.current
 
     if (duration > 0) {
         Column(
-            Modifier
+            modifier
                 .padding(contentPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
@@ -100,7 +104,7 @@ private fun Content(
             for ((index, project) in projectsTime.withIndex()) {
                 var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
                 var color by remember { mutableStateOf(Color.Black) }
-                if (index == selected.value) {
+                if (index == selected.intValue) {
                     fontWeight = FontWeight.Bold
                     color = MaterialTheme.colorScheme.onSurface
                 } else {
@@ -142,7 +146,7 @@ private fun Content(
             }
         }
     } else {
-        NoData(stringResource(R.string.no_record), modifier = Modifier.padding(contentPadding))
+        NoData(stringResource(R.string.no_record), modifier = modifier.padding(contentPadding))
     }
 }
 

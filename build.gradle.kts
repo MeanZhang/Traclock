@@ -17,7 +17,7 @@ spotless {
         targetExclude("${project.layout.buildDirectory}/**/*.kt", "bin/**/*.kt")
         ktlint(ktlintVersion).setEditorConfigPath("$projectDir/.editorconfig").customRuleSets(
             listOf(
-//                "io.nlopez.compose.rules:ktlint:${libs.versions.compose.rules.get()}",
+//                "io.nlopez.compose.rules:ktlint:${libs.versions.composeRules.get()}",
             ),
         )
     }

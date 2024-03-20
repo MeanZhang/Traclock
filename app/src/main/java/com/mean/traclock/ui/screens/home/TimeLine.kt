@@ -75,7 +75,7 @@ private fun Content(
     val startTime by startTimeFlow.collectAsState()
     if (records.isNotEmpty()) {
         LazyColumn(
-            modifier.padding(contentPadding),
+            modifier = modifier.padding(contentPadding),
             state = listState,
         ) {
             item {
