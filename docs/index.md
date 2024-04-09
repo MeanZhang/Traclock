@@ -1,29 +1,15 @@
 ---
-home: true
-heroImage: /images/logo.svg
-heroImageDark: /images/logo-dark.svg
-heroText: 时迹
-tagline: 一款记录任务时间的时间管理应用
-actions:
-  - text: 查看帮助
-    link: /help
-footer: Copyright © 2021-2024 Mean
----
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
 
-<p align="center">
-  <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.5.10-brightgreen?logo=android" />
-  </a>
-  <a href="https://android-arsenal.com/api?level=26" alt="API">
-    <img src="https://img.shields.io/badge/API-26%2B-blue?logo=android" />
-  </a>
-  <a href="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml"  alt="Android CI">
-    <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml/badge.svg" />
-  </a>
-  <a href="https://github.com/MeanZhang/Traclock/releases"  alt="GitHub release">
-    <img src="https://img.shields.io/github/v/release/MeanZhang/Traclock?sort=semver">
-  </a>
-</p>
+hero:
+  name: "时迹"
+  tagline: "一款记录任务时间的时间管理应用"
+  actions:
+    - theme: brand
+      text: 查看帮助
+      link: /help/index
+---
 
 ## 简介
 
@@ -63,6 +49,6 @@ footer: Copyright © 2021-2024 Mean
 
 | 时间线                                                       | 时间线                                                       | 项目                                                      | 统计                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------ |
-| ![timeline-detail](./images/ui/timeline-detail.png) | ![timeline](./images/ui/timeline.png)    | ![projects](./images/ui/projects.png) | ![statistics](./images/ui/statistics.png) |
+| ![timeline-detail](./images/ui/timeline-detail.webp) | ![timeline](./images/ui/timeline.webp)    | ![projects](./images/ui/projects.webp) | ![statistics](./images/ui/statistics.webp) |
 | 设置                                                         | 通知                                                         | 深色                                                      | 恢复                                                         |
-| ![settings](./images/ui/settings.png)    | ![notification](./images/ui/notification.png) | ![dark](./images/ui/dark.png)         | ![restore](./images/ui/restore.png)      |
+| ![settings](./images/ui/settings.webp)    | ![notification](./images/ui/notification.webp) | ![dark](./images/ui/dark.webp)         | ![restore](./images/ui/restore.webp)      |

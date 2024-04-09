@@ -11,10 +11,10 @@
   <a href="https://android-arsenal.com/api?level=26" alt="API">
     <img src="https://img.shields.io/badge/API-26%2B-blue?logo=android" />
   </a>
-  <a href="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml"  alt="Android CI">
-    <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml/badge.svg" />
+  <a href="https://github.com/MeanZhang/Traclock/actions/workflows/android-build.yml"  alt="Android 构建">
+    <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android-build.yml/badge.svg" />
   </a>
-  <a href="https://github.com/MeanZhang/Traclock/releases"  alt="GitHub release">
+  <a href="https://github.com/MeanZhang/Traclock/releases"  alt="GitHub Release">
     <img src="https://img.shields.io/github/v/release/MeanZhang/Traclock?sort=semver">
   </a>
 </p>
@@ -57,6 +57,6 @@
 
 | 时间线                                                 | 时间线                                           | 项目                                     | 统计                                         |
 | ------------------------------------------------------ | ------------------------------------------------ | ---------------------------------------- | -------------------------------------------- |
-| ![timeline-detail](docs/images/ui/timeline-detail.png) | ![timeline](docs/images/ui/timeline.png)         | ![projects](docs/images/ui/projects.png) | ![statistics](docs/images/ui/statistics.png) |
+| ![timeline-detail](docs/images/ui/timeline-detail.webp) | ![timeline](docs/images/ui/timeline.webp)         | ![projects](docs/images/ui/projects.webp) | ![statistics](docs/images/ui/statistics.webp) |
 | 设置                                                   | 通知                                             | 深色                                     | 恢复                                         |
-| ![settings](docs/images/ui/settings.png)               | ![notification](docs/images/ui/notification.png) | ![dark](docs/images/ui/dark.png)         | ![restore](docs/images/ui/restore.png)       |
+| ![settings](docs/images/ui/settings.webp)               | ![notification](docs/images/ui/notification.webp) | ![dark](docs/images/ui/dark.webp)         | ![restore](docs/images/ui/restore.webp)       |
