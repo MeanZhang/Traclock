@@ -3,8 +3,6 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    // TODO hilt支持ksp后，移除下面这行
-//    kotlin("kapt")
 }
 
 android {
@@ -14,6 +12,12 @@ android {
             storePassword = env.fetch("KEYSTORE_PASSWORD")
             keyPassword = env.fetch("KEY_PASSWORD")
             keyAlias = env.fetch("KEY_ALIAS")
+        }
+        create("debug-mean") {
+            storeFile = file("../debug-mean.jks")
+            storePassword = "debug-mean"
+            keyPassword = "debug-mean"
+            keyAlias = "debug-mean"
         }
     }
     namespace = "com.mean.traclock"
@@ -47,6 +51,7 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["APP_NAME"] = "时迹（debug）"
+            signingConfig = signingConfigs.getByName("debug-mean")
         }
     }
     compileOptions {
@@ -65,7 +70,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     packaging {
         resources {

@@ -1,10 +1,11 @@
-import { defaultTheme, defineUserConfig } from "vuepress";
+import { defineConfig } from "vitepress";
 import taskLists from "markdown-it-task-lists";
 
-export default defineUserConfig({
+// https://vitepress.dev/reference/site-config
+export default defineConfig({
   lang: "zh-CN",
   title: "时迹",
-  description: "时迹帮助文档",
+  description: "一款记录任务时间的时间管理应用",
   head: [
     ["link", { rel: "icon", href: "/images/logo.svg" }],
     ["link", { rel: "manifest", href: "/manifest.webmanifest" }],
@@ -24,29 +25,33 @@ export default defineUserConfig({
     ["link", { rel: "mask-icon", href: "/images/logo.svg", color: "#5bbad5" }],
     ["meta", { name: "msapplication-TileColor", content: "#2d89ef" }],
   ],
-
-  theme: defaultTheme({
-    logo: "/images/logo.svg",
-    logoDark: "/images/logo-dark.svg",
-    repo: "MeanZhang/Traclock",
-    docsBranch: "main",
-    docsDir: "docs",
-    editLinkText: "编辑此页面",
-    lastUpdatedText: "上次更新于",
-    contributorsText: "贡献者",
-    navbar: [
+  themeConfig: {
+    // https://vitepress.dev/reference/default-theme-config
+    logo: { light: "/images/logo.svg", dark: "/images/logo-dark.svg" },
+    nav: [
       {
         text: "使用帮助",
-        link: "/help",
+        link: "/help/index",
       },
       {
         text: "隐私政策",
         link: "/privacy",
       },
     ],
-  }),
 
-  extendsMarkdown: (md) => {
-    md.use(taskLists);
+    socialLinks: [
+      { icon: "github", link: "https://github.com/MeanZhang/Traclock" },
+    ],
+    footer: {
+      copyright: "Copyright © 2022-2024 Mean",
+    },
+    search: {
+      provider: "local",
+    },
+  },
+  markdown: {
+    config: (md) => {
+      md.use(taskLists);
+    },
   },
 });

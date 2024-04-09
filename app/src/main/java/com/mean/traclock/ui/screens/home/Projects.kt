@@ -1,7 +1,6 @@
 package com.mean.traclock.ui.screens.home
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -29,7 +28,7 @@ fun Projects(
     val timingProject by DataModel.dataModel.projectId.collectAsState()
     val startTime by DataModel.dataModel.startTime.collectAsState()
 
-    LazyColumn(contentPadding = contentPadding, modifier = modifier.fillMaxSize()) {
+    LazyColumn(contentPadding = contentPadding, modifier = modifier) {
         item {
             TimingCard(
                 timingProject,
