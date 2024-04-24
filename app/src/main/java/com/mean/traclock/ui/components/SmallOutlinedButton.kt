@@ -1,16 +1,18 @@
 package com.mean.traclock.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Chip
-import androidx.compose.material.ChipDefaults
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,27 +23,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.R
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SmallOutlinedButton(
     text: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-    Chip(
-        modifier = modifier.height(28.dp),
-        onClick = onClick,
-        colors =
-            ChipDefaults.chipColors(
-                backgroundColor = MaterialTheme.colorScheme.inverseOnSurface,
-                contentColor = MaterialTheme.colorScheme.outline.copy(0.2f),
-                leadingIconContentColor = MaterialTheme.colorScheme.outline.copy(0.2f),
+    ElevatedSuggestionChip(
+        elevation =
+            SuggestionChipDefaults.elevatedSuggestionChipElevation(
+                elevation = 0.dp,
             ),
-        leadingIcon = {
+        modifier =
+            modifier
+                .height(28.dp)
+                .width(IntrinsicSize.Max),
+        onClick = onClick,
+        shape = RoundedCornerShape(50),
+        icon = {
             Icon(
                 imageVector = Icons.Default.PlayArrow,
                 contentDescription = stringResource(R.string.start),
-                modifier = Modifier.padding(start = 6.dp).size(16.dp),
+                modifier =
+                    Modifier
+                        .padding(start = 6.dp)
+                        .size(16.dp),
                 tint = MaterialTheme.colorScheme.outline,
             )
         },
@@ -51,15 +57,16 @@ fun SmallOutlinedButton(
                 // 边框颜色
                 color = MaterialTheme.colorScheme.outline.copy(0.2f),
             ),
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.outline,
-        )
-    }
+        label = {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelMedium,
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        },
+    )
 }
 
 @Composable

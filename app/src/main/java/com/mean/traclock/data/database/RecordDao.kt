@@ -1,4 +1,4 @@
-package com.mean.traclock.database
+package com.mean.traclock.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,33 +6,49 @@ import androidx.room.Insert
 import androidx.room.MapColumn
 import androidx.room.Query
 import androidx.room.Update
+import com.mean.traclock.data.Record
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDao {
     @Query("SELECT *, rowid FROM Record WHERE rowid = :id")
-    suspend fun getRecord(id: Long): Record
+    suspend fun get(id: Long): Record
 
     @Query("SELECT *, rowid FROM Record WHERE project = :projectId")
-    suspend fun getRecords(projectId: Int): List<Record>
+    suspend fun getRecords(projectId: Long): List<Record>
 
+    /**
+     * 增加记录
+     * @param record 要增加的记录
+     * @return 插入记录的 id
+     */
     @Insert
-    fun insert(record: Record)
+    suspend fun insert(record: Record): Long
 
+    /**
+     * 删除记录
+     * @param record 要删除的记录
+     * @return 成功删除的行数
+     */
     @Delete
-    suspend fun delete(record: Record)
+    suspend fun delete(record: Record): Int
 
+    /**
+     * 更新记录
+     * @param record 要更新的记录
+     * @return 成功更新的行数
+     */
     @Update
-    fun update(record: Record)
+    suspend fun update(record: Record): Int
 
     @Query("UPDATE Record SET project = :newProjectId WHERE project = :oldProjectId")
-    fun update(
-        oldProjectId: Int,
-        newProjectId: Int,
+    suspend fun update(
+        oldProjectId: Long,
+        newProjectId: Long,
     )
 
     @Query("DELETE FROM Record WHERE project = :projectId")
-    fun deleteByProject(projectId: Int)
+    fun deleteByProject(projectId: Long)
 
     @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
     fun getAll(): Flow<List<Record>>
@@ -48,7 +64,7 @@ interface RecordDao {
 
     @Query("SELECT *, rowid FROM Record WHERE project = :projectId ORDER BY startTime DESC")
     fun getRecordsOfDays(
-        projectId: Int,
+        projectId: Long,
     ): Flow<
         Map<
             @MapColumn(columnName = "date")
@@ -58,7 +74,7 @@ interface RecordDao {
     >
 
     @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
-    fun getRecordsList(): List<Record>
+    suspend fun getRecordsList(): List<Record>
 
     @Query(
         "SELECT Project.rowid AS project," +
@@ -90,7 +106,7 @@ interface RecordDao {
             "GROUP BY date",
     )
     fun getTimeOfDays(
-        projectId: Int,
+        projectId: Long,
     ): Flow<
         Map<
             @MapColumn(columnName = "date")

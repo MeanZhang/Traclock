@@ -1,4 +1,4 @@
-package com.mean.traclock.database
+package com.mean.traclock.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -10,5 +10,5 @@ import androidx.room.PrimaryKey
 data class Project(var name: String, var color: Int = 0) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")
-    var id: Int = 0
+    var id: Long = 0
 }

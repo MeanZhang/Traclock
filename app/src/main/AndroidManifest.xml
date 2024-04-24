@@ -24,6 +24,7 @@
         <activity
             android:name=".MainActivity"
             android:enableOnBackInvokedCallback="true"
+            android:launchMode="singleInstance"
             android:exported="true"
             android:theme="@style/Theme.Traclock">
             <intent-filter>

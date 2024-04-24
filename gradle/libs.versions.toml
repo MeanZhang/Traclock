@@ -1,37 +1,37 @@
 [versions]
 # 默认
-agp = "8.3.1"
+agp = "8.3.2"
 material = "1.11.0"
-kotlin = "1.9.22"
-coreKtx = "1.12.0"
+kotlin = "1.9.23"
+coreKtx = "1.13.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2024.02.02"
+activityCompose = "1.9.0"
+composeBom = "2024.04.01"
 # Compose Compiler
-composeCompiler = "1.5.10"
+composeCompiler = "1.5.12"
 # 插件
 spotless = "6.25.0"
 ktlint = "1.2.1"
 composeRules = "0.3.12"
 hilt = "2.50"
-ksp = "1.9.22-1.0.17"
-dotenv = "2.0.0"
+ksp = "1.9.23-1.0.20"
+dotenv = "4.0.0"
 # 自定义
 room = "2.6.1"
 xlog = "1.11.0"
 leakcanary = "2.12"
 hiltNavigationCompose = "1.2.0"
-datastorePreferences = "1.0.0"
+datastorePreferences = "1.1.0"
 accompanist = "0.32.0" # 需与 Compose Compiler 版本对应
 glance = "1.1.0"
 coil = "2.4.0"
 mpandroidchart = "3.1.0"
 lottieCompose = "6.0.0"
 appcompat = "1.6.1"
-androidxNavigationCompose = "2.8.0-alpha04"
+androidxNavigationCompose = "2.7.7"
 datetimepicker = "0.6.2"
 kotlinxCollectionsImmutable = "0.3.7"
 
@@ -50,7 +50,7 @@ ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-material3 = { group = "androidx.compose.material3", name = "material3" }
+material3 = { group = "androidx.compose.material3", name = "material3", version="1.3.0-alpha05" }
 # 自定义
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
@@ -60,8 +60,6 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 glance = { group = "com.guolindev.glance", name = "glance", version.ref = "glance" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
@@ -71,6 +69,8 @@ datetimepicker = { group = "com.github.loperSeven", name = "DateTimePicker", ver
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 compose-material = { group = "androidx.compose.material", name = "material" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 

@@ -42,28 +42,34 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.mean.traclock.R
-import com.mean.traclock.data.DataModel
-import com.mean.traclock.database.Record
+import com.mean.traclock.data.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.components.HomeScaffold
 import com.mean.traclock.ui.components.NoData
+import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.utils.TimeUtils
+import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun Statistics(
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier,
 ) {
     val date = TimeUtils.getIntDate(System.currentTimeMillis())
-    Content(
-        DataModel.dataModel.getProjectsTimeOfDay(date),
-        contentPadding,
-        modifier = modifier,
-    )
+    HomeScaffold(route = HomeRoute.STATISTICS) { contentPadding ->
+        Content(
+            viewModel,
+            viewModel.getProjectsTimeOfDay(date),
+            contentPadding,
+            modifier = modifier,
+        )
+    }
 }
 
 @Composable
 private fun Content(
+    viewModel: MainViewModel,
     projectsTimeFlow: Flow<List<Record>>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -96,10 +102,19 @@ private fun Content(
                         .padding(horizontal = HORIZONTAL_MARGIN),
                 factory = { context ->
                     PieChart(context).apply {
-                        setPieChart(context, this, projectsTime, duration, selected)
+                        setPieChart(viewModel, context, this, projectsTime, duration, selected)
                     }
                 },
-                update = { chart -> setPieChart(context, chart, projectsTime, duration, selected) },
+                update = { chart ->
+                    setPieChart(
+                        viewModel,
+                        context,
+                        chart,
+                        projectsTime,
+                        duration,
+                        selected,
+                    )
+                },
             )
             for ((index, project) in projectsTime.withIndex()) {
                 var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
@@ -125,14 +140,14 @@ private fun Content(
                         Icon(
                             imageVector = Icons.Default.Circle,
                             contentDescription = null,
-                            tint = Color(DataModel.dataModel.projects[project.project]?.color ?: 0),
+                            tint = Color(viewModel.projects[project.project]?.color ?: 0),
                             modifier =
                                 Modifier
                                     .size(20.dp)
                                     .padding(horizontal = 4.dp),
                         )
                         Text(
-                            DataModel.dataModel.projects[project.project]?.name ?: "",
+                            viewModel.projects[project.project]?.name ?: "",
                             fontWeight = fontWeight,
                             color = color,
                         )
@@ -151,6 +166,7 @@ private fun Content(
 }
 
 fun setPieChart(
+    viewModel: MainViewModel,
     context: Context,
     chart: PieChart,
     projectsTime: List<Record>,
@@ -182,7 +198,7 @@ fun setPieChart(
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, context.getString(R.string.records_duration))
-    dataset.colors = projectsTime.map { DataModel.dataModel.projects[it.project]?.color ?: 0 }
+    dataset.colors = projectsTime.map { viewModel.projects[it.project]?.color ?: 0 }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)

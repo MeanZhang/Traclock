@@ -1,4 +1,4 @@
-package com.mean.traclock.database
+package com.mean.traclock.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -15,7 +15,7 @@ import com.mean.traclock.utils.TimeUtils
 @Fts4
 @Entity
 data class Record(
-    var project: Int,
+    var project: Long,
     var startTime: Long,
     var endTime: Long,
     var date: Int = TimeUtils.getIntDate(startTime),

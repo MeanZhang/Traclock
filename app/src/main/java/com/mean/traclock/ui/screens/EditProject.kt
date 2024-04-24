@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.ColorPicker
@@ -55,7 +56,7 @@ import kotlinx.coroutines.launch
 fun EditProject(
     navBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: EditProjectViewModel = viewModel(),
+    viewModel: EditProjectViewModel = hiltViewModel(),
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current

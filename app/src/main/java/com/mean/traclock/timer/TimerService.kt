@@ -6,10 +6,17 @@ import android.os.IBinder
 import com.elvishew.xlog.XLog
 import com.mean.traclock.BuildConfig
 import com.mean.traclock.MainActivity
-import com.mean.traclock.data.DataModel
+import com.mean.traclock.data.repository.TimerRepository
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 /** 时器通知服务 */
+@AndroidEntryPoint
 class TimerService : Service() {
+    @Inject
+    lateinit var timerRepo: TimerRepository
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(
@@ -21,17 +28,18 @@ class TimerService : Service() {
             ACTION_SHOW_APP -> {
                 val showApp: Intent =
                     Intent(this, MainActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(showApp)
             }
             // 开始
             ACTION_START_TIMER -> {
                 XLog.d("开始计时")
-                DataModel.dataModel.startTimer()
+                runBlocking { timerRepo.start() }
             }
             // 停止
             ACTION_STOP_TIMER -> {
-                DataModel.dataModel.stopTimer()
+                XLog.d("停止计时")
+                runBlocking { timerRepo.stop() }
             }
         }
 

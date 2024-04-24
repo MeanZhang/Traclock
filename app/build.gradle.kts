@@ -128,8 +128,4 @@ dependencies {
     implementation(libs.material.icons.extended)
     // DataStore
     implementation(libs.datastore.preferences)
-    // Compose Material 2
-    implementation(libs.compose.material)
-    // Immutable Collections
-    implementation(libs.kotlinx.collections.immutable)
 }

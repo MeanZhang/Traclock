@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
@@ -44,7 +45,7 @@ import com.mean.traclock.viewmodels.BackupRestoreViewModel.RestoreState
 @Composable
 fun BackupRestore(
     modifier: Modifier = Modifier,
-    viewModel: BackupRestoreViewModel = viewModel(),
+    viewModel: BackupRestoreViewModel = hiltViewModel(),
     navBack: () -> Unit,
 ) {
     val context = LocalContext.current

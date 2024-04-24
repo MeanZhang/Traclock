@@ -5,8 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elvishew.xlog.XLog
-import com.mean.traclock.data.DataModel
-import com.mean.traclock.database.Project
+import com.mean.traclock.data.Project
+import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.ui.ProjectColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,10 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProjectViewModel
     @Inject
-    constructor(savedStateHandle: SavedStateHandle) : ViewModel() {
+    constructor(
+        private val projectsRepo: ProjectsRepository,
+        savedStateHandle: SavedStateHandle,
+    ) : ViewModel() {
         private var project: Project? = null
         private val _name = MutableStateFlow("")
         private val _color = MutableStateFlow(ProjectColor.entries[0].color.toArgb())
@@ -28,9 +31,10 @@ class EditProjectViewModel
             get() = _color
 
         init {
+            val id = savedStateHandle.get<String?>("id")?.toLong()
             viewModelScope.launch {
-                if (savedStateHandle.get<Boolean>("isNew") == false) {
-                    project = DataModel.dataModel.getProject(savedStateHandle.get<Int>("id")!!)
+                if (id != null) {
+                    project = projectsRepo.projects[id]
                     _name.value = project!!.name
                     _color.value = project!!.color
                 }
@@ -57,28 +61,26 @@ class EditProjectViewModel
             if (project == null) {
                 val project = Project(_name.value, _color.value)
                 XLog.d(project)
-                return DataModel.dataModel.insertProject(project)
+                projectsRepo.insert(project)
+                return 1
             }
             return when {
                 _name.value != project!!.name -> { // 项目名发生变化
                     val res =
-                        DataModel.dataModel.updateProject(
+                        projectsRepo.update(
                             project!!.apply {
                                 name = _name.value
                                 color = _color.value
                             },
                         )
-                    if (res) {
+                    if (res > 0) {
                         XLog.d("项目更新成功")
-                        1
-                    } else {
-                        -1 // 已存在
                     }
+                    res
                 }
 
                 _color.value != project!!.color -> { // 项目名没变，颜色变化
-                    DataModel.dataModel.updateProject(project!!.apply { color = _color.value })
-                    1
+                    projectsRepo.update(project!!.apply { color = _color.value })
                 }
 
                 else -> {

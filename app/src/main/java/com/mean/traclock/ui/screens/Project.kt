@@ -27,12 +27,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mean.traclock.R
-import com.mean.traclock.data.DataModel
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
@@ -42,11 +42,11 @@ import com.mean.traclock.viewmodels.ProjectViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Project(
-    navToProject: (Int) -> Unit,
-    navToEditProject: (Int, Boolean) -> Unit,
+    navToProject: (Long) -> Unit,
+    navToEditProject: (Long, Boolean) -> Unit,
     navToEditRecord: (Long) -> Unit,
     navBack: () -> Unit,
-    viewModel: ProjectViewModel,
+    viewModel: ProjectViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -65,7 +65,13 @@ fun Project(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
-                title = { Text(DataModel.dataModel.projects[projectId]?.name ?: "") },
+                title = {
+                    Text(
+                        viewModel.projectName,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
                         Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -112,9 +118,12 @@ fun Project(
                     items(data) {
                         RecordItem(
                             record = it,
-                            color = Color(DataModel.dataModel.projects[projectId]!!.color),
+                            projectName = viewModel.projectName,
+                            color = viewModel.projectColor,
                             navToProject = navToProject,
                             navToEditRecord = navToEditRecord,
+                            deleteRecord = viewModel::deleteRecord,
+                            startTiming = { viewModel.startTimer() },
                         )
                     }
                 }
@@ -127,7 +136,7 @@ fun Project(
                         TextButton(
                             onClick = {
                                 showDialog = false
-                                DataModel.dataModel.deleteProject(projectId!!)
+                                viewModel.deleteProject()
                                 navBack()
                             },
                         ) {
