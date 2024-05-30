@@ -80,7 +80,7 @@ fun TraclockApp() {
                 Project(
                     navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                     navBack = { navController.navigateUp() },
-                    navToEditProject = { id, isNew -> navController.navigate("${Route.EDIT_PROJECT}/$id/$isNew") },
+                    navToEditProject = { id -> navController.navigate("${Route.EDIT_PROJECT}?id=$id") },
                     navToEditRecord = { navController.navigate("${Route.EDIT_RECORD}/$it") },
                 )
             }

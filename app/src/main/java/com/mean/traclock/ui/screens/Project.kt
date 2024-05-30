@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -38,25 +39,26 @@ import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.ProjectViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Project(
+    modifier: Modifier = Modifier,
     navToProject: (Long) -> Unit,
-    navToEditProject: (Long, Boolean) -> Unit,
+    navToEditProject: (Long) -> Unit,
     navToEditRecord: (Long) -> Unit,
     navBack: () -> Unit,
     viewModel: ProjectViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier,
 ) {
     var showMenu by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     val records by viewModel.records.collectAsState(mapOf())
     val time by viewModel.timeOfDays.collectAsState(mapOf())
     val projectId by viewModel.projectId.collectAsState()
-
+    val scope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -84,14 +86,14 @@ fun Project(
                             text = { Text(stringResource(R.string.edit)) },
                             onClick = {
                                 showMenu = false
-                                navToEditProject(projectId!!, false)
+                                navToEditProject(projectId!!)
                             },
                         )
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.delete)) },
                             onClick = {
                                 showMenu = false
-                                showDialog = true
+                                showDeleteDialog = true
                             },
                         )
                     }
@@ -128,39 +130,41 @@ fun Project(
                     }
                 }
             }
-            if (showDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = { Text(stringResource(R.string.delete)) },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                viewModel.deleteProject()
-                                navBack()
-                            },
-                        ) {
-                            Text(
-                                stringResource(R.string.delete).uppercase(),
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = { showDialog = false },
-                        ) {
-                            Text(
-                                stringResource(R.string.cancel).uppercase(),
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
-                    },
-                    text = { Text(stringResource(R.string.confirm_delete_project)) },
-                )
-            }
         } else {
             NoData(stringResource(R.string.no_record), modifier = Modifier.padding(contentPadding))
+        }
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text(stringResource(R.string.delete)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                showDeleteDialog = false
+                                viewModel.deleteProject()
+                                navBack()
+                            }
+                        },
+                    ) {
+                        Text(
+                            stringResource(R.string.delete).uppercase(),
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showDeleteDialog = false },
+                    ) {
+                        Text(
+                            stringResource(R.string.cancel).uppercase(),
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                },
+                text = { Text(stringResource(R.string.confirm_delete_project)) },
+            )
         }
     }
 }

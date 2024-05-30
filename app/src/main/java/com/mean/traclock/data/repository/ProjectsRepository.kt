@@ -2,32 +2,38 @@ package com.mean.traclock.data.repository
 
 import com.mean.traclock.data.Project
 import com.mean.traclock.data.database.ProjectDao
+import com.mean.traclock.data.database.RecordDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ProjectsRepository
     @Inject
-    constructor(private val projectDao: ProjectDao) {
+    constructor(private val projectDao: ProjectDao, private val recordDao: RecordDao) {
         suspend fun get(id: Long): Project = projectDao.get(id)
 
         suspend fun insert(project: Project): Long {
-            val res = projectDao.insert(project)
-            _projects[project.id] = project
-            return res
+            val id = projectDao.insert(project)
+            project.id = id
+            _projects[id] = project
+            return id
         }
 
         suspend fun update(project: Project): Int {
-            val res = projectDao.update(project)
             _projects[project.id] = project
+            val res = projectDao.update(project)
             return res
         }
 
-        fun delete(id: Long) {
-            projectDao.delete(id)
+        suspend fun delete(id: Long) {
             _projects.remove(id)
+            withContext(Dispatchers.IO) {
+                recordDao.deleteByProject(id)
+                projectDao.delete(id)
+            }
         }
 
         private val _projects: MutableMap<Long, Project> =
@@ -36,5 +42,5 @@ class ProjectsRepository
             }.toMutableMap()
 
         val projects: Map<Long, Project>
-            get() = _projects.toMap()
+            get() = _projects
     }

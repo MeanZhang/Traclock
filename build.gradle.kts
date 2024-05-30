@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.dotenv)
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 spotless {

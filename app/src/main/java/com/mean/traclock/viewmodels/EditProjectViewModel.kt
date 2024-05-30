@@ -60,8 +60,8 @@ class EditProjectViewModel
         suspend fun updateProject(): Int {
             if (project == null) {
                 val project = Project(_name.value, _color.value)
-                XLog.d(project)
                 projectsRepo.insert(project)
+                XLog.d("插入项目：$project")
                 return 1
             }
             return when {

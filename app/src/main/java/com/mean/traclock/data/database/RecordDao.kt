@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDao {
-    @Query("SELECT *, rowid FROM Record WHERE rowid = :id")
+    @Query("SELECT *, id FROM Record WHERE id = :id")
     suspend fun get(id: Long): Record
 
-    @Query("SELECT *, rowid FROM Record WHERE project = :projectId")
+    @Query("SELECT *, id FROM Record WHERE project = :projectId")
     suspend fun getRecords(projectId: Long): List<Record>
 
     /**
@@ -50,10 +50,10 @@ interface RecordDao {
     @Query("DELETE FROM Record WHERE project = :projectId")
     fun deleteByProject(projectId: Long)
 
-    @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
+    @Query("SELECT *, id FROM Record ORDER BY startTime DESC")
     fun getAll(): Flow<List<Record>>
 
-    @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
+    @Query("SELECT *, id FROM Record ORDER BY startTime DESC")
     fun getRecordsOfDays(): Flow<
         Map<
             @MapColumn(columnName = "date")
@@ -62,7 +62,7 @@ interface RecordDao {
         >,
     >
 
-    @Query("SELECT *, rowid FROM Record WHERE project = :projectId ORDER BY startTime DESC")
+    @Query("SELECT *, id FROM Record WHERE project = :projectId ORDER BY startTime DESC")
     fun getRecordsOfDays(
         projectId: Long,
     ): Flow<
@@ -73,17 +73,17 @@ interface RecordDao {
         >,
     >
 
-    @Query("SELECT *, rowid FROM Record ORDER BY startTime DESC")
+    @Query("SELECT *, id FROM Record ORDER BY startTime DESC")
     suspend fun getRecordsList(): List<Record>
 
     @Query(
-        "SELECT Project.rowid AS project," +
+        "SELECT Project.id AS project," +
             "0 AS startTime," +
             "SUM(endTime - startTime)/1000 AS endTime," +
             "0 AS date," +
-            "0 AS rowid " +
+            "0 AS id " +
             "FROM Project LEFT JOIN Record " +
-            "ON Record.project=Project.rowid " +
+            "ON Record.project=Project.id " +
             "GROUP BY Project.name",
     )
     fun getProjectsTime(): Flow<List<Record>>
@@ -122,7 +122,7 @@ interface RecordDao {
         "SELECT project," +
             "0 AS startTime," +
             "SUM(endTime - startTime)/1000 AS endTime," +
-            "date, rowid " +
+            "date, id " +
             "FROM Record " +
             "GROUP BY project, date " +
             "ORDER BY date DESC",
@@ -135,14 +135,14 @@ interface RecordDao {
         >,
     >
 
-    @Query("SELECT *, rowid FROM Record WHERE date=:date")
+    @Query("SELECT *, id FROM Record WHERE date=:date")
     fun getRecordsOfDay(date: Int): Flow<List<Record>>
 
     @Query(
         "SELECT project," +
             "0 AS startTime," +
             "SUM(endTime - startTime) AS endTime," +
-            "date, rowid " +
+            "date, id " +
             "FROM Record " +
             "WHERE date=:date " +
             "GROUP BY project",

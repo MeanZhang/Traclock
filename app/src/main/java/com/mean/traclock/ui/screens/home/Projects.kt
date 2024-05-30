@@ -45,7 +45,7 @@ fun Projects(
                     exit = shrinkVertically(),
                 ) {
                     TimingCard(
-                        projectName = viewModel.projects[viewModel.timingProjectId]?.name ?: "",
+                        projectName = viewModel.projects[viewModel.timingProjectId]!!.name ?: "",
                         startTime = viewModel.startTime,
                         stopTiming = viewModel::stopTiming,
                     )

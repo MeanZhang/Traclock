@@ -42,6 +42,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.mean.traclock.R
+import com.mean.traclock.data.Project
 import com.mean.traclock.data.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.components.HomeScaffold
@@ -78,7 +79,6 @@ private fun Content(
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableIntStateOf(-1) }
     val context = LocalContext.current
-
     if (duration > 0) {
         Column(
             modifier
@@ -102,12 +102,12 @@ private fun Content(
                         .padding(horizontal = HORIZONTAL_MARGIN),
                 factory = { context ->
                     PieChart(context).apply {
-                        setPieChart(viewModel, context, this, projectsTime, duration, selected)
+                        setPieChart(viewModel.projects, context, this, projectsTime, duration, selected)
                     }
                 },
                 update = { chart ->
                     setPieChart(
-                        viewModel,
+                        viewModel.projects,
                         context,
                         chart,
                         projectsTime,
@@ -166,7 +166,7 @@ private fun Content(
 }
 
 fun setPieChart(
-    viewModel: MainViewModel,
+    projects: Map<Long, Project>,
     context: Context,
     chart: PieChart,
     projectsTime: List<Record>,
@@ -198,7 +198,7 @@ fun setPieChart(
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, context.getString(R.string.records_duration))
-    dataset.colors = projectsTime.map { viewModel.projects[it.project]?.color ?: 0 }
+    dataset.colors = projectsTime.map { projects[it.project]?.color ?: 0 }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)

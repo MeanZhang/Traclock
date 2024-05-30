@@ -66,9 +66,7 @@ class ProjectViewModel
             }
         }
 
-        fun deleteProject() {
-            viewModelScope.launch {
-                projectsRepo.delete(project.id)
-            }
+        suspend fun deleteProject() {
+            projectsRepo.delete(project.id)
         }
     }

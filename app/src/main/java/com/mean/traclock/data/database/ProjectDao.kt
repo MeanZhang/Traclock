@@ -6,16 +6,17 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.mean.traclock.data.Project
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProjectDao {
-    @Query("SELECT *, rowid FROM Project WHERE rowid = :id")
+    @Query("SELECT *, id FROM Project WHERE id = :id")
     suspend fun get(id: Long): Project
 
     /**
      * 插入一个项目（[Project]）
      * @param project 要插入的项目
-     * @return 插入成功的项目的 rowid
+     * @return 插入成功的项目的 id
      */
     @Insert
     suspend fun insert(project: Project): Long
@@ -28,15 +29,18 @@ interface ProjectDao {
     @Delete
     fun delete(project: Project): Int
 
-    @Query("DELETE FROM Project WHERE rowid = :id")
+    @Query("DELETE FROM Project WHERE id = :id")
     fun delete(id: Long): Int
 
     @Update
     suspend fun update(project: Project): Int
 
-    @Query("SELECT *, rowid FROM Project")
+    @Query("SELECT *, id FROM Project")
     suspend fun getAll(): List<Project>
 
-    @Query("SELECT *, rowid FROM Project WHERE name LIKE :name")
+    @Query("SELECT *, id FROM Project WHERE name LIKE :name")
     fun findByName(name: String): Project
+
+    @Query("SELECT *, id FROM Project")
+    fun getAllFlow(): Flow<List<Project>>
 }
