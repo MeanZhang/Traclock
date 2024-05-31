@@ -3,8 +3,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    // TODO hilt支持ksp后，移除下面这行
-    kotlin("kapt")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -14,6 +13,12 @@ android {
             storePassword = env.fetch("KEYSTORE_PASSWORD")
             keyPassword = env.fetch("KEY_PASSWORD")
             keyAlias = env.fetch("KEY_ALIAS")
+        }
+        create("debug-mean") {
+            storeFile = file("../debug-mean.jks")
+            storePassword = "debug-mean"
+            keyPassword = "debug-mean"
+            keyAlias = "debug-mean"
         }
     }
     namespace = "com.mean.traclock"
@@ -47,6 +52,7 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["APP_NAME"] = "时迹（debug）"
+            signingConfig = signingConfigs.getByName("debug-mean")
         }
     }
     compileOptions {
@@ -63,9 +69,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
     }
     packaging {
         resources {
@@ -100,8 +103,6 @@ dependencies {
     // 日期时间选择器
     implementation(libs.material)
     implementation(libs.datetimepicker)
-    // Accompanist Navigation Animation
-    implementation(libs.accompanist.navigation.animation)
     // Accompanist Permissions
     implementation(libs.accompanist.permissions)
     // Room数据库
@@ -117,9 +118,7 @@ dependencies {
     implementation(libs.xlog)
     // Hilt
     implementation(libs.hilt.android)
-    // ksp(libs.hilt.android.compiler)
-    // TODO hilt支持ksp后，移除下面这行
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     // Hilt Compose Navigation
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.appcompat)
@@ -127,6 +126,4 @@ dependencies {
     implementation(libs.material.icons.extended)
     // DataStore
     implementation(libs.datastore.preferences)
-    // Compose Material 2
-    implementation(libs.compose.material)
 }

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
@@ -25,46 +25,55 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mean.traclock.R
-import com.mean.traclock.data.DataModel
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.ProjectViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Project(
-    navToProject: (Int) -> Unit,
-    navToEditProject: (Int, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    navToProject: (Long) -> Unit,
+    navToEditProject: (Long) -> Unit,
     navToEditRecord: (Long) -> Unit,
     navBack: () -> Unit,
-    viewModel: ProjectViewModel,
+    viewModel: ProjectViewModel = hiltViewModel(),
 ) {
     var showMenu by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     val records by viewModel.records.collectAsState(mapOf())
     val time by viewModel.timeOfDays.collectAsState(mapOf())
-    val projectId by viewModel.projectIdFlow.collectAsState()
-
+    val projectId by viewModel.projectId.collectAsState()
+    val scope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = navBack) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
-                title = { Text(DataModel.dataModel.projects[projectId]?.name ?: "") },
+                title = {
+                    Text(
+                        viewModel.projectName,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
                         Icon(Icons.Filled.MoreHoriz, stringResource(R.string.more))
@@ -77,14 +86,14 @@ fun Project(
                             text = { Text(stringResource(R.string.edit)) },
                             onClick = {
                                 showMenu = false
-                                navToEditProject(projectId!!, false)
+                                navToEditProject(projectId!!)
                             },
                         )
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.delete)) },
                             onClick = {
                                 showMenu = false
-                                showDialog = true
+                                showDeleteDialog = true
                             },
                         )
                     }
@@ -92,14 +101,15 @@ fun Project(
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
-            contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
-        ) {
-            if (records.isNotEmpty()) {
+        if (records.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
+                contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
+            ) {
                 records.forEach { (date, data) ->
                     stickyHeader {
                         DateTitle(
@@ -110,27 +120,31 @@ fun Project(
                     items(data) {
                         RecordItem(
                             record = it,
-                            color = Color(DataModel.dataModel.projects[projectId]!!.color),
+                            projectName = viewModel.projectName,
+                            color = viewModel.projectColor,
                             navToProject = navToProject,
                             navToEditRecord = navToEditRecord,
+                            deleteRecord = viewModel::deleteRecord,
+                            startTiming = { viewModel.startTimer() },
                         )
                     }
                 }
-            } else {
-                item { NoData(stringResource(R.string.no_record)) }
             }
+        } else {
+            NoData(stringResource(R.string.no_record), modifier = Modifier.padding(contentPadding))
         }
-
-        if (showDialog) {
+        if (showDeleteDialog) {
             AlertDialog(
-                onDismissRequest = { showDialog = false },
+                onDismissRequest = { showDeleteDialog = false },
                 title = { Text(stringResource(R.string.delete)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            showDialog = false
-                            DataModel.dataModel.deleteProject(projectId!!)
-                            navBack()
+                            scope.launch {
+                                showDeleteDialog = false
+                                viewModel.deleteProject()
+                                navBack()
+                            }
                         },
                     ) {
                         Text(
@@ -141,7 +155,7 @@ fun Project(
                 },
                 dismissButton = {
                     TextButton(
-                        onClick = { showDialog = false },
+                        onClick = { showDeleteDialog = false },
                     ) {
                         Text(
                             stringResource(R.string.cancel).uppercase(),

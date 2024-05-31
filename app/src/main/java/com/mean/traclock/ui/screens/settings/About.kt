@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -14,10 +15,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -47,7 +49,11 @@ import com.mean.traclock.utils.openURL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun About(navBack: () -> Unit, navToOpenSourceLicenses: () -> Unit) {
+fun About(
+    navBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    navToOpenSourceLicenses: () -> Unit,
+) {
     val context = LocalContext.current
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
@@ -56,30 +62,33 @@ fun About(navBack: () -> Unit, navToOpenSourceLicenses: () -> Unit) {
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = navBack) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 title = { Text(text = stringResource(R.string.about)) },
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) {
         Column(
             Modifier
                 .verticalScroll(rememberScrollState())
+                .fillMaxSize()
                 .padding(it)
                 .padding(WindowInsets.navigationBars.asPaddingValues()),
         ) {
             AsyncImage(
                 R.drawable.ic_logo,
                 contentDescription = stringResource(R.string.app_name),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 24.dp)
-                    .size(72.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 24.dp)
+                        .size(72.dp)
+                        .fillMaxWidth(),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
             )
             Text(
@@ -101,15 +110,16 @@ fun About(navBack: () -> Unit, navToOpenSourceLicenses: () -> Unit) {
                     Image(
                         painterResource(R.drawable.avatar),
                         "开发者头像",
-                        modifier = Modifier
-                            .height(24.dp)
-                            .clip(CircleShape),
+                        modifier =
+                            Modifier
+                                .height(24.dp)
+                                .clip(CircleShape),
                     )
                 },
                 modifier = Modifier.clickable { context.openURL(context.getString(R.string.github_page)) },
             )
 
-            Divider()
+            HorizontalDivider()
             SettingGroupTitle(stringResource(R.string.others))
             SettingItem(
                 icon = Icons.Default.Code,

@@ -6,15 +6,21 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.dotenv)
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 spotless {
-    val ktlintVersion = "0.48.2"
+    val ktlintVersion = libs.versions.ktlint.get()
 
     kotlin {
         target("**/*.kt")
-        targetExclude("$buildDir/**/*.kt", "bin/**/*.kt")
-        ktlint(ktlintVersion).setUseExperimental(true)
+        targetExclude("${project.layout.buildDirectory}/**/*.kt", "bin/**/*.kt")
+        ktlint(ktlintVersion).setEditorConfigPath("$projectDir/.editorconfig").customRuleSets(
+            listOf(
+//                "io.nlopez.compose.rules:ktlint:${libs.versions.composeRules.get()}",
+            ),
+        )
     }
     kotlinGradle {
         target("**.gradle.kts")

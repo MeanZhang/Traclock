@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,33 +42,46 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.mean.traclock.R
-import com.mean.traclock.data.DataModel
-import com.mean.traclock.database.Record
+import com.mean.traclock.data.Project
+import com.mean.traclock.data.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.ui.components.HomeScaffold
 import com.mean.traclock.ui.components.NoData
+import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.utils.TimeUtils
+import com.mean.traclock.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun Statistics(contentPadding: PaddingValues = PaddingValues(0.dp)) {
+fun Statistics(
+    viewModel: MainViewModel,
+    modifier: Modifier = Modifier,
+) {
     val date = TimeUtils.getIntDate(System.currentTimeMillis())
-    Content(
-        DataModel.dataModel.getProjectsTimeOfDay(date),
-        contentPadding,
-    )
+    HomeScaffold(route = HomeRoute.STATISTICS) { contentPadding ->
+        Content(
+            viewModel,
+            viewModel.getProjectsTimeOfDay(date),
+            contentPadding,
+            modifier = modifier,
+        )
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: PaddingValues) {
+private fun Content(
+    viewModel: MainViewModel,
+    projectsTimeFlow: Flow<List<Record>>,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
-    val selected = remember { mutableStateOf(-1) }
+    val selected = remember { mutableIntStateOf(-1) }
     val context = LocalContext.current
-
     if (duration > 0) {
         Column(
-            Modifier
+            modifier
                 .padding(contentPadding)
                 .verticalScroll(rememberScrollState()),
         ) {
@@ -82,21 +95,31 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                 Text(TimeUtils.getDurationString(duration))
             }
             AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .padding(horizontal = HORIZONTAL_MARGIN),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(horizontal = HORIZONTAL_MARGIN),
                 factory = { context ->
                     PieChart(context).apply {
-                        setPieChart(context, this, projectsTime, duration, selected)
+                        setPieChart(viewModel.projects, context, this, projectsTime, duration, selected)
                     }
                 },
-                update = { chart -> setPieChart(context, chart, projectsTime, duration, selected) },
+                update = { chart ->
+                    setPieChart(
+                        viewModel.projects,
+                        context,
+                        chart,
+                        projectsTime,
+                        duration,
+                        selected,
+                    )
+                },
             )
             for ((index, project) in projectsTime.withIndex()) {
                 var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
                 var color by remember { mutableStateOf(Color.Black) }
-                if (index == selected.value) {
+                if (index == selected.intValue) {
                     fontWeight = FontWeight.Bold
                     color = MaterialTheme.colorScheme.onSurface
                 } else {
@@ -117,13 +140,14 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
                         Icon(
                             imageVector = Icons.Default.Circle,
                             contentDescription = null,
-                            tint = Color(DataModel.dataModel.projects[project.project]?.color ?: 0),
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(horizontal = 4.dp),
+                            tint = Color(viewModel.projects[project.project]?.color ?: 0),
+                            modifier =
+                                Modifier
+                                    .size(20.dp)
+                                    .padding(horizontal = 4.dp),
                         )
                         Text(
-                            DataModel.dataModel.projects[project.project]?.name ?: "",
+                            viewModel.projects[project.project]?.name ?: "",
                             fontWeight = fontWeight,
                             color = color,
                         )
@@ -137,11 +161,12 @@ private fun Content(projectsTimeFlow: Flow<List<Record>>, contentPadding: Paddin
             }
         }
     } else {
-        NoData(stringResource(R.string.no_record), Modifier.padding(contentPadding))
+        NoData(stringResource(R.string.no_record), modifier = modifier.padding(contentPadding))
     }
 }
 
 fun setPieChart(
+    projects: Map<Long, Project>,
     context: Context,
     chart: PieChart,
     projectsTime: List<Record>,
@@ -154,21 +179,26 @@ fun setPieChart(
     chart.centerText = TimeUtils.getDurationString(duration)
     chart.legend.isEnabled = false // 不显示图例
     chart.setUsePercentValues(true)
-    chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-        override fun onValueSelected(e: Entry?, h: Highlight?) {
-            if (h != null) {
-                selected.value = h.x.toInt()
+    chart.setOnChartValueSelectedListener(
+        object : OnChartValueSelectedListener {
+            override fun onValueSelected(
+                e: Entry?,
+                h: Highlight?,
+            ) {
+                if (h != null) {
+                    selected.value = h.x.toInt()
+                }
             }
-        }
 
-        override fun onNothingSelected() {
-            selected.value = -1
-        }
-    })
+            override fun onNothingSelected() {
+                selected.value = -1
+            }
+        },
+    )
 
     val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
     val dataset = PieDataSet(list, context.getString(R.string.records_duration))
-    dataset.colors = projectsTime.map { DataModel.dataModel.projects[it.project]?.color ?: 0 }
+    dataset.colors = projectsTime.map { projects[it.project]?.color ?: 0 }
     dataset.valueFormatter = PercentFormatter(chart)
     chart.data = PieData(dataset)
     chart.animateXY(1000, 1000)

@@ -1,7 +1,13 @@
 pluginManagement {
     repositories {
         maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
     }
