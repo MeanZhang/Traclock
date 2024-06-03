@@ -126,4 +126,6 @@ dependencies {
     implementation(libs.material.icons.extended)
     // DataStore
     implementation(libs.datastore.preferences)
+    // Vico
+    implementation(libs.vico.compose)
 }
