@@ -8,6 +8,7 @@
         android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,6 +23,8 @@
 
         <activity
             android:name=".MainActivity"
+            android:enableOnBackInvokedCallback="true"
+            android:launchMode="singleInstance"
             android:exported="true"
             android:theme="@style/Theme.Traclock">
             <intent-filter>

@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -31,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mean.traclock.R
 import com.mean.traclock.ui.components.SettingGroupTitle
@@ -41,7 +43,11 @@ import com.mean.traclock.viewmodels.BackupRestoreViewModel.RestoreState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackupRestore(viewModel: BackupRestoreViewModel = viewModel(), navBack: () -> Unit) {
+fun BackupRestore(
+    modifier: Modifier = Modifier,
+    viewModel: BackupRestoreViewModel = hiltViewModel(),
+    navBack: () -> Unit,
+) {
     val context = LocalContext.current
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
@@ -70,25 +76,30 @@ fun BackupRestore(viewModel: BackupRestoreViewModel = viewModel(), navBack: () -
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = navBack) {
-                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                     }
                 },
                 title = { Text(stringResource(R.string.title_activity_backup_restore)) },
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier =
+            modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
             SettingGroupTitle(stringResource(R.string.backup))
             SettingItem(
                 title = stringResource(R.string.backup),
                 description = stringResource(R.string.backup_locally),
-                onClick = { backupLauncher.launch(context.getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv") },
+                onClick = {
+                    backupLauncher.launch(
+                        context.getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv",
+                    )
+                },
             )
 
-            Divider()
+            HorizontalDivider()
             SettingGroupTitle(stringResource(R.string.restore))
             SettingItem(
                 title = stringResource(R.string.restore_from_file),
@@ -125,7 +136,9 @@ fun BackupRestore(viewModel: BackupRestoreViewModel = viewModel(), navBack: () -
             onDismissRequest = { },
             title = { Text(stringResource(if (backingUp) R.string.backing_up else R.string.backup_completed)) },
             text = {
-                LinearProgressIndicator(progress = progress)
+                LinearProgressIndicator(
+                    progress = { progress },
+                )
             },
             confirmButton = {
                 TextButton(
@@ -155,10 +168,11 @@ fun BackupRestore(viewModel: BackupRestoreViewModel = viewModel(), navBack: () -
                 if (restoreState != RestoreState.FAILED) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         LinearProgressIndicator(
-                            progress = progress,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 4.dp),
+                            progress = { progress },
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .padding(end = 4.dp),
                         )
                         Text(
                             "${(progress * 100).toInt()}%".padStart(4),

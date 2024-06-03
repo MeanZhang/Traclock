@@ -44,7 +44,10 @@ object TimeUtils {
      * @param endTime 结束时间的时间戳（秒）
      * @return 精确到秒的时间字符串，格式为 `HH:mm:ss`
      */
-    fun getMillisecondDurationString(startTime: Long, endTime: Long): String {
+    fun getMillisecondDurationString(
+        startTime: Long,
+        endTime: Long,
+    ): String {
         val last = abs(startTime - endTime)
         val s = last % 60
         val min = (last / 60) % 60
@@ -59,7 +62,11 @@ object TimeUtils {
      * @param useMillisecond 时间戳单位是否为毫秒
      * @return 精确到秒的时间字符串，格式为 `HH:mm:ss`
      */
-    fun getDurationString(startTime: Long, endTime: Long, useMillisecond: Boolean = true): String {
+    fun getDurationString(
+        startTime: Long,
+        endTime: Long,
+        useMillisecond: Boolean = true,
+    ): String {
         val last = if (useMillisecond) abs(startTime - endTime) / 1000 else abs(startTime - endTime)
         val s = last % 60
         val min = (last / 60) % 60
@@ -90,10 +97,11 @@ object TimeUtils {
         if (time.year == today.year && time.dayOfYear == today.dayOfYear) {
             return "今天"
         }
-        val pattern = when (Locale.getDefault().language) {
-            "zh" -> "MMMd日 EEE"
-            else -> "EEE, MMM d"
-        }
+        val pattern =
+            when (Locale.getDefault().language) {
+                "zh" -> "MMMd日 EEE"
+                else -> "EEE, MMM d"
+            }
         return time.format(DateTimeFormatter.ofPattern(pattern))
     }
 
@@ -111,10 +119,11 @@ object TimeUtils {
         if (time.year == today.year && time.dayOfYear == today.dayOfYear) {
             return "今天"
         }
-        val pattern = when (Locale.getDefault().language) {
-            "zh" -> "MMMd日 EEE"
-            else -> "EEE, MMM d"
-        }
+        val pattern =
+            when (Locale.getDefault().language) {
+                "zh" -> "MMMd日 EEE"
+                else -> "EEE, MMM d"
+            }
         return time.format(DateTimeFormatter.ofPattern(pattern))
     }
 

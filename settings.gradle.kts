@@ -1,7 +1,16 @@
 pluginManagement {
     repositories {
+        if (System.getenv("CI") != "true") {
+            maven("https://repo.nju.edu.cn/repository/maven-public/")
+        }
         maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -9,6 +18,9 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        if (System.getenv("CI") != "true") {
+            maven("https://repo.nju.edu.cn/repository/maven-public/")
+        }
         maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()

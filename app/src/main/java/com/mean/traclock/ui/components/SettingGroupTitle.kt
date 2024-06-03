@@ -12,15 +12,19 @@ private val TOP_MARGIN = 24.dp
 private val BOTTOM_MARGIN = 8.dp
 
 @Composable
-fun SettingGroupTitle(title: String) {
+fun SettingGroupTitle(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = title,
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .padding(
-                horizontal = HORIZONTAL_MARGIN,
-            )
-            .padding(top = TOP_MARGIN, bottom = BOTTOM_MARGIN),
+        modifier =
+            modifier
+                .padding(
+                    horizontal = HORIZONTAL_MARGIN,
+                )
+                .padding(top = TOP_MARGIN, bottom = BOTTOM_MARGIN),
     )
 }
