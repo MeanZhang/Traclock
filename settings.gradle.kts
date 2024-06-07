@@ -3,13 +3,7 @@ pluginManagement {
         if (System.getenv("CI") != "true") {
             maven("https://repo.nju.edu.cn/repository/maven-public/")
         }
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
