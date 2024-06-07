@@ -16,6 +16,7 @@ dependencyResolutionManagement {
         }
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 rootProject.name = "Traclock"
