@@ -19,7 +19,7 @@ ksp = "2.0.10-1.0.24"
 dotenv = "4.0.0"
 # 自定义
 room = "2.6.1"
-xlog = "1.11.0"
+xlog = "1.11.1"
 leakcanary = "2.14"
 hiltNavigationCompose = "1.2.0"
 datastorePreferences = "1.1.1"
