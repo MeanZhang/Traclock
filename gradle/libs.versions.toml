@@ -31,7 +31,7 @@ lottieCompose = "6.4.1"
 appcompat = "1.7.0"
 androidxNavigationCompose = "2.7.7"
 datetimepicker = "0.6.3"
-vico = "2.0.0-alpha.21"
+vico = "2.0.0-alpha.28"
 
 [libraries]
 # 默认
