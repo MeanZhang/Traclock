@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.lang.IllegalArgumentException
 
 class ProjectsRepository(private val projectDao: ProjectDao, private val recordDao: RecordDao) {
     suspend fun get(id: Long): Project =
@@ -15,6 +16,7 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
         }
 
     suspend fun insert(project: Project): Long {
+        if (projects.any { it.value.name == project.name }) throw IllegalArgumentException("项目名${project.name}已存在")
         val id =
             withContext(Dispatchers.IO) {
                 projectDao.insert(project)

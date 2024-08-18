@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -79,7 +81,11 @@ fun EditProject(
 
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 navigationIcon = {
@@ -101,7 +107,7 @@ fun EditProject(
                                 if (viewModel.updateProject() != -1) {
                                     navBack()
                                 } else {
-//                                    Toast.makeText(context, "项目已存在", Toast.LENGTH_SHORT).show()
+                                    snackbarHostState.showSnackbar("项目已存在")
                                 }
                             }
                         }) {

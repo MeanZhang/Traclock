@@ -193,8 +193,12 @@ class BackupRestoreViewModel(
                     setErrorMessage("第${lineIndex}行颜色格式有误：${columns[2]}")
                     return RestoreError.COLOR_ERROR
                 }
-            val id = projectsRepo.insert(Project(projectName, color))
-            projectToId[projectName] = id
+            try {
+                val id = projectsRepo.insert(Project(projectName, color))
+                projectToId[projectName] = id
+            } catch (_: Exception) {
+                Logger.w { "项目${projectName}已存在" }
+            }
         } else {
             // 记录
             val date = TimeUtils.getIntDate(startTime)

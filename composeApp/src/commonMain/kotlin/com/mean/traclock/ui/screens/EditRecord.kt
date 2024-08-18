@@ -22,6 +22,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -46,6 +48,7 @@ import com.mean.traclock.ui.components.DateTimePicker
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.back
@@ -57,6 +60,8 @@ import traclock.composeapp.generated.resources.edit_record
 import traclock.composeapp.generated.resources.end
 import traclock.composeapp.generated.resources.keep_editing
 import traclock.composeapp.generated.resources.more
+import traclock.composeapp.generated.resources.no_such_project
+import traclock.composeapp.generated.resources.please_enter_a_project_name
 import traclock.composeapp.generated.resources.project
 import traclock.composeapp.generated.resources.save
 import traclock.composeapp.generated.resources.start
@@ -79,6 +84,7 @@ fun EditRecord(
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     val sheetState = rememberModalBottomSheetState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     fun back() {
         if (viewModel.isModified) {
@@ -89,6 +95,9 @@ fun EditRecord(
     }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 navigationIcon = {
@@ -185,19 +194,12 @@ fun EditRecord(
                     when (viewModel.updateRecord()) {
                         2 -> navBack()
                         1 -> navBack()
-                        -1 -> {}
-//                            Toast.makeText(
-//                                context,
-//                                context.getString(R.string.please_enter_a_project_name),
-//                                Toast.LENGTH_SHORT,
-//                            ).show()
-
-                        -2 -> {}
-//                            Toast.makeText(
-//                                context,
-//                                context.getString(R.string.no_such_project),
-//                                Toast.LENGTH_SHORT,
-//                            ).show()
+                        -1 -> {
+                            snackbarHostState.showSnackbar(getString(Res.string.please_enter_a_project_name))
+                        }
+                        -2 -> {
+                            snackbarHostState.showSnackbar(getString(Res.string.no_such_project))
+                        }
                     }
                 }
             }) {

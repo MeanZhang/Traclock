@@ -56,7 +56,12 @@ class EditProjectViewModel(
     suspend fun updateProject(): Int {
         if (project == null) {
             val project = Project(_name.value, _color.value)
-            projectsRepo.insert(project)
+            try {
+                projectsRepo.insert(project)
+            } catch (_: Exception) {
+                Logger.e { "项目${_name.value}已存在" }
+                return -1
+            }
             Logger.d("插入项目：$project")
             return 1
         }
