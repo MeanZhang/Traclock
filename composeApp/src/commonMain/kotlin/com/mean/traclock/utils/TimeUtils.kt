@@ -195,4 +195,10 @@ object TimeUtils {
     fun utcMillisToLocalDate(dateMillis: Long): LocalDate {
         return Instant.fromEpochMilliseconds(dateMillis).toLocalDateTime(TimeZone.UTC).date
     }
+
+    fun getDateTimeStringWithoutSeperator(): String {
+        val dateTimeFormat = LocalDateTime.Format { byUnicodePattern("yyyyMMdd_HHmmss") }
+        val time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        return dateTimeFormat.format(time)
+    }
 }

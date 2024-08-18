@@ -28,8 +28,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
+import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.BackupRestoreViewModel
 import com.mean.traclock.viewmodels.BackupRestoreViewModel.RestoreState
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import io.github.vinceglb.filekit.core.PickerMode
+import io.github.vinceglb.filekit.core.PickerType
 import org.jetbrains.compose.resources.stringResource
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.back
@@ -65,19 +70,23 @@ fun BackupRestore(
     val restoreState by viewModel.restoreState.collectAsState()
     val progress by viewModel.progress.collectAsState()
     val message by viewModel.message.collectAsState()
-//    val backupLauncher =
-//        rememberLauncherForActivityResult(CreateDocument("text/csv")) {
-//            if (it != null) {
-//                viewModel.backup(it)
-//            }
-//        }
-//    val restoreLauncher =
-//        rememberLauncherForActivityResult(OpenDocument()) {
-//            if (it != null) {
-//                viewModel.setRestoreUri(it)
-//                viewModel.setShowConfirmDialog(true)
-//            }
-//        }
+
+    val backupLauncher =
+        rememberFileSaverLauncher {
+            it?.let {
+                viewModel.backup(it)
+            }
+        }
+    val restoreLauncher =
+        rememberFilePickerLauncher(
+            type = PickerType.File(listOf("csv")),
+            mode = PickerMode.Single,
+        ) {
+            it?.let {
+                viewModel.setRestoreFile(it)
+                viewModel.setShowConfirmDialog(true)
+            }
+        }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -100,9 +109,10 @@ fun BackupRestore(
                 title = stringResource(Res.string.backup),
                 description = stringResource(Res.string.backup_locally),
                 onClick = {
-//                    backupLauncher.launch(
-//                        context.getString(R.string.default_label) + "_backup_" + TimeUtils.getDateTime() + ".csv",
-//                    )
+                    backupLauncher.launch(
+                        baseName = "traclock_backup_" + TimeUtils.getDateTimeStringWithoutSeperator(),
+                        extension = ".csv",
+                    )
                 },
             )
 
@@ -112,7 +122,7 @@ fun BackupRestore(
                 title = stringResource(Res.string.restore_from_file),
                 description = stringResource(Res.string.settings_description_restore_from_file),
                 onClick = {
-//                    restoreLauncher.launch(arrayOf("text/*"))
+                    restoreLauncher.launch()
                 },
             )
         }

@@ -65,6 +65,8 @@ kotlin {
             implementation(libs.hilt.android)
             // TimePicker
             implementation(project(":timepicker"))
+            // FileKit
+            implementation(libs.filekit.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

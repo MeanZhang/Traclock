@@ -1,13 +1,24 @@
 package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mean.traclock.data.Record
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.utils.TimeUtils
+import com.mean.traclock.utils.openInputStream
+import com.mean.traclock.utils.openOutputStream
 import data.Project
+import io.github.vinceglb.filekit.core.PlatformFile
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 class BackupRestoreViewModel(
     private val projectsRepo: ProjectsRepository,
@@ -19,7 +30,7 @@ class BackupRestoreViewModel(
     private val _showBackupDialog = MutableStateFlow(false)
     private val _showRestoreDialog = MutableStateFlow(false)
 
-//        private var restoreUri: Uri? = null
+    private var restoreFile: PlatformFile? = null
     private val _progress = MutableStateFlow(0F)
     private val _restoreState = MutableStateFlow(RestoreState.RESTORING)
     private val _message = MutableStateFlow("")
@@ -43,9 +54,9 @@ class BackupRestoreViewModel(
     val message: StateFlow<String>
         get() = _message
 
-//        fun setRestoreUri(uri: Uri) {
-//            restoreUri = uri
-//        }
+    fun setRestoreFile(file: PlatformFile) {
+        restoreFile = file
+    }
 
     fun setShowConfirmDialog(show: Boolean) {
         _showConfirmDialog.value = show
@@ -68,33 +79,33 @@ class BackupRestoreViewModel(
         _showRestoreDialog.value = show
     }
 
-//        fun backup(uri: Uri) {
-//            setProgress(0F)
-//            _showBackupDialog.value = true
-//            _backingUp.value = true
-//            viewModelScope.launch(Dispatchers.IO) {
-//                val records = recordsRepo.getRecordsList()
-//                val size = projects.size + records.size
-//                var completed = 0
-//                context.contentResolver.openOutputStream(uri).use { outputStream ->
-//                    BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
-//                        writer.write("Project, Start Time, End Time\n")
-//                        for (project in projects) {
-//                            writer.write(project.value.name + ",-1," + project.value.color + "\n")
-//                            setProgress(completed++.toFloat() / size)
-//                        }
-//                        for (record in records) {
-//                            writer.write(
-//                                projects[record.project]!!.name + "," + record.startTime + "," + record.endTime + "\n",
-//                            )
-//                            setProgress(completed++.toFloat() / size)
-//                        }
-//                    }
-//                }
-//                setProgress(1F)
-//                _backingUp.value = false
-//            }
-//        }
+    fun backup(file: PlatformFile) {
+        setProgress(0F)
+        _showBackupDialog.value = true
+        _backingUp.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            val records = recordsRepo.getRecordsList()
+            val size = projects.size + records.size
+            var completed = 0
+            file.openOutputStream().use { outputStream ->
+                BufferedWriter(OutputStreamWriter(outputStream)).use { writer ->
+                    writer.write("Project, Start Time, End Time\n")
+                    for (project in projects) {
+                        writer.write(project.value.name + ",-1," + project.value.color + "\n")
+                        setProgress(completed++.toFloat() / size)
+                    }
+                    for (record in records) {
+                        writer.write(
+                            projects[record.project]!!.name + "," + record.startTime + "," + record.endTime + "\n",
+                        )
+                        setProgress(completed++.toFloat() / size)
+                    }
+                }
+            }
+            setProgress(1F)
+            _backingUp.value = false
+        }
+    }
 
     fun restore() {
         setProgress(0F)
@@ -102,42 +113,36 @@ class BackupRestoreViewModel(
         _restoreState.value = RestoreState.RESTORING
         var restoredBytesSize = 0L
         var lineIndex = 2
-//            restoreUri?.let { uri ->
-//                viewModelScope.launch(Dispatchers.IO) {
-//                    val totalBytes =
-//                        context.contentResolver.query(uri, null, null, null, null)
-//                            ?.use {
-//                                val index = it.getColumnIndex(OpenableColumns.SIZE)
-//                                it.moveToFirst()
-//                                it.getLong(index)
-//                            }
-//                    if (totalBytes == null) {
-//                        _restoreState.value = RestoreState.FAILED
-//                        return@launch
-//                    }
-//                    context.contentResolver.openInputStream(uri)?.use { inputStream ->
-//                        BufferedReader(InputStreamReader(inputStream)).use { reader ->
-//                            restoredBytesSize += reader.readLine().toByteArray().size + 1
-//                            var line = reader.readLine()
-//                            while (line != null) {
-//                                val res = restore(line, lineIndex)
-//                                if (res != RestoreError.NO_ERROR) {
-//                                    setProgress(1F)
-//                                    _restoreState.value = RestoreState.FAILED
-//                                    return@launch
-//                                }
-//                                lineIndex++
-//                                restoredBytesSize += line.toByteArray().size + 1
-//                                setProgress(restoredBytesSize.toFloat() / totalBytes)
-//
-//                                line = reader.readLine()
-//                            }
-//                        }
-//                    }
-//                    setProgress(1F)
-//                    _restoreState.value = RestoreState.SUCCESS
-//                }
-//            }
+        restoreFile?.let { file ->
+            viewModelScope.launch(Dispatchers.IO) {
+                val totalBytes = file.getSize()
+                if (totalBytes == null) {
+                    _restoreState.value = RestoreState.FAILED
+                    return@launch
+                }
+                file.openInputStream()?.use { inputStream ->
+                    BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                        restoredBytesSize += reader.readLine().toByteArray().size + 1
+                        var line = reader.readLine()
+                        while (line != null) {
+                            val res = restore(line, lineIndex)
+                            if (res != RestoreError.NO_ERROR) {
+                                setProgress(1F)
+                                _restoreState.value = RestoreState.FAILED
+                                return@launch
+                            }
+                            lineIndex++
+                            restoredBytesSize += line.toByteArray().size + 1
+                            setProgress(restoredBytesSize.toFloat() / totalBytes)
+
+                            line = reader.readLine()
+                        }
+                    }
+                }
+                setProgress(1F)
+                _restoreState.value = RestoreState.SUCCESS
+            }
+        }
     }
 
     /**
@@ -200,13 +205,13 @@ class BackupRestoreViewModel(
                     setErrorMessage("第${lineIndex}行结束时间格式有误：${columns[2]}")
                     return RestoreError.END_TIME_ERROR
                 }
-//                val record = Record(projectToId[projectName]!!, startTime, endTime, date)
-//                try {
-//                    recordsRepo.insert(record)
-//                } catch (e: Exception) {
-//                    setErrorMessage("第${lineIndex}行记录插入失败：$record")
-//                    return RestoreError.INSERT_ERROR
-//                }
+            val record = Record(projectToId[projectName]!!, startTime, endTime, date)
+            try {
+                recordsRepo.insert(record)
+            } catch (e: Exception) {
+                setErrorMessage("第${lineIndex}行记录插入失败：$record")
+                return RestoreError.INSERT_ERROR
+            }
         }
         return RestoreError.NO_ERROR
     }
