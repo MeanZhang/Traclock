@@ -9,6 +9,6 @@ actual fun initLogger() {
     val severity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info
     Logger.setLogWriters(platformLogWriter())
     Logger.setMinSeverity(severity)
-    Logger.setTag("DIARY")
+    Logger.setTag(LOG_TAG)
     Logger.i { "Logger initialized, severity: ${severity.name}." }
 }

@@ -39,7 +39,7 @@ actual fun initLogger() {
         ),
     )
     Logger.setMinSeverity(severity)
-    Logger.setTag("DIARY")
+    Logger.setTag(LOG_TAG)
     Logger.i { "Logger initialized, severity: ${severity.name}." }
 }
 
