@@ -138,6 +138,16 @@ private val LICENSES =
             "https://patrykandpatrick.com/vico/",
             "Apache License 2.0",
         ),
+        License(
+            "FileKit",
+            "https://github.com/vinceglb/FileKit",
+            "MIT License",
+        ),
+        License(
+            "Koala Plot",
+            "https://koalaplot.github.io/",
+            "MIT License",
+        ),
     ).sortedBy { it.name.lowercase() }
 
 private data class License(val name: String, val url: String, val license: String)

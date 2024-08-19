@@ -13,7 +13,6 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
-import java.nio.charset.Charset
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 actual fun initLogger() {
@@ -33,7 +32,7 @@ actual fun initLogger() {
                                     byUnicodePattern("yyyy-MM-dd HH:mm:ss[.SSS]")
                                 },
                             )
-                    }][${severity?.name}][${tag?.tag}]${message.message}".toGBK()
+                    }][${severity?.name}][${tag?.tag}]${message.message}"
                 }
             },
         ),
@@ -43,6 +42,6 @@ actual fun initLogger() {
     Logger.i { "Logger initialized, severity: ${severity.name}." }
 }
 
-private fun String.toGBK(): String {
-    return this.toByteArray(Charsets.UTF_8).toString(Charset.forName("GBK"))
-}
+// private fun String.toGBK(): String {
+//    return this.toByteArray(Charsets.UTF_8).toString(Charset.forName("GBK"))
+// }

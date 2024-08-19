@@ -77,6 +77,7 @@
     <string name="restore_failed">恢复失败</string>
     <string name="stopped">已停止</string>
     <string name="exit">退出</string>
+    <string name="total_duration">总时长</string>
     <string name="time_picker_switch_to_text_input">切换到文本输入</string>
     <string name="time_picker_switch_to_touch_input">切换到触摸选择</string>
     <string name="time_picker_select_time">选择时间</string>

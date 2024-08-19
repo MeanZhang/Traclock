@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.data.Record
@@ -32,6 +33,9 @@ import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.MainViewModel
+import io.github.koalaplot.core.pie.DefaultSlice
+import io.github.koalaplot.core.pie.PieChart
+import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import traclock.composeapp.generated.resources.Res
@@ -55,6 +59,7 @@ fun Statistics(
     }
 }
 
+@OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 private fun Content(
     viewModel: MainViewModel,
@@ -63,6 +68,7 @@ private fun Content(
     modifier: Modifier = Modifier,
 ) {
     val projectsTime by projectsTimeFlow.collectAsState(listOf())
+    val data = projectsTime.map { (it.endTime - it.startTime).toFloat() }
     val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
     val selected = remember { mutableIntStateOf(-1) }
     if (duration > 0) {
@@ -70,6 +76,7 @@ private fun Content(
             modifier
                 .padding(contentPadding)
                 .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
                 Modifier
@@ -78,30 +85,22 @@ private fun Content(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(stringResource(Res.string.records_duration))
-                Text(TimeUtils.getDurationString(duration))
+                Text(
+                    TimeUtils.getDurationString(duration),
+                    fontFamily = FontFamily.Monospace,
+                )
             }
-//            AndroidView(
-//                modifier =
-//                    Modifier
-//                        .fillMaxWidth()
-//                        .height(400.dp)
-//                        .padding(horizontal = HORIZONTAL_MARGIN),
-//                factory = { context ->
-//                    PieChart(context).apply {
-//                        setPieChart(viewModel.projects, context, this, projectsTime, duration, selected)
-//                    }
-//                },
-//                update = { chart ->
-//                    setPieChart(
-//                        viewModel.projects,
-//                        context,
-//                        chart,
-//                        projectsTime,
-//                        duration,
-//                        selected,
-//                    )
-//                },
-//            )
+            PieChart(
+                modifier = Modifier.padding(horizontal = HORIZONTAL_MARGIN),
+                values = data,
+                label = {
+                    Text(viewModel.projects[projectsTime[it].project]?.name ?: "")
+                },
+                slice = {
+                    DefaultSlice(color = Color(viewModel.projects[projectsTime[it].project]?.color ?: 0))
+                },
+                holeSize = 0.75F,
+            )
             for ((index, project) in projectsTime.withIndex()) {
                 var fontWeight by remember { mutableStateOf(FontWeight.Medium) }
                 var color by remember { mutableStateOf(Color.Black) }
@@ -141,6 +140,7 @@ private fun Content(
                     Text(
                         TimeUtils.getDurationString(project.startTime, project.endTime),
                         fontWeight = fontWeight,
+                        fontFamily = FontFamily.Monospace,
                         color = color,
                     )
                 }
@@ -150,42 +150,3 @@ private fun Content(
         NoData(stringResource(Res.string.no_record), modifier = modifier.padding(contentPadding))
     }
 }
-
-// fun setPieChart(
-//    projects: Map<Long, Project>,
-//    context: Context,
-//    chart: PieChart,
-//    projectsTime: List<Record>,
-//    duration: Long,
-//    selected: MutableState<Int>,
-// ) {
-//    chart.minimumHeight = chart.width // 宽高相同
-//    chart.description.isEnabled = false // 不显示description
-//    chart.setHoleColor(Color.Transparent.toArgb()) // 中间圆孔设为透明
-//    chart.centerText = TimeUtils.getDurationString(duration)
-//    chart.legend.isEnabled = false // 不显示图例
-//    chart.setUsePercentValues(true)
-//    chart.setOnChartValueSelectedListener(
-//        object : OnChartValueSelectedListener {
-//            override fun onValueSelected(
-//                e: Entry?,
-//                h: Highlight?,
-//            ) {
-//                if (h != null) {
-//                    selected.value = h.x.toInt()
-//                }
-//            }
-//
-//            override fun onNothingSelected() {
-//                selected.value = -1
-//            }
-//        },
-//    )
-//
-//    val list = projectsTime.map { PieEntry((it.endTime - it.startTime).toFloat(), it.project) }
-//    val dataset = PieDataSet(list, context.getString(R.string.records_duration))
-//    dataset.colors = projectsTime.map { projects[it.project]?.color ?: 0 }
-//    dataset.valueFormatter = PercentFormatter(chart)
-//    chart.data = PieData(dataset)
-//    chart.animateXY(1000, 1000)
-// }

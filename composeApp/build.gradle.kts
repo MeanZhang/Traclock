@@ -67,6 +67,10 @@ kotlin {
             implementation(project(":timepicker"))
             // FileKit
             implementation(libs.filekit.compose)
+            // vico
+            implementation(libs.vico.compose)
+            // Koala Plot
+            implementation(libs.koalaplot.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
