@@ -20,6 +20,7 @@ import com.mean.traclock.ui.navigation.HomeRoute
 fun HomeScaffold(
     modifier: Modifier = Modifier,
     route: HomeRoute,
+    snackbarHost: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable (() -> Unit) = {},
     content: @Composable (PaddingValues) -> Unit,
@@ -27,6 +28,7 @@ fun HomeScaffold(
     val state = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(state)
     Scaffold(
+        snackbarHost = snackbarHost,
         topBar = {
             HomeTopBar(
                 currentRoute = route,

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.ui.components.ColorPicker
+import com.mean.traclock.utils.PlatformUtils
 import com.mean.traclock.viewmodels.EditProjectViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -107,7 +108,10 @@ fun EditProject(
                                 if (viewModel.updateProject() != -1) {
                                     navBack()
                                 } else {
-                                    snackbarHostState.showSnackbar("项目已存在")
+                                    PlatformUtils.toast("项目已存在")
+                                    if (!PlatformUtils.isAndroid) {
+                                        snackbarHostState.showSnackbar("项目已存在")
+                                    }
                                 }
                             }
                         }) {

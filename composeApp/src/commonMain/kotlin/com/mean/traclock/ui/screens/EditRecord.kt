@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.ui.components.DateTimePicker
+import com.mean.traclock.utils.PlatformUtils
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -195,10 +196,16 @@ fun EditRecord(
                         2 -> navBack()
                         1 -> navBack()
                         -1 -> {
-                            snackbarHostState.showSnackbar(getString(Res.string.please_enter_a_project_name))
+                            PlatformUtils.toast(getString(Res.string.please_enter_a_project_name))
+                            if (!PlatformUtils.isAndroid) {
+                                snackbarHostState.showSnackbar(getString(Res.string.please_enter_a_project_name))
+                            }
                         }
                         -2 -> {
-                            snackbarHostState.showSnackbar(getString(Res.string.no_such_project))
+                            PlatformUtils.toast(getString(Res.string.no_such_project))
+                            if (!PlatformUtils.isAndroid) {
+                                snackbarHostState.showSnackbar(getString(Res.string.no_such_project))
+                            }
                         }
                     }
                 }

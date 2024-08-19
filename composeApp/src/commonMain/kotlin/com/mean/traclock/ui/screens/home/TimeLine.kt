@@ -12,20 +12,28 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.navigation.HomeRoute
+import com.mean.traclock.utils.PlatformUtils
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.MainViewModel
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.change_view
+import traclock.composeapp.generated.resources.is_running_description
 import traclock.composeapp.generated.resources.no_record
 import ui.components.HomeScaffold
 import ui.components.TimingCard
@@ -44,7 +52,12 @@ fun TimeLine(
     val projectsTimeOfDays by viewModel.projectsTimeOfDays.collectAsState(mapOf())
     val timeOfDays by viewModel.timeOfDays.collectAsState(mapOf())
     val data = if (detailView) records else projectsTimeOfDays
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     HomeScaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         route = HomeRoute.TIMELINE,
         actions = {
             IconButton(onClick = viewModel::changeDetailView) {
@@ -89,7 +102,15 @@ fun TimeLine(
                             navToEditRecord = navToEditRecord,
                             deleteRecord = viewModel::deleteRecord,
                             projectName = viewModel.projects[record.project]?.name ?: "",
-                            startTiming = viewModel::startTiming,
+                            startTiming = {
+                                if (isTiming && !PlatformUtils.isAndroid) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
+                                    }
+                                } else {
+                                    viewModel.startTiming(it)
+                                }
+                            },
                         )
                     }
                 }
