@@ -5,8 +5,8 @@
 > 一款记录任务时间的时间管理应用。
 
 <p align="center">
-  <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.5.10-brightgreen?logo=android" />
+  <a href="https://www.jetbrains.com/zh-cn/lp/compose-multiplatform/" alt="Compose">
+    <img src="https://img.shields.io/badge/Compose%20Multiplatform-gray?logo=jetpackcompose" />
   </a>
   <a href="https://android-arsenal.com/api?level=26" alt="API">
     <img src="https://img.shields.io/badge/API-26%2B-blue?logo=android" />
@@ -21,9 +21,9 @@
 
 ## 简介
 
-时迹一款记录各项任务时间的时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
+时迹是一款记录各项任务时间的时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
 
-使用 Jetpack Compose 构建，采用 Material You 设计，已完成项目记录、管理和统计等基本功能，UI 界面将随 Jetpack Compose 的更新逐步完善。
+使用 Compose Multiplatform 构建，采用 Material You 设计，已完成项目记录、管理等基本功能。
 
 该应用将拥有以下特点：
 

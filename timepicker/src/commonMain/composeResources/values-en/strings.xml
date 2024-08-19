@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="indeterminate">Partially checked</string>
+    <!-- Spoken description of on state of a switch -->
+    <string name="state_on">On</string>
+    <!-- Spoken description of off state of a switch -->
+    <string name="state_off">Off</string>
+    <!-- Spoken description naming a Switch Material UI widget -->
+    <string name="switch_role">Switch</string>
+    <!-- Spoken description of selected state of a selectable item -->
+    <string name="selected">Selected</string>
+    <!-- Spoken description of not selected state of a switch -->
+    <string name="not_selected">Not selected</string>
+    <!-- Spoken template for announcing the progress of a progress indicator os slider -->
+    <string name="template_percent"><xliff:g id="percentage">%1$d</xliff:g> percent.</string>
+    <!-- Spoken description of the progress of an indeterminate progress bar -->
+    <string name="in_progress">In progress</string>
+    <!-- Spoken description of a Tab. -->
+    <string name="tab">Tab</string>
+    <!-- Spoken title when a navigation drawer opens. -->
+    <string name="navigation_menu">"Navigation menu"</string>
+    <!-- Spoken title of a dropdown menu. -->
+    <string name="dropdown_menu">"Dropdown menu"</string>
+    <!--
+Spoken content description of an element which will close the navigation menu when clicked.
+    -->
+    <string name="close_drawer">"Close navigation menu"</string>
+    <!-- Spoken content description of an element which will close the sheet when clicked. -->
+    <string name="close_sheet">"Close sheet"</string>
+    <!-- Default accessibility error text for an editable text field. -->
+    <string name="default_error_message">"Invalid input"</string>
+    <!-- Spoken description of an empty editable text field -->
+    <string name="state_empty">Empty</string>
+    <!-- Default title of the popup window to be read by a screen reader. -->
+    <string name="default_popup_window_title" tools:ignore="ExtraTranslation">"Pop-Up Window"</string>
+
+    <!-- Spoken content description of the start seek control in a range slider. -->
+    <string name="range_start">"Range start"</string>
+    <!-- Spoken content description of the end seek control in a range slider. -->
+    <string name="range_end">"Range end"</string>
+    <string name="m3c_dialog">"Dialog"</string>
+    <!-- Spoken description of expanded state of a dropdown menu -->
+    <string name="m3c_dropdown_menu_expanded">Expanded</string>
+    <!-- Spoken description of collapsed state of a dropdown menu -->
+    <string name="m3c_dropdown_menu_collapsed">Collapsed</string>
+    <!-- Describes the toggle action to change expanded/collapsed state of a dropdown menu -->
+    <string name="m3c_dropdown_menu_toggle">Toggle dropdown menu</string>
+    <!-- Spoken description of a snackbar dismiss action -->
+    <string name="m3c_snackbar_dismiss">Dismiss</string>
+    <!-- Spoken description of a search bar -->
+    <string name="m3c_search_bar_search">Search</string>
+    <!-- Spoken description when search suggestions are available -->
+    <string name="m3c_suggestions_available">Suggestions below</string>
+    <!-- Spoken description of a bottom sheet -->
+    <string name="m3c_bottom_sheet_pane_title">Bottom Sheet</string>
+    <!-- Names the drag handle visual for bottom sheet. -->
+    <string name="m3c_bottom_sheet_drag_handle_description">Drag handle</string>
+    <!-- Describes the collapse action for bottom sheet. -->
+    <string name="m3c_bottom_sheet_collapse_description">Collapse bottom sheet</string>
+    <!-- Describes the dismiss action for bottom sheet. -->
+    <string name="m3c_bottom_sheet_dismiss_description">Dismiss bottom sheet</string>
+    <!-- Describes the expand action visual for bottom sheet. -->
+    <string name="m3c_bottom_sheet_expand_description">Expand bottom sheet</string>
+    <!-- Spoken description of a tooltip -->
+    <string name="m3c_tooltip_pane_description">Tooltip</string>
+    <string name="m3c_tooltip_long_press_label">Show tooltip</string>
+    <!-- Suffix for time in 12-hour standard, after noon. [CHAR_LIMIT=2]" -->
+    <string name="m3c_time_picker_pm">PM</string>
+    <!-- Suffix for time in 12-hour standard, before noon. [CHAR_LIMIT=2]" -->
+    <string name="m3c_time_picker_am">AM</string>
+    <!-- Description for the toggle to choose between AM and PM [CHAR_LIMIT=NONE] -->
+    <string name="m3c_time_picker_period_toggle_description">Select AM or PM</string>
+    <!-- Description for button to switch to select the hour [CHAR_LIMIT=NONE] -->
+    <string name="m3c_time_picker_hour_selection">Select hour</string>
+    <!-- Description for button to switch to select the minute [CHAR_LIMIT=NONE] -->
+    <string name="m3c_time_picker_minute_selection">Select minutes</string>
+    <string name="m3c_time_picker_second_selection">Select seconds</string>
+    <!-- Spoken suffix for an hour in the clock [CHAR_LIMIT=10] -->
+    <string name="m3c_time_picker_hour_suffix">%1$d o\'clock</string>
+    <!-- Spoken suffix for an hour in the 24-hour clock [CHAR_LIMIT=10] -->
+    <string name="m3c_time_picker_hour_24h_suffix">%1$d hours</string>
+    <!-- Spoken suffix for an amount of minutes in the clock [CHAR_LIMIT=16] -->
+    <string name="m3c_time_picker_minute_suffix">%1$d minutes</string>
+    <string name="m3c_time_picker_second_suffix">%1$d seconds</string>
+    <!-- Label for a textField that allows the user to enter minutes to set the time -->
+    <string name="m3c_time_picker_minute">Minute</string>
+    <string name="m3c_time_picker_second">Second</string>
+    <!-- Label for a textField that allows the user to the hour to set the time -->
+    <string name="m3c_time_picker_hour">Hour</string>
+    <!-- A label for a textfield that allows the user to input minutes. It reads: Edit Box, for minutes -->
+    <string name="m3c_time_picker_minute_text_field">for minutes</string>
+    <string name="m3c_time_picker_second_text_field">for seconds</string>
+    <!-- A label for a textfield that allows the user to input hours. It reads: Edit Box, for hour -->
+    <string name="m3c_time_picker_hour_text_field">for hour</string>
+</resources>
