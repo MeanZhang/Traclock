@@ -2,7 +2,7 @@
 
 # 时迹
 
-> 一款记录任务时间的时间管理应用。
+> 一款记录任务时间的跨平台时间管理应用。
 
 <p align="center">
   <a href="https://www.jetbrains.com/zh-cn/lp/compose-multiplatform/" alt="Compose">
@@ -21,7 +21,7 @@
 
 ## 简介
 
-时迹是一款记录各项任务时间的时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
+时迹是一款记录各项任务时间的跨平台时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
 
 使用 Compose Multiplatform 构建，采用 Material You 设计，已完成项目记录、管理等基本功能。
 
@@ -34,6 +34,11 @@
 - [ ] 微件
 - [ ] 数据统计
 - [ ] ……
+
+## 平台支持
+
+- Android
+- Desktop
 
 ## 功能介绍
 
@@ -55,8 +60,8 @@
 
 ## 截图
 
-| 时间线                                                 | 时间线                                           | 项目                                     | 统计                                         |
-| ------------------------------------------------------ | ------------------------------------------------ | ---------------------------------------- | -------------------------------------------- |
+| 时间线                                                  | 时间线                                            | 项目                                      | 统计                                          |
+| ------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------- | --------------------------------------------- |
 | ![timeline-detail](docs/images/ui/timeline-detail.webp) | ![timeline](docs/images/ui/timeline.webp)         | ![projects](docs/images/ui/projects.webp) | ![statistics](docs/images/ui/statistics.webp) |
-| 设置                                                   | 通知                                             | 深色                                     | 恢复                                         |
+| 设置                                                    | 通知                                              | 深色                                      | 恢复                                          |
 | ![settings](docs/images/ui/settings.webp)               | ![notification](docs/images/ui/notification.webp) | ![dark](docs/images/ui/dark.webp)         | ![restore](docs/images/ui/restore.webp)       |

@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "时迹"
-  tagline: "一款记录任务时间的时间管理应用"
+  tagline: "一款记录任务时间的跨平台时间管理应用"
   actions:
     - theme: brand
       text: 查看帮助
@@ -13,7 +13,7 @@ hero:
 
 ## 简介
 
-时迹是一款记录各项任务时间的时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
+时迹是一款记录各项任务时间的跨平台时间管理应用，可以帮助你了解自己的时间分配，提高工作效率。
 
 使用 Compose Multiplatform 构建，采用 Material You 设计，已完成项目记录、管理等基本功能。
 
@@ -26,6 +26,11 @@ hero:
 - [ ] 微件
 - [ ] 数据统计
 - [ ] ……
+
+## 平台支持
+
+- Android
+- Desktop
 
 ## 功能介绍
 
@@ -47,8 +52,8 @@ hero:
 
 ## 截图
 
-| 时间线                                                       | 时间线                                                       | 项目                                                      | 统计                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------ |
-| ![timeline-detail](./images/ui/timeline-detail.webp) | ![timeline](./images/ui/timeline.webp)    | ![projects](./images/ui/projects.webp) | ![statistics](./images/ui/statistics.webp) |
-| 设置                                                         | 通知                                                         | 深色                                                      | 恢复                                                         |
-| ![settings](./images/ui/settings.webp)    | ![notification](./images/ui/notification.webp) | ![dark](./images/ui/dark.webp)         | ![restore](./images/ui/restore.webp)      |
+| 时间线                                               | 时间线                                         | 项目                                   | 统计                                       |
+| ---------------------------------------------------- | ---------------------------------------------- | -------------------------------------- | ------------------------------------------ |
+| ![timeline-detail](./images/ui/timeline-detail.webp) | ![timeline](./images/ui/timeline.webp)         | ![projects](./images/ui/projects.webp) | ![statistics](./images/ui/statistics.webp) |
+| 设置                                                 | 通知                                           | 深色                                   | 恢复                                       |
+| ![settings](./images/ui/settings.webp)               | ![notification](./images/ui/notification.webp) | ![dark](./images/ui/dark.webp)         | ![restore](./images/ui/restore.webp)       |
