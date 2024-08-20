@@ -7,6 +7,7 @@ on:
       - "docs/**"
       - "package.json"
       - "yarn.lock"
+      - ".gitignore"
 jobs:
   build:
     runs-on: ubuntu-latest
