@@ -8,12 +8,14 @@ on:
       - "docs/**"
       - "package.json"
       - "yarn.lock"
+      - ".gitignore"
   pull_request:
     paths-ignore:
       - "**.md"
       - "docs/**"
       - "package.json"
       - "yarn.lock"
+      - ".gitignore"
 
 jobs:
   format-check:

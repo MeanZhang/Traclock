@@ -8,6 +8,7 @@ on:
       - "docs/**"
       - "package.json"
       - "yarn.lock"
+      - ".gitignore"
 
 jobs:
   build:
