@@ -139,23 +139,33 @@ object TimeUtils {
      */
     fun getDataString(timestamp: Long): String {
         val date = getDate(timestamp)
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        if (date.compareTo(today) == 0) {
-            return "今天"
-        }
-        return DATE_FORMAT.format(date)
+        return getDataString(date)
     }
 
     /**
      * 获取日期字符串
-     * @param date 以整数表示的日期，例如20211231
+     * @param dateInt 以整数表示的日期，例如20211231
      * @return 日期字符串，格式为系统时区的日期
      */
-    fun getDataString(date: Int): String {
-        val year = date / 10000
-        val month = (date / 100) % 100
-        val day = date % 100
-        return DATE_FORMAT.format(LocalDate(year, month, day))
+    fun getDataString(dateInt: Int): String {
+        val year = dateInt / 10000
+        val month = (dateInt / 100) % 100
+        val day = dateInt % 100
+        val date = LocalDate(year, month, day)
+        return getDataString(date)
+    }
+
+    /**
+     * 获取日期字符串
+     * @param date [LocalDate]
+     * @return 日期字符串，格式为系统时区的日期
+     */
+    private fun getDataString(date: LocalDate): String {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        if (date.compareTo(today) == 0) {
+            return if (Locale.current.language == "zh") "今天" else "Today"
+        }
+        return DATE_FORMAT.format(date)
     }
 
     /**
