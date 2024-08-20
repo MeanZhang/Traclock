@@ -2,6 +2,8 @@
 .gradle
 .kotlin
 build
+node_modules
 local.properties
 
 .env
+docs/.vitepress/dist
