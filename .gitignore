@@ -7,3 +7,4 @@ local.properties
 
 .env
 docs/.vitepress/dist
+docs/.vitepress/cache

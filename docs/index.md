@@ -52,8 +52,37 @@ hero:
 
 ## 截图
 
-| 时间线                                               | 时间线                                         | 项目                                   | 统计                                       |
-| ---------------------------------------------------- | ---------------------------------------------- | -------------------------------------- | ------------------------------------------ |
-| ![timeline-detail](./images/ui/timeline-detail.webp) | ![timeline](./images/ui/timeline.webp)         | ![projects](./images/ui/projects.webp) | ![statistics](./images/ui/statistics.webp) |
-| 设置                                                 | 通知                                           | 深色                                   | 恢复                                       |
-| ![settings](./images/ui/settings.webp)               | ![notification](./images/ui/notification.webp) | ![dark](./images/ui/dark.webp)         | ![restore](./images/ui/restore.webp)       |
+### 时间线
+
+<div align="center">
+    <img src="/images/ui/desktop-timeline.webp" width="64%"alt="桌面-时间线" />
+    <img src="/images/ui/android-timeline.webp" width="23.2%" alt="Android-时间线" />
+</div>
+
+### 项目
+
+<div align="center">
+    <img src="/images/ui/desktop-projects.webp" width="64%"alt="桌面-项目" />
+    <img src="/images/ui/android-projects.webp" width="23.2%" alt="Android-项目" />
+</div>
+
+### 统计
+
+<div align="center">
+    <img src="/images/ui/desktop-statistics.webp" width="64%"alt="桌面-s" />
+    <img src="/images/ui/android-statistics.webp" width="23.2%" alt="Android-统计" />
+</div>
+
+### 设置
+
+<div align="center">
+    <img src="/images/ui/desktop-settings.webp" width="64%"alt="桌面-设置" />
+    <img src="/images/ui/android-settings.webp" width="23.2%" alt="Android-设置" />
+</div>
+
+### 通知
+
+<div align="center">
+    <img src="/images/ui/desktop-tray-and-notification.webp" width="64%" alt="桌面-托盘和通知" />
+    <img src="/images/ui/android-notification.webp" width="23.2%" alt="Android-通知" />
+</div>
