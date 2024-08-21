@@ -22,9 +22,6 @@ import com.mean.traclock.R
 import com.mean.traclock.timer.TimerService
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.utils.Utils
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 actual class NotificationRepository(
     private val context: Context,
@@ -105,7 +102,7 @@ actual class NotificationRepository(
                 } else {
                     context.getString(R.string.stopped).uppercase()
                 }
-                ),
+            ),
         )
         content.setViewVisibility(R.id.project_name, VISIBLE)
         val notification: Builder =
