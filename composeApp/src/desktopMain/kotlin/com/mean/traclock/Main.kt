@@ -32,27 +32,26 @@ import traclock.composeapp.generated.resources.logo
 import traclock.composeapp.generated.resources.start
 import traclock.composeapp.generated.resources.stop
 
-fun main() =
+fun main() {
+    initLogger()
+    val database = getAppDatabase()
+    val recordsRepo = RecordsRepository(database.recordDao())
+    val projectsRepo = ProjectsRepository(database.projectDao(), database.recordDao())
+    val dataStore =
+        getDataStore { (System.getProperty("user.home").toPath() / ".traclock" / DATA_STORE_FILE_NAME).toString() }
+    val datastoreRepo = DatastoreRepository(dataStore)
+    val notificationRepo = NotificationRepository()
+    val timerRepo =
+        TimerRepository(
+            notificationRepo = notificationRepo,
+            projectsRepo = projectsRepo,
+            recordsRepo = recordsRepo,
+            datastoreRepo = datastoreRepo,
+        )
     application {
-        initLogger()
         val scope = rememberCoroutineScope()
-        val database = getAppDatabase()
-        val recordsRepo = RecordsRepository(database.recordDao())
-        val projectsRepo = ProjectsRepository(database.projectDao(), database.recordDao())
-        val dataStore =
-            getDataStore { (System.getProperty("user.home").toPath() / ".traclock" / DATA_STORE_FILE_NAME).toString() }
-        val datastoreRepo = DatastoreRepository(dataStore)
         val trayState = rememberTrayState()
-        val notificationRepo = NotificationRepository()
         notificationRepo.init(trayState)
-        val timerRepo =
-            TimerRepository(
-                notificationRepo = notificationRepo,
-                projectsRepo = projectsRepo,
-                recordsRepo = recordsRepo,
-                datastoreRepo = datastoreRepo,
-            )
-
         var isVisible by remember { mutableStateOf(true) }
         val isTiming by timerRepo.isTiming.collectAsState()
 
@@ -81,8 +80,13 @@ fun main() =
                     enabled = !isTiming,
                     onClick = { scope.launch { timerRepo.start() } },
                 )
-                Item(stringResource(Res.string.stop), enabled = isTiming, onClick = { scope.launch { timerRepo.stop() } })
+                Item(
+                    stringResource(Res.string.stop),
+                    enabled = isTiming,
+                    onClick = { scope.launch { timerRepo.stop() } },
+                )
                 Item(stringResource(Res.string.exit), onClick = ::exitApplication)
             },
         )
     }
+}

@@ -59,7 +59,6 @@ class TimerRepository(
      */
     suspend fun start(projectId: Long? = null) {
         mutex.withLock {
-            Logger.d("开始计时: $projectId")
             _isTiming.value = true
             //
             timer =
@@ -69,7 +68,7 @@ class TimerRepository(
                     timer!!.start()
                 } else {
                     Timer(projectId)
-                }
+                }.also { Logger.d("开始计时: ${projectsRepo.projects[it.projectId]?.name}") }
             updateNotification()
             datastoreRepo.saveTimer(timer!!)
         }
