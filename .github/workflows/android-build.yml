@@ -44,4 +44,4 @@ jobs:
         with:
           key: ${{ secrets.KEY }}
           msgtype: "file"
-          content: composeApp/build/outputs/apk/release/*.apk
+          content: composeApp/build/outputs/apk/release/composeApp-arm64-v8a-release.apk

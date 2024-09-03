@@ -126,6 +126,12 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            splits {
+                abi {
+                    isEnable = true
+                    isUniversalApk = false
+                }
+            }
         }
         getByName("debug") {
             applicationIdSuffix = ".debug"
