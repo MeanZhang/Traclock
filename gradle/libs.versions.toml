@@ -32,7 +32,7 @@ dotenv = "4.0.0"
 spotless = "6.25.0"
 ktlint = "1.2.1"
 filekit = "0.8.7"
-koalaplot = "0.6.4"
+koalaplot = "0.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
