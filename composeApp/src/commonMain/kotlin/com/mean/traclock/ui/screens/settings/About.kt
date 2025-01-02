@@ -54,7 +54,6 @@ import traclock.composeapp.generated.resources.back
 import traclock.composeapp.generated.resources.developer
 import traclock.composeapp.generated.resources.developer_introduction
 import traclock.composeapp.generated.resources.github_page
-import traclock.composeapp.generated.resources.ic_logo
 import traclock.composeapp.generated.resources.others
 import traclock.composeapp.generated.resources.title_activity_open_source_licenses
 

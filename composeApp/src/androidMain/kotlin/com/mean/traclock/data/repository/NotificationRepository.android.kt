@@ -93,13 +93,13 @@ actual class NotificationRepository(
         content.setTextViewText(
             R.id.project_name,
             "$projectName·" + (
-                    if (isRunning) {
-                        context.getString(R.string.tracking)
-                            .uppercase()
-                    } else {
-                        context.getString(R.string.stopped).uppercase()
-                    }
-                    ),
+                if (isRunning) {
+                    context.getString(R.string.tracking)
+                        .uppercase()
+                } else {
+                    context.getString(R.string.stopped).uppercase()
+                }
+            ),
         )
         content.setViewVisibility(R.id.project_name, VISIBLE)
         val notification: Builder =

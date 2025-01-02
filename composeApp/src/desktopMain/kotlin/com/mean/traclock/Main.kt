@@ -1,8 +1,5 @@
 package com.mean.traclock
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,8 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -89,7 +84,8 @@ fun main() =
                 Item(
                     stringResource(Res.string.stop),
                     enabled = isTiming,
-                    onClick = { scope.launch { timerRepo.stop() } })
+                    onClick = { scope.launch { timerRepo.stop() } },
+                )
                 Item(stringResource(Res.string.exit), onClick = ::exitApplication)
             },
         )

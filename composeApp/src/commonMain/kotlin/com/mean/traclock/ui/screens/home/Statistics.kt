@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import co.touchlab.kermit.Logger
 import com.mean.traclock.data.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.components.NoData
@@ -153,13 +151,13 @@ private fun Content(
     }
 }
 
-//@Composable
-//private fun Content2(
+// @Composable
+// private fun Content2(
 //    viewModel: MainViewModel,
 //    projectsTimeFlow: Flow<List<Record>>,
 //    contentPadding: PaddingValues,
 //    modifier: Modifier = Modifier,
-//) {
+// ) {
 //    val projectsTime by projectsTimeFlow.collectAsState(listOf())
 //    val data =
 //        projectsTime.associate { Pair(viewModel.projects[it.project]!!.name, (it.endTime - it.startTime).toInt()) }
@@ -181,5 +179,4 @@ private fun Content(
 //    ) { computationMessages ->
 //        computationMessages.forEach { println("[DEMO APP MESSAGE] $it") }
 //    }
-//}
-
+// }
