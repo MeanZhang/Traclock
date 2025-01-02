@@ -33,6 +33,6 @@ jobs:
       - name: 格式检查
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ALIAS }}
+          KEY_ALIAS: ${{ vars.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: chmod +x gradlew && ./gradlew spotlessCheck

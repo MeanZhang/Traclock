@@ -111,7 +111,7 @@ fun BackupRestore(
                 onClick = {
                     backupLauncher.launch(
                         baseName = "traclock_backup_" + TimeUtils.getDateTimeStringWithoutSeperator(),
-                        extension = ".csv",
+                        extension = "csv",
                     )
                 },
             )

@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.hilt)
 }
 
 kotlin {
@@ -36,6 +35,8 @@ kotlin {
             implementation(libs.accompanist.permissions)
             // material-components
             implementation(libs.androidx.material)
+            // Lets-Plot
+//            implementation(libs.skiko.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -61,8 +62,6 @@ kotlin {
             implementation(libs.datastore.preferences.core)
             // Kermit日志
             implementation(libs.kermit)
-            // Hilt
-            implementation(libs.hilt.android)
             // TimePicker
             implementation(project(":timepicker"))
             // FileKit
@@ -71,10 +70,16 @@ kotlin {
             implementation(libs.vico.compose)
             // Koala Plot
             implementation(libs.koalaplot.core)
+            // Lets-Plot
+//            implementation(libs.lets.plot.kotlin.kernel)
+//            implementation(libs.lets.plot.common)
+//            implementation(libs.lets.plot.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            // Lets-Plot
+//            implementation(libs.platf.awt)
         }
     }
 }
@@ -126,18 +131,19 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
-            splits {
-                abi {
-                    isEnable = true
-                    isUniversalApk = false
-                }
-            }
         }
         getByName("debug") {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             manifestPlaceholders["APP_NAME"] = "时迹（debug）"
             signingConfig = signingConfigs.getByName("debug-mean")
+        }
+    }
+    applicationVariants.configureEach {
+        outputs.configureEach {
+            val newFileName = "${rootProject.name.replace(" ", "_")}-${name}-${versionName}.apk"
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+                newFileName
         }
     }
     compileOptions {
@@ -181,8 +187,6 @@ compose.desktop {
 dependencies {
     // Room
     add("kspCommonMainMetadata", libs.room.compiler)
-    // Hilt
-    add("kspCommonMainMetadata", libs.hilt.android.compiler)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {

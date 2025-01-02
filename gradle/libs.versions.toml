@@ -1,38 +1,40 @@
 [versions]
-agp = "8.5.2"
+agp = "8.7.3"
 android-compileSdk = "35"
 android-minSdk = "26"
 android-targetSdk = "35"
-androidx-activityCompose = "1.9.1"
+androidx-activityCompose = "1.9.3"
 androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.1.4"
-androidx-core-ktx = "1.13.1"
+androidx-constraintlayout = "2.2.0"
+androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.4"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-plugin = "1.7.1"
+compose-plugin = "1.6.11"
 junit = "4.13.2"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.1"
 # 自定义
-viewmodel = "2.8.0"
-navigation = "2.8.0-alpha10"
+navigation = "2.7.0-alpha07"
 kotlinx-datetime = "0.6.1"
 room = "2.7.0-alpha05"
 sqlite = "2.5.0-SNAPSHOT"
-ksp = "2.0.21-1.0.27"
+ksp = "2.1.0-1.0.29"
 kermit = "2.0.5"
 coil = "3.0.4"
 vico = "2.0.0-beta.2"
 datastore = "1.1.1"
 accompanist = "0.36.0"
-hilt = "2.53"
 dotenv = "4.0.0"
 spotless = "6.25.0"
 ktlint = "1.2.1"
 filekit = "0.8.7"
-koalaplot = "0.7.0"
+koalaplot = "0.6.4"
+lets-plot-kotlin-kernel = "4.9.3"
+lets-plot = "4.5.2"
+lets-plot-compose = "2.1.1"
+skiko = "0.8.12"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -59,10 +61,13 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "filekit" }
 koalaplot-core = { group = "io.github.koalaplot", name = "koalaplot-core", version.ref = "koalaplot" }
+lets-plot-kotlin-kernel = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-kernel", version.ref = "lets-plot-kotlin-kernel" }
+lets-plot-common = { group = "org.jetbrains.lets-plot", name = "lets-plot-common", version.ref = "lets-plot" }
+platf-awt = { group = "org.jetbrains.lets-plot", name = "platf-awt", version.ref = "lets-plot" }
+lets-plot-compose = { group = "org.jetbrains.lets-plot", name = "lets-plot-compose", version.ref = "lets-plot-compose" }
+skiko-android = { group = "org.jetbrains.skiko", name = "skiko-android-runtime-arm64", version.ref = "skiko" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -73,6 +78,5 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 # 自定义
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 dotenv = { id = "co.uzzu.dotenv.gradle", version.ref = "dotenv" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

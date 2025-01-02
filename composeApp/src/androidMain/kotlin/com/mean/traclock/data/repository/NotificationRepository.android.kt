@@ -34,8 +34,6 @@ actual class NotificationRepository(
         private const val TIMER_NOTIFICATION_ID = Int.MAX_VALUE - 1
     }
 
-    private var channelBuilt = false
-
     private val notificationManager =
         NotificationManagerCompat.from(context)
 
@@ -47,7 +45,6 @@ actual class NotificationRepository(
                 NotificationManager.IMPORTANCE_DEFAULT,
             )
         notificationManager.createNotificationChannel(channel)
-        channelBuilt = true
     }
 
     fun build(
@@ -96,13 +93,13 @@ actual class NotificationRepository(
         content.setTextViewText(
             R.id.project_name,
             "$projectName·" + (
-                if (isRunning) {
-                    context.getString(R.string.tracking)
-                        .uppercase()
-                } else {
-                    context.getString(R.string.stopped).uppercase()
-                }
-            ),
+                    if (isRunning) {
+                        context.getString(R.string.tracking)
+                            .uppercase()
+                    } else {
+                        context.getString(R.string.stopped).uppercase()
+                    }
+                    ),
         )
         content.setViewVisibility(R.id.project_name, VISIBLE)
         val notification: Builder =
@@ -137,9 +134,7 @@ actual class NotificationRepository(
                 isRunning,
                 startTime,
             )
-        if (!channelBuilt) {
-            buildChannel()
-        }
+        buildChannel()
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS,

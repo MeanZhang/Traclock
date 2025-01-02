@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import com.mean.traclock.data.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.components.NoData
@@ -150,3 +152,34 @@ private fun Content(
         NoData(stringResource(Res.string.no_record), modifier = modifier.padding(contentPadding))
     }
 }
+
+//@Composable
+//private fun Content2(
+//    viewModel: MainViewModel,
+//    projectsTimeFlow: Flow<List<Record>>,
+//    contentPadding: PaddingValues,
+//    modifier: Modifier = Modifier,
+//) {
+//    val projectsTime by projectsTimeFlow.collectAsState(listOf())
+//    val data =
+//        projectsTime.associate { Pair(viewModel.projects[it.project]!!.name, (it.endTime - it.startTime).toInt()) }
+//    val duration = projectsTime.sumOf { it.endTime - it.startTime } / 1000
+//    val selected = remember { mutableIntStateOf(-1) }
+//    val piePlot = letsPlot(
+//        mapOf(
+//            "name" to data.keys.toList(),
+//            "value" to data.values.toList()
+//        )
+//    ) +
+//            geomPie(stat = Stat.identity, size = 0.5, sizeUnit = "x") {
+//                slice = "value"
+//                fill = "name"
+//            }
+//    PlotPanel(
+//        figure = piePlot,
+//        modifier = Modifier.fillMaxSize()
+//    ) { computationMessages ->
+//        computationMessages.forEach { println("[DEMO APP MESSAGE] $it") }
+//    }
+//}
+

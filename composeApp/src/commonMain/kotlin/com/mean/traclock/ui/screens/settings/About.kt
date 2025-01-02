@@ -42,6 +42,7 @@ import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.utils.Utils.openUrl
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -57,7 +58,7 @@ import traclock.composeapp.generated.resources.ic_logo
 import traclock.composeapp.generated.resources.others
 import traclock.composeapp.generated.resources.title_activity_open_source_licenses
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun About(
     navBack: () -> Unit,
@@ -91,7 +92,7 @@ fun About(
                 .padding(WindowInsets.navigationBars.asPaddingValues()),
         ) {
             AsyncImage(
-                model = Res.drawable.ic_logo,
+                model = Res.getUri("drawable/ic_logo.xml"),
                 contentDescription = stringResource(Res.string.app_name),
                 modifier =
                     Modifier
