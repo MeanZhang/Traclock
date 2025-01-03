@@ -2,9 +2,11 @@ package com.mean.traclock.data.repository
 
 import com.mean.traclock.data.Record
 import com.mean.traclock.data.database.RecordDao
+import com.mean.traclock.utils.TimeUtils.toInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
 
 class RecordsRepository(private val recordDao: RecordDao) {
     suspend fun insert(record: Record) = withContext(Dispatchers.IO) { recordDao.insert(record) }
@@ -23,11 +25,21 @@ class RecordsRepository(private val recordDao: RecordDao) {
 
     suspend fun delete(record: Record) = withContext(Dispatchers.IO) { recordDao.delete(record) }
 
-    fun getProjectsTimeOfDay(date: Int) = recordDao.getProjectsTimeOfDay(date)
-
     suspend fun get(id: Long): Record = withContext(Dispatchers.IO) { recordDao.get(id) }
 
     suspend fun update(record: Record) = withContext(Dispatchers.IO) { recordDao.update(record) }
 
     suspend fun getRecordsList() = withContext(Dispatchers.IO) { recordDao.getRecordsList() }
+
+    fun getProjectsTimeOfPeriod(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ) = recordDao.getProjectsTimeOfPeriod(startDate.toInt(), endDate.toInt())
+
+    fun getAllRecordsNumber(): Flow<Int> = recordDao.getAllRecordsNumber()
+
+    fun getRecordsNumber(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): Flow<Int> = recordDao.getRecordsNumber(startDate.toInt(), endDate.toInt())
 }

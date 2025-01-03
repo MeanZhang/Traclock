@@ -91,13 +91,13 @@ fun About(
                 .padding(WindowInsets.navigationBars.asPaddingValues()),
         ) {
             AsyncImage(
-                model = Res.getUri("drawable/ic_logo.xml"),
+                model = Res.getUri("drawable/ic_logo.svg"),
                 contentDescription = stringResource(Res.string.app_name),
                 modifier =
                     Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(vertical = 24.dp)
-                        .size(72.dp)
+                        .size(64.dp)
                         .fillMaxWidth(),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
             )

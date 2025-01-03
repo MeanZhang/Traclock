@@ -2,6 +2,7 @@ package com.mean.traclock.utils
 
 import androidx.compose.ui.text.intl.Locale
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -14,6 +15,8 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 import kotlin.time.DurationUnit
@@ -60,6 +63,50 @@ object TimeUtils {
             }
         }
 
+    private val DATE_FORMAT_WITHOUT_DAY_OF_WEEK =
+        LocalDate.Format {
+//        byUnicodePattern(
+//                when (Locale.current.language) {
+//                    "zh" -> "MMMd日"
+//                    else -> "MMM d"
+//                }
+//        )
+            when (Locale.current.language) {
+                "zh" -> {
+                    monthNumber(padding = Padding.NONE)
+                    char('月')
+                    dayOfMonth(padding = Padding.NONE)
+                    chars("日")
+                }
+
+                else -> {
+                    monthName(MonthNames.ENGLISH_ABBREVIATED)
+                    char(' ')
+                    dayOfMonth(Padding.NONE)
+                }
+            }
+        }
+
+    private val MONTH_FORMAT =
+        LocalDate.Format {
+            when (Locale.current.language) {
+                "zh" -> {
+                    year(padding = Padding.NONE)
+                    char('年')
+                    monthNumber(padding = Padding.NONE)
+                    char('月')
+                }
+
+                else -> {
+                    monthName(MonthNames.ENGLISH_ABBREVIATED)
+                    char(' ')
+                    year(padding = Padding.NONE)
+                }
+            }
+        }
+
+    fun LocalDate.toInt(): Int = year * 10000 + monthNumber * 100 + dayOfMonth
+
     /**
      * 获取以整数表示的日期
      * @param timestamp 时间戳，以毫秒为单位
@@ -67,7 +114,7 @@ object TimeUtils {
      */
     fun getIntDate(timestamp: Long = now()): Int {
         val time = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault())
-        return time.year * 10000 + time.monthNumber * 100 + time.dayOfMonth
+        return time.date.toInt()
     }
 
     /**
@@ -94,27 +141,22 @@ object TimeUtils {
 
     /**
      * 获取时长字符串
-     * @param startTime 开始时间的时间戳
-     * @param endTime 结束时间的时间戳
-     * @param useMillisecond 时间戳单位是否为毫秒
+     * @param startTime 开始时间的时间戳（毫秒）
+     * @param endTime 结束时间的时间戳（毫秒）
      * @return 精确到秒的时间字符串，格式为 `HH:mm:ss`
      */
     fun getDurationString(
         startTime: Long,
         endTime: Long,
-        useMillisecond: Boolean = true,
-    ): String {
-        val last = if (useMillisecond) abs(startTime - endTime) / 1000 else abs(startTime - endTime)
-        return getDurationString(last)
-    }
+    ): String = getDurationString(abs(startTime - endTime))
 
     /**
      * 获取时长字符串
-     * @param duration 时长秒数
+     * @param duration 时长毫秒数
      * @return 精确到秒的时间字符串，格式为`HH:mm:ss`
      */
     fun getDurationString(duration: Long): String {
-        val d = duration.toDuration(DurationUnit.SECONDS)
+        val d = duration.toDuration(DurationUnit.MILLISECONDS)
         return d.toComponents { hours, minutes, seconds, _ ->
             "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${
                 seconds.toString().padStart(2, '0')
@@ -127,7 +169,7 @@ object TimeUtils {
      * @param timestamp 时间戳（毫秒）
      * @return 日期字符串，格式为`yyyy-MM-dd`
      */
-    fun getDataStringWithYear(timestamp: Long): String {
+    fun getDateStringWithYear(timestamp: Long): String {
         val date = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault()).date
         return date.format(LocalDate.Format { byUnicodePattern("yyyy-MM-dd") })
     }
@@ -137,9 +179,9 @@ object TimeUtils {
      * @param timestamp 时间戳（毫秒）
      * @return 带年份的日期字符串，格式为系统时区的日期
      */
-    fun getDataString(timestamp: Long): String {
+    fun getDateString(timestamp: Long): String {
         val date = getDate(timestamp)
-        return getDataString(date)
+        return getDateString(date)
     }
 
     /**
@@ -147,12 +189,30 @@ object TimeUtils {
      * @param dateInt 以整数表示的日期，例如20211231
      * @return 日期字符串，格式为系统时区的日期
      */
-    fun getDataString(dateInt: Int): String {
+    fun getDateString(dateInt: Int): String = getDateString(getDate(dateInt))
+
+    fun getDate(dateInt: Int): LocalDate {
         val year = dateInt / 10000
         val month = (dateInt / 100) % 100
         val day = dateInt % 100
-        val date = LocalDate(year, month, day)
-        return getDataString(date)
+        return LocalDate(year, month, day)
+    }
+
+    /**
+     * 获取日期所在星期的星期一
+     * @param date [LocalDate]
+     */
+    fun getMonday(date: LocalDate): LocalDate {
+        val dayOfWeek = date.dayOfWeek.value
+        val monday = date.minus(dayOfWeek - 1, DateTimeUnit.DAY)
+        return monday
+    }
+
+    fun getFirstDayOfMonth(date: LocalDate): LocalDate = date.minus(date.dayOfMonth - 1, DateTimeUnit.DAY)
+
+    fun getLastDayOfMonth(date: LocalDate): LocalDate {
+        val nextMonth = getFirstDayOfMonth(date).plus(1, DateTimeUnit.MONTH)
+        return nextMonth.minus(1, DateTimeUnit.DAY)
     }
 
     /**
@@ -160,12 +220,29 @@ object TimeUtils {
      * @param date [LocalDate]
      * @return 日期字符串，格式为系统时区的日期
      */
-    private fun getDataString(date: LocalDate): String {
+    fun getDateString(date: LocalDate): String {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         if (date.compareTo(today) == 0) {
             return if (Locale.current.language == "zh") "今天" else "Today"
         }
         return DATE_FORMAT.format(date)
+    }
+
+    /**
+     * 获取不带星期几的日期字符串
+     * @param date [LocalDate]
+     * @return 日期字符串，格式为系统时区的日期
+     */
+    fun getDateStringWithoutDayOfWeek(date: LocalDate): String {
+        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        if (date.compareTo(today) == 0) {
+            return if (Locale.current.language == "zh") "今天" else "Today"
+        }
+        return DATE_FORMAT_WITHOUT_DAY_OF_WEEK.format(date)
+    }
+
+    fun getMonthString(date: LocalDate): String {
+        return MONTH_FORMAT.format(date)
     }
 
     /**
@@ -211,4 +288,6 @@ object TimeUtils {
         val time = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         return dateTimeFormat.format(time)
     }
+
+    fun getCurrentDate(): LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 }

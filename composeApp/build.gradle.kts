@@ -17,7 +17,6 @@ kotlin {
     }
 
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -58,6 +57,7 @@ kotlin {
             implementation(libs.sqlite.bundled)
             // Coil（Compose的Image会缺角）
             implementation(libs.coil.compose)
+            implementation(libs.coil.svg)
             // DataStore
             implementation(libs.datastore.preferences.core)
             // Kermit日志
@@ -96,8 +96,8 @@ android {
         applicationId = "com.mean.traclock"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 4
+        versionName = "1.3.0"
         vectorDrawables {
             useSupportLibrary = true
         }

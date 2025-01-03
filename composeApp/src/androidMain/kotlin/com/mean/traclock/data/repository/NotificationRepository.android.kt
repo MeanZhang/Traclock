@@ -38,13 +38,15 @@ actual class NotificationRepository(
         NotificationManagerCompat.from(context)
 
     private fun buildChannel() {
-        val channel =
-            NotificationChannel(
-                TIMER_NOTIFICATION_CHANNEL_ID,
-                context.getString(R.string.default_label),
-                NotificationManager.IMPORTANCE_DEFAULT,
-            )
-        notificationManager.createNotificationChannel(channel)
+        if (notificationManager.getNotificationChannel(TIMER_NOTIFICATION_CHANNEL_ID) == null) {
+            val channel =
+                NotificationChannel(
+                    TIMER_NOTIFICATION_CHANNEL_ID,
+                    context.getString(R.string.default_label),
+                    NotificationManager.IMPORTANCE_DEFAULT,
+                )
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     fun build(

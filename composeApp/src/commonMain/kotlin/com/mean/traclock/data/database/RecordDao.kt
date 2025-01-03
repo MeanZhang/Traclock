@@ -79,16 +79,17 @@ interface RecordDao {
     @Query(
         "SELECT Project.id AS project," +
             "0 AS startTime," +
-            "SUM(endTime - startTime)/1000 AS endTime," +
+            "SUM(endTime - startTime) AS endTime," +
             "0 AS date," +
             "0 AS id " +
             "FROM Project LEFT JOIN Record " +
             "ON Record.project=Project.id " +
-            "GROUP BY Project.name",
+            "GROUP BY Project.name " +
+            "ORDER BY endTime DESC",
     )
     fun getProjectsTime(): Flow<List<Record>>
 
-    @Query("SELECT date, SUM(endTime - startTime)/1000 AS time FROM Record GROUP BY date")
+    @Query("SELECT date, SUM(endTime - startTime) AS time FROM Record GROUP BY date")
     fun getTimeOfDays(): Flow<
         Map<
             @MapColumn(columnName = "date")
@@ -100,7 +101,7 @@ interface RecordDao {
 
     @Query(
         "SELECT date," +
-            "SUM(endTime - startTime)/1000 AS time " +
+            "SUM(endTime - startTime) AS time " +
             "FROM Record " +
             "WHERE project = :projectId " +
             "GROUP BY date",
@@ -121,7 +122,7 @@ interface RecordDao {
     @Query(
         "SELECT project," +
             "0 AS startTime," +
-            "SUM(endTime - startTime)/1000 AS endTime," +
+            "SUM(endTime - startTime) AS endTime," +
             "date, id " +
             "FROM Record " +
             "GROUP BY project, date " +
@@ -144,8 +145,21 @@ interface RecordDao {
             "SUM(endTime - startTime) AS endTime," +
             "date, id " +
             "FROM Record " +
-            "WHERE date=:date " +
-            "GROUP BY project",
+            "WHERE date>=:startDate AND date<=:endDate AND endTime<>0 " +
+            "GROUP BY project " +
+            "ORDER BY endTime DESC",
     )
-    fun getProjectsTimeOfDay(date: Int): Flow<List<Record>>
+    fun getProjectsTimeOfPeriod(
+        startDate: Int,
+        endDate: Int,
+    ): Flow<List<Record>>
+
+    @Query("SELECT COUNT(*) FROM Record")
+    fun getAllRecordsNumber(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM Record WHERE date>=:startDate AND date<=:endDate")
+    fun getRecordsNumber(
+        startDate: Int,
+        endDate: Int,
+    ): Flow<Int>
 }

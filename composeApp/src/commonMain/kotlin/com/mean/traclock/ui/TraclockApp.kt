@@ -38,6 +38,7 @@ import com.mean.traclock.viewmodels.EditProjectViewModel
 import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.MainViewModel
 import com.mean.traclock.viewmodels.ProjectViewModel
+import com.mean.traclock.viewmodels.StatisticViewModel
 
 @Composable
 fun TraclockApp(
@@ -79,7 +80,17 @@ fun TraclockApp(
                     )
                 }
                 composable(HomeRoute.STATISTICS.route) {
-                    Statistics(modifier = Modifier.fillMaxSize(), viewModel = viewModel)
+                    Statistics(
+                        modifier = Modifier.fillMaxSize(),
+                        viewModel =
+                            viewModel {
+                                StatisticViewModel(
+                                    recordsRepo = recordsRepo,
+                                    projectsRepo = projectsRepo,
+                                    timerRepo = timerRepo,
+                                )
+                            },
+                    )
                 }
                 composable(HomeRoute.SETTINGS.route) {
                     Settings(
