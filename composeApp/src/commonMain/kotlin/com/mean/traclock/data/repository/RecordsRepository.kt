@@ -42,4 +42,15 @@ class RecordsRepository(private val recordDao: RecordDao) {
         startDate: LocalDate,
         endDate: LocalDate,
     ): Flow<Int> = recordDao.getRecordsNumber(startDate.toInt(), endDate.toInt())
+
+    fun getRecords(date: LocalDate): Flow<List<Record>> = recordDao.getRecords(date.toInt())
+
+    fun getRecords(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): Flow<List<Record>> = recordDao.getRecords(startDate.toInt(), endDate.toInt())
+
+    fun getAllRecords(): Flow<List<Record>> = recordDao.getAllRecords()
+
+    fun getDurationsOfYears(): Flow<Map<Int, Long>> = recordDao.getDurationsOfYears()
 }

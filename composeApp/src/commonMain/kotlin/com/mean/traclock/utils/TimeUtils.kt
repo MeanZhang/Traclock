@@ -25,7 +25,7 @@ import kotlin.time.toDuration
 @OptIn(FormatStringsInDatetimeFormats::class)
 object TimeUtils {
     @JvmStatic
-    private val CHINESE_DAY_OF_WEEK_NAMES =
+    val CHINESE_DAY_OF_WEEK_NAMES =
         DayOfWeekNames(
             listOf(
                 "星期一",
@@ -227,31 +227,6 @@ object TimeUtils {
     }
 
     /**
-     * 获取用于显示的日期字符串，例如`今天`或`12月31日星期五`或`2021年12月31日星期五`
-     * @param date [LocalDate]
-     * @return 日期字符串
-     */
-    @JvmStatic
-    fun getDisplayDateWithoutDayofWeek(date: LocalDate): String {
-        val today = getToday()
-        if (today == date) {
-            return "今天"
-        }
-        val format =
-            LocalDate.Format {
-                if (today.year != date.year) {
-                    year(padding = Padding.NONE)
-                    char('年')
-                }
-                monthNumber(padding = Padding.NONE)
-                char('月')
-                dayOfMonth(padding = Padding.NONE)
-                char('日')
-            }
-        return format.format(date)
-    }
-
-    /**
      * 获取用于显示的时间段字符串，例如`2021年1月1日至2022年1月1日`、`2021年1月1日至2月1日`、`2021年1月1日至2日`、`1月1日至2月1日`、`1月1日至2日`
      * @param startDate 开始日期
      * @param endDate 结束日期
@@ -437,4 +412,13 @@ object TimeUtils {
      */
     @JvmStatic
     fun getToday(): LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+    fun getMillisOfDay(timestamp: Long): Int {
+        val time = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault()).time
+        return time.toMillisecondOfDay()
+    }
+
+    fun getDayOfWeek(date: LocalDate): Int = date.dayOfWeek.value
+
+    fun getDayOfWeek(date: Int): Int = getDate(date).dayOfWeek.value
 }

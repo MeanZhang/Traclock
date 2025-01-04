@@ -136,8 +136,25 @@ interface RecordDao {
         >,
     >
 
+    /**
+     * 获取指定日期的记录
+     * @param date 指定日期，如`20210101`
+     * @return 指定日期的记录
+     */
     @Query("SELECT *, id FROM Record WHERE date=:date")
-    fun getRecordsOfDay(date: Int): Flow<List<Record>>
+    fun getRecords(date: Int): Flow<List<Record>>
+
+    /**
+     * 获取指定日期范围内的记录
+     * @param startDate 开始日期，如`20210101`
+     * @param endDate 结束日期，如`20210131`
+     * @return 指定日期范围内的记录
+     */
+    @Query("SELECT *, id FROM Record WHERE date>=:startDate AND date<=:endDate")
+    fun getRecords(
+        startDate: Int,
+        endDate: Int,
+    ): Flow<List<Record>>
 
     @Query(
         "SELECT project," +
@@ -162,4 +179,29 @@ interface RecordDao {
         startDate: Int,
         endDate: Int,
     ): Flow<Int>
+
+    /**
+     * 获取所有记录
+     * @return 所有记录
+     */
+    @Query("SELECT *, id FROM Record")
+    fun getAllRecords(): Flow<List<Record>>
+
+    /**
+     * 获取每年的总时长
+     * @return 每年的总时长
+     */
+    @Query("SELECT date/10000 AS year, SUM(endTime - startTime) AS time FROM Record GROUP BY year ORDER BY year DESC")
+    fun getDurationsOfYears(): Flow<
+        Map<
+            @MapColumn(
+                columnName = "year",
+            )
+            Int,
+            @MapColumn(
+                columnName = "time",
+            )
+            Long,
+        >,
+    >
 }

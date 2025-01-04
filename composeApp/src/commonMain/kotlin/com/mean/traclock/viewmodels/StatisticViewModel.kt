@@ -9,6 +9,7 @@ import com.mean.traclock.ui.screens.home.Period
 import com.mean.traclock.ui.screens.home.PeriodType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDate
 
 class StatisticViewModel(
     private val recordsRepo: RecordsRepository,
@@ -33,4 +34,22 @@ class StatisticViewModel(
         }
         return recordsRepo.getRecordsNumber(period.startDate, period.endDate)
     }
+
+    fun getRecords(date: LocalDate): Flow<List<Record>> = recordsRepo.getRecords(date)
+
+    fun getRecords(period: Period): Flow<List<Record>> {
+        return when (period.type) {
+            PeriodType.ALL_TIME -> {
+                recordsRepo.getAllRecords()
+            }
+            PeriodType.DAY -> {
+                recordsRepo.getRecords(period.startDate)
+            }
+            else -> {
+                recordsRepo.getRecords(period.startDate, period.endDate)
+            }
+        }
+    }
+
+    fun getDurationsOfYears(): Flow<Map<Int, Long>> = recordsRepo.getDurationsOfYears()
 }
