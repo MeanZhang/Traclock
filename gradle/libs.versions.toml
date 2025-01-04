@@ -34,7 +34,7 @@ ktlint = "1.2.1"
 filekit = "0.8.7"
 # FIXME Implemented only in JetBrains fork.
 #koalaplot = "0.7.1"
-koalaplot = "0.6.4"
+koalaplot = "0.7.1"
 lets-plot-kotlin-kernel = "4.9.3"
 lets-plot = "4.5.2"
 lets-plot-compose = "2.1.1"
