@@ -263,18 +263,26 @@ object TimeUtils {
         endDate: LocalDate,
     ): String {
         val today = getToday()
-        val startFormat =
-            LocalDate.Format {
-                if (today.year != startDate.year || startDate.year != endDate.year) {
-                    year(padding = Padding.NONE)
-                    char('年')
-                }
-                monthNumber(padding = Padding.NONE)
-                char('月')
-                dayOfMonth(padding = Padding.NONE)
-                char('日')
+        val start =
+            if (today == startDate) {
+                "今天"
+            } else {
+                val startFormat =
+                    LocalDate.Format {
+                        if (today.year != startDate.year || startDate.year != endDate.year) {
+                            year(padding = Padding.NONE)
+                            char('年')
+                        }
+                        monthNumber(padding = Padding.NONE)
+                        char('月')
+                        dayOfMonth(padding = Padding.NONE)
+                        char('日')
+                    }
+                startFormat.format(startDate)
             }
-        val start = startFormat.format(startDate)
+        if (startDate == endDate) {
+            return start
+        }
         val end =
             if (today == endDate) {
                 "今天"

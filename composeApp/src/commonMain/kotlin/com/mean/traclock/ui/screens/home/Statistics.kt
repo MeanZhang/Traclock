@@ -96,7 +96,10 @@ private fun Content(
                 )
             }
         }
-        Column(modifier = Modifier.verticalScroll(scrollableState), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.verticalScroll(scrollableState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             if (selectedPeriod.type != PeriodType.ALL_TIME) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -136,6 +139,9 @@ private fun Content(
             Row {
                 SimpleStatisticItem("记录数", recordsNumber.toString(), modifier = Modifier.weight(1f))
                 SimpleStatisticItem("时长", TimeUtils.getDurationString(duration), modifier = Modifier.weight(1f))
+            }
+            if (selectedPeriod.type == PeriodType.DAY) {
+            } else {
             }
             HorizontalDivider()
             if (projectsTime.isNotEmpty()) {
@@ -266,6 +272,64 @@ private fun SimpleStatisticItem(
     }
 }
 
+@Composable
+private fun DayTimeline() {
+    Column {
+        Row {
+            Text("00:00")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("12:00")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("24:00")
+        }
+    }
+}
+
+@Composable
+private fun WeekTrend() {
+    Column {
+        Row {
+            Text("周一")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("周三")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("周五")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("周日")
+        }
+    }
+}
+
+@Composable
+private fun MonthTrend() {
+    Column {
+        Row {
+            Text("1号")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("10号")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("20号")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("30号")
+        }
+    }
+}
+
+@Composable
+private fun AllTimeTrend() {
+    Column {
+        Row {
+            Text("2021")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("2022")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("2023")
+            Spacer(modifier = Modifier.weight(1f))
+            Text("2024")
+        }
+    }
+}
+
 enum class PeriodType(val label: String) {
     DAY("天"),
     WEEK("周"),
@@ -288,14 +352,14 @@ data class Period(
                     if (endDate > today) {
                         newPeriod.copy(startDate = today, endDate = today)
                     } else {
-                        newPeriod.copy(startDate = endDate)
+                        newPeriod.copy(startDate = endDate, endDate = endDate)
                     }
             }
 
             PeriodType.WEEK -> {
                 val start = TimeUtils.getMonday(if (endDate > today) today else endDate)
                 Logger.d("start: $start")
-                val end = if (endDate >= today) today else start.plus(6, DateTimeUnit.DAY)
+                val end = if (endDate.plus(1, DateTimeUnit.WEEK) >= today) today else start.plus(6, DateTimeUnit.DAY)
                 Logger.d("end: $end")
                 newPeriod = newPeriod.copy(startDate = start, endDate = end)
             }
@@ -318,7 +382,8 @@ data class Period(
             when (type) {
                 PeriodType.DAY -> {
                     val unit = DateTimeUnit.DAY
-                    copy(startDate = startDate.minus(1, unit), endDate = endDate.minus(1, unit))
+                    val date = startDate.minus(1, unit)
+                    copy(startDate = date, endDate = date)
                 }
 
                 PeriodType.WEEK -> {
@@ -350,7 +415,7 @@ data class Period(
                     val start = startDate.plus(1, unit)
                     Logger.d("start: $start")
                     val end =
-                        if (endDate.plus(1, DateTimeUnit.MONTH) >= today) today else start.plus(6, DateTimeUnit.DAY)
+                        if (endDate.plus(1, DateTimeUnit.WEEK) >= today) today else start.plus(6, DateTimeUnit.DAY)
                     Logger.d("end: $end")
                     copy(startDate = start, endDate = end)
                 }
