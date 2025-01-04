@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.hilt)
 }
 
 kotlin {
@@ -18,7 +17,6 @@ kotlin {
     }
 
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -36,6 +34,8 @@ kotlin {
             implementation(libs.accompanist.permissions)
             // material-components
             implementation(libs.androidx.material)
+            // Lets-Plot
+//            implementation(libs.skiko.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -57,12 +57,11 @@ kotlin {
             implementation(libs.sqlite.bundled)
             // Coil（Compose的Image会缺角）
             implementation(libs.coil.compose)
+            implementation(libs.coil.svg)
             // DataStore
             implementation(libs.datastore.preferences.core)
             // Kermit日志
             implementation(libs.kermit)
-            // Hilt
-            implementation(libs.hilt.android)
             // TimePicker
             implementation(project(":timepicker"))
             // FileKit
@@ -71,10 +70,16 @@ kotlin {
             implementation(libs.vico.compose)
             // Koala Plot
             implementation(libs.koalaplot.core)
+            // Lets-Plot
+//            implementation(libs.lets.plot.kotlin.kernel)
+//            implementation(libs.lets.plot.common)
+//            implementation(libs.lets.plot.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            // Lets-Plot
+//            implementation(libs.platf.awt)
         }
     }
 }
@@ -91,8 +96,8 @@ android {
         applicationId = "com.mean.traclock"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 4
+        versionName = "1.3.0"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -132,6 +137,13 @@ android {
             versionNameSuffix = "-debug"
             manifestPlaceholders["APP_NAME"] = "时迹（debug）"
             signingConfig = signingConfigs.getByName("debug-mean")
+        }
+    }
+    applicationVariants.configureEach {
+        outputs.configureEach {
+            val newFileName = "${rootProject.name.replace(" ", "_")}-${name}-${versionName}.apk"
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+                newFileName
         }
     }
     compileOptions {
@@ -175,8 +187,6 @@ compose.desktop {
 dependencies {
     // Room
     add("kspCommonMainMetadata", libs.room.compiler)
-    // Hilt
-    add("kspCommonMainMetadata", libs.hilt.android.compiler)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {

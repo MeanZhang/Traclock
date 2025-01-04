@@ -81,7 +81,11 @@ fun main() =
                     enabled = !isTiming,
                     onClick = { scope.launch { timerRepo.start() } },
                 )
-                Item(stringResource(Res.string.stop), enabled = isTiming, onClick = { scope.launch { timerRepo.stop() } })
+                Item(
+                    stringResource(Res.string.stop),
+                    enabled = isTiming,
+                    onClick = { scope.launch { timerRepo.stop() } },
+                )
                 Item(stringResource(Res.string.exit), onClick = ::exitApplication)
             },
         )

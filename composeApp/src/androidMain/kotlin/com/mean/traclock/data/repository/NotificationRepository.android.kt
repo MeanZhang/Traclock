@@ -22,28 +22,24 @@ import com.mean.traclock.R
 import com.mean.traclock.timer.TimerService
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.utils.Utils
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-actual class NotificationRepository
-    @Inject
-    constructor(
-        @ApplicationContext private val context: Context,
-    ) {
-        companion object {
-            /** 计时通知渠道 ID */
-            private const val TIMER_NOTIFICATION_CHANNEL_ID = "TraclockNotification"
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual class NotificationRepository(
+    private val context: Context,
+) {
+    companion object {
+        /** 计时通知渠道 ID */
+        private const val TIMER_NOTIFICATION_CHANNEL_ID = "TraclockNotification"
 
-            /** 计时器通知 ID */
-            private const val TIMER_NOTIFICATION_ID = Int.MAX_VALUE - 1
-        }
+        /** 计时器通知 ID */
+        private const val TIMER_NOTIFICATION_ID = Int.MAX_VALUE - 1
+    }
 
-        private val notificationManager =
-            NotificationManagerCompat.from(context)
+    private val notificationManager =
+        NotificationManagerCompat.from(context)
 
-        private fun buildChannel() {
+    private fun buildChannel() {
+        if (notificationManager.getNotificationChannel(TIMER_NOTIFICATION_CHANNEL_ID) == null) {
             val channel =
                 NotificationChannel(
                     TIMER_NOTIFICATION_CHANNEL_ID,
@@ -52,102 +48,103 @@ actual class NotificationRepository
                 )
             notificationManager.createNotificationChannel(channel)
         }
-
-        fun build(
-            projectName: String,
-            isRunning: Boolean,
-            startTime: Long,
-        ): Notification {
-            /** 点击通知时打开应用的 Intent */
-            val showApp: Intent =
-                Intent(context, TimerService::class.java)
-                    .setAction(TimerService.ACTION_SHOW_APP)
-
-            val pendingShowApp = Utils.pendingServiceIntent(context, showApp)
-
-            val pname: String = context.packageName
-            val res: Resources = context.resources
-            val base: Long =
-                SystemClock.elapsedRealtime() - (TimeUtils.now() - startTime)
-
-            val content = RemoteViews(pname, R.layout.chronometer_notif_content)
-            content.setChronometer(R.id.chronometer, base, null, isRunning)
-
-            val actions: MutableList<Action> = ArrayList(2)
-
-            if (isRunning) {
-                // 停止按钮
-                val stop: Intent =
-                    Intent(context, TimerService::class.java)
-                        .setAction(TimerService.ACTION_STOP_TIMER)
-
-                @DrawableRes val iconStop: Int = R.drawable.ic_logo
-                val titleStop: CharSequence = res.getText(R.string.stop)
-                val intentStop: PendingIntent = Utils.pendingServiceIntent(context, stop)
-                actions.add(Action.Builder(iconStop, titleStop, intentStop).build())
-            } else {
-                // 开始按钮
-                val start: Intent =
-                    Intent(context, TimerService::class.java)
-                        .setAction(TimerService.ACTION_START_TIMER)
-
-                @DrawableRes val iconStart: Int = R.drawable.ic_logo
-                val titleStart: CharSequence = res.getText(R.string.start)
-                val intentStart: PendingIntent = Utils.pendingServiceIntent(context, start)
-                actions.add(Action.Builder(iconStart, titleStart, intentStart).build())
-            }
-            content.setTextViewText(
-                R.id.project_name,
-                "$projectName·" + (
-                    if (isRunning) {
-                        context.getString(R.string.tracking)
-                            .uppercase()
-                    } else {
-                        context.getString(R.string.stopped).uppercase()
-                    }
-                ),
-            )
-            content.setViewVisibility(R.id.project_name, VISIBLE)
-            val notification: Builder =
-                Builder(
-                    context,
-                    TIMER_NOTIFICATION_CHANNEL_ID,
-                )
-                    .setLocalOnly(true)
-                    .setOngoing(isRunning)
-                    .setCustomContentView(content)
-                    .setContentIntent(pendingShowApp)
-                    .setAutoCancel(!isRunning)
-                    .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
-                    .setSmallIcon(R.drawable.ic_logo)
-                    .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-
-            for (action in actions) {
-                notification.addAction(action)
-            }
-
-            return notification.build()
-        }
-
-        actual fun notify(
-            projectName: String,
-            isRunning: Boolean,
-            startTime: Long,
-        ) {
-            val notification: Notification =
-                build(
-                    projectName,
-                    isRunning,
-                    startTime,
-                )
-            buildChannel()
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS,
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-            notificationManager.notify(TIMER_NOTIFICATION_ID, notification)
-        }
     }
+
+    fun build(
+        projectName: String,
+        isRunning: Boolean,
+        startTime: Long,
+    ): Notification {
+        /** 点击通知时打开应用的 Intent */
+        val showApp: Intent =
+            Intent(context, TimerService::class.java)
+                .setAction(TimerService.ACTION_SHOW_APP)
+
+        val pendingShowApp = Utils.pendingServiceIntent(context, showApp)
+
+        val pname: String = context.packageName
+        val res: Resources = context.resources
+        val base: Long =
+            SystemClock.elapsedRealtime() - (TimeUtils.now() - startTime)
+
+        val content = RemoteViews(pname, R.layout.chronometer_notif_content)
+        content.setChronometer(R.id.chronometer, base, null, isRunning)
+
+        val actions: MutableList<Action> = ArrayList(2)
+
+        if (isRunning) {
+            // 停止按钮
+            val stop: Intent =
+                Intent(context, TimerService::class.java)
+                    .setAction(TimerService.ACTION_STOP_TIMER)
+
+            @DrawableRes val iconStop: Int = R.drawable.ic_logo
+            val titleStop: CharSequence = res.getText(R.string.stop)
+            val intentStop: PendingIntent = Utils.pendingServiceIntent(context, stop)
+            actions.add(Action.Builder(iconStop, titleStop, intentStop).build())
+        } else {
+            // 开始按钮
+            val start: Intent =
+                Intent(context, TimerService::class.java)
+                    .setAction(TimerService.ACTION_START_TIMER)
+
+            @DrawableRes val iconStart: Int = R.drawable.ic_logo
+            val titleStart: CharSequence = res.getText(R.string.start)
+            val intentStart: PendingIntent = Utils.pendingServiceIntent(context, start)
+            actions.add(Action.Builder(iconStart, titleStart, intentStart).build())
+        }
+        content.setTextViewText(
+            R.id.project_name,
+            "$projectName·" + (
+                if (isRunning) {
+                    context.getString(R.string.tracking)
+                        .uppercase()
+                } else {
+                    context.getString(R.string.stopped).uppercase()
+                }
+            ),
+        )
+        content.setViewVisibility(R.id.project_name, VISIBLE)
+        val notification: Builder =
+            Builder(
+                context,
+                TIMER_NOTIFICATION_CHANNEL_ID,
+            )
+                .setLocalOnly(true)
+                .setOngoing(isRunning)
+                .setCustomContentView(content)
+                .setContentIntent(pendingShowApp)
+                .setAutoCancel(!isRunning)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
+                .setSmallIcon(R.drawable.ic_logo)
+                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+
+        for (action in actions) {
+            notification.addAction(action)
+        }
+
+        return notification.build()
+    }
+
+    actual fun notify(
+        projectName: String,
+        isRunning: Boolean,
+        startTime: Long,
+    ) {
+        val notification: Notification =
+            build(
+                projectName,
+                isRunning,
+                startTime,
+            )
+        buildChannel()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS,
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        notificationManager.notify(TIMER_NOTIFICATION_ID, notification)
+    }
+}

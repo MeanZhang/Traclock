@@ -59,7 +59,7 @@ fun DateTimePicker(
                     inactiveContentColor = textColor,
                 ),
         ) {
-            Text(TimeUtils.getDataStringWithYear(initailTimeMillis))
+            Text(TimeUtils.getDateStringWithYear(initailTimeMillis))
         }
         SegmentedButton(
             shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),

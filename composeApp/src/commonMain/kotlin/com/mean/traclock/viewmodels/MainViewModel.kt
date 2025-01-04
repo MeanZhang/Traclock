@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.minus
 import org.jetbrains.compose.resources.getString
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.is_running_description
@@ -67,6 +68,4 @@ class MainViewModel(
     fun deleteRecord(record: Record) {
         viewModelScope.launch(Dispatchers.IO) { recordsRepo.delete(record) }
     }
-
-    fun getProjectsTimeOfDay(date: Int) = recordsRepo.getProjectsTimeOfDay(date)
 }

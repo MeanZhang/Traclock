@@ -30,9 +30,9 @@
 - [x] 数据持久化保存，重启后可继续计时
 - [x] 数据可备份和恢复
 - [x] 适配深色模式
+- [x] 数据统计
 - [ ] 快捷方式（Shortcuts）
 - [ ] 微件
-- [ ] 数据统计
 - [ ] ……
 
 ## 平台支持
@@ -77,8 +77,8 @@
 ### 统计
 
 <div align="center">
-    <img src="docs/images/ui/desktop-statistics.webp" width="64%"alt="桌面-s" />
-    <img src="docs/images/ui/android-statistics.webp" width="23.2%" alt="Android-统计" />
+    <img src="docs/images/ui/desktop-statistics.webp" width="65.6%"alt="桌面-统计" />
+    <img src="docs/images/ui/android-statistics.webp" width="21.5%" alt="Android-统计" />
 </div>
 
 ### 设置

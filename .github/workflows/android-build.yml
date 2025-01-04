@@ -26,12 +26,9 @@ jobs:
       - name: 构建并签名
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ALIAS }}
+          KEY_ALIAS: ${{ vars.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: chmod +x gradlew && ./gradlew assembleRelease
-
-      - name: 重命名 APK
-        run: python3 ci.py rename
 
       - name: 上传 APK
         uses: actions/upload-artifact@v4
@@ -42,6 +39,6 @@ jobs:
       - name: 发送 APK 到企业微信
         uses: MeanZhang/wecom-group-robot@v1.2
         with:
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.WEWORK_BOT_KEY }}
           msgtype: "file"
           content: composeApp/build/outputs/apk/release/*.apk

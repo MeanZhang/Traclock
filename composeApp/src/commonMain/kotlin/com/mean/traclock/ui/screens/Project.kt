@@ -119,7 +119,7 @@ fun Project(
                 records.forEach { (date, data) ->
                     stickyHeader {
                         DateTitle(
-                            date = TimeUtils.getDataString(date),
+                            date = TimeUtils.getDateString(date),
                             duration = time[date] ?: 0L,
                         )
                     }

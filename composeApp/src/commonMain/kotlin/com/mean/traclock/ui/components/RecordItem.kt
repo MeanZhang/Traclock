@@ -96,7 +96,7 @@ fun RecordItem(
                 if (detailView) {
                     "$startTime - $endTime"
                 } else {
-                    TimeUtils.getDurationString(record.startTime, record.endTime, false)
+                    TimeUtils.getDurationString(record.startTime, record.endTime)
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -104,7 +104,7 @@ fun RecordItem(
         },
         trailingContent = {
             SmallOutlinedButton(
-                text = TimeUtils.getDurationString(record.startTime, record.endTime, detailView),
+                text = TimeUtils.getDurationString(record.startTime, record.endTime),
             ) {
                 scope.launch {
                     startTiming(record.project)

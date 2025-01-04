@@ -135,7 +135,7 @@ private val LICENSES =
         ),
         License(
             "Vico",
-            "https://patrykandpatrick.com/vico/",
+            "https://github.com/patrykandpatrick/vico",
             "Apache License 2.0",
         ),
         License(

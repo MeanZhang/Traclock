@@ -9,7 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material.icons.filled.ViewDay
+import androidx.compose.material.icons.filled.ViewHeadline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
@@ -61,7 +62,10 @@ fun TimeLine(
         route = HomeRoute.TIMELINE,
         actions = {
             IconButton(onClick = viewModel::changeDetailView) {
-                Icon(Icons.Default.SwapHoriz, stringResource(Res.string.change_view))
+                Icon(
+                    imageVector = if (detailView) Icons.Default.ViewHeadline else Icons.Default.ViewDay,
+                    contentDescription = stringResource(Res.string.change_view),
+                )
             }
         },
         modifier = modifier,
@@ -88,7 +92,7 @@ fun TimeLine(
                 data.forEach { (date, data) ->
                     stickyHeader(key = date) {
                         DateTitle(
-                            date = TimeUtils.getDataString(date),
+                            date = TimeUtils.getDateString(date),
                             duration = timeOfDays[date] ?: 0L,
                         )
                     }
