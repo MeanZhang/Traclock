@@ -52,6 +52,220 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import ui.components.HomeScaffold
 
+@Composable
+fun Statistics(
+    viewModel: StatisticViewModel,
+    modifier: Modifier = Modifier,
+) {
+    HomeScaffold(route = HomeRoute.STATISTICS) { contentPadding ->
+        Content(
+            viewModel,
+            contentPadding,
+            modifier = modifier,
+        )
+    }
+}
+
+@OptIn(ExperimentalKoalaPlotApi::class, ExperimentalMaterial3Api::class)
+@Composable
+private fun Content(
+    viewModel: StatisticViewModel,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    var selectedPeriod by remember {
+        mutableStateOf(
+            Period(
+                PeriodType.DAY,
+            ),
+        )
+    }
+    val projectsTime by viewModel.getProjectsTimeOfPeriod(selectedPeriod).collectAsState(listOf())
+    val recordsNumber by viewModel.getRecordsNumber(selectedPeriod).collectAsState(0)
+    val duration = projectsTime.sumOf { it.endTime }
+    val data = projectsTime.map { (it.endTime).toFloat() }
+    var selectedProjectIndex by remember(selectedPeriod) { mutableIntStateOf(-1) }
+    val scrollableState = rememberScrollState()
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(contentPadding)) {
+        PrimaryTabRow(selectedTabIndex = selectedPeriod.type.ordinal) {
+            PeriodType.entries.forEach {
+                Tab(
+                    selected = selectedPeriod.type == it,
+                    onClick = { selectedPeriod = selectedPeriod.changeType(it) },
+                    text = { Text(it.label) },
+                )
+            }
+        }
+        Column(modifier = Modifier.verticalScroll(scrollableState), horizontalAlignment = Alignment.CenterHorizontally) {
+            if (selectedPeriod.type != PeriodType.ALL_TIME) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier =
+                        Modifier.padding(
+                            HORIZONTAL_MARGIN,
+                        ).fillMaxWidth(),
+                ) {
+                    val iconSize = 24.dp
+                    IconButton(
+                        onClick = {
+                            selectedPeriod = selectedPeriod.prev
+                        },
+                        modifier = Modifier.size(iconSize),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = "上一个",
+                        )
+                    }
+                    Text(selectedPeriod.getString())
+                    IconButton(
+                        enabled = selectedPeriod.hasNext,
+                        onClick = {
+                            selectedPeriod = selectedPeriod.next
+                        },
+                        modifier = Modifier.size(iconSize),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "下一个",
+                        )
+                    }
+                }
+            }
+            Row {
+                SimpleStatisticItem("记录数", recordsNumber.toString(), modifier = Modifier.weight(1f))
+                SimpleStatisticItem("时长", TimeUtils.getDurationString(duration), modifier = Modifier.weight(1f))
+            }
+            HorizontalDivider()
+            if (projectsTime.isNotEmpty()) {
+                PieChart(
+                    values = data,
+                    labelConnector = {},
+                    slice = { index ->
+                        val project = viewModel.projects[projectsTime[index % projectsTime.size].project]
+                        val color =
+                            Color(
+                                project?.color ?: 0,
+                            )
+                        DefaultSlice(
+                            color = color,
+                            gap = if (data.size > 1) 0.5f else 0f,
+                            clickable = true,
+                            hoverExpandFactor = 1.05f,
+                            hoverElement = {
+                                Card {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier.padding(4.dp),
+                                    ) {
+                                        viewModel.projects[projectsTime[index % projectsTime.size].project]?.let {
+                                            val endTime = projectsTime[index % projectsTime.size].endTime
+                                            Text(it.name, color = MaterialTheme.colorScheme.primary)
+                                            Text(
+                                                "${(endTime.toFloat() / projectsTime.sumOf { it.endTime }).toPercentage()}  ${
+                                                    TimeUtils.getDurationString(
+                                                        endTime,
+                                                    )
+                                                }",
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            onClick = {
+                                if (selectedProjectIndex == index) {
+                                    selectedProjectIndex = -1
+                                } else {
+                                    selectedProjectIndex = index
+                                }
+                            },
+                        )
+                    },
+                    holeSize = 0.75F,
+                    modifier = Modifier.padding(8.dp),
+                    forceCenteredPie = true,
+                )
+            }
+            projectsTime.forEachIndexed { index, project ->
+                var fontWeight by remember { mutableStateOf(FontWeight.Normal) }
+                var color by remember { mutableStateOf(Color.Black) }
+                if (index == selectedProjectIndex) {
+                    fontWeight = FontWeight.Bold
+                    color = MaterialTheme.colorScheme.primary
+                } else {
+                    fontWeight = FontWeight.Normal
+                    color = MaterialTheme.colorScheme.onSurface
+                }
+                Row(
+                    Modifier
+                        .clickable {
+                            if (selectedProjectIndex == index) {
+                                selectedProjectIndex = -1
+                            } else {
+                                selectedProjectIndex = index
+                            }
+                        }
+                        .padding(horizontal = HORIZONTAL_MARGIN, vertical = 6.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Circle,
+                        contentDescription = null,
+                        tint = Color(viewModel.projects[project.project]?.color ?: 0),
+                        modifier =
+                            Modifier
+                                .size(20.dp)
+                                .padding(end = 8.dp),
+                    )
+                    Text(
+                        viewModel.projects[project.project]?.name ?: "",
+                        fontWeight = fontWeight,
+                        color = color,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        ((project.endTime).toFloat() / projectsTime.sumOf { it.endTime }).toPercentage(),
+                        fontWeight = fontWeight,
+                        color = color,
+                        modifier = Modifier.padding(end = 16.dp),
+                    )
+                    Text(
+                        TimeUtils.getDurationString(project.endTime),
+                        fontWeight = fontWeight,
+                        fontFamily = FontFamily.Monospace,
+                        color = color,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SimpleStatisticItem(
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            description,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp, bottom = 4.dp),
+        )
+        Text(
+            title,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 16.dp),
+        )
+    }
+}
+
 enum class PeriodType(val label: String) {
     DAY("天"),
     WEEK("周"),
@@ -61,13 +275,13 @@ enum class PeriodType(val label: String) {
 
 data class Period(
     val type: PeriodType,
-    val startDate: LocalDate = TimeUtils.getCurrentDate(),
-    val endDate: LocalDate = TimeUtils.getCurrentDate(),
+    val startDate: LocalDate = TimeUtils.getToday(),
+    val endDate: LocalDate = TimeUtils.getToday(),
 ) {
     fun changeType(newType: PeriodType): Period {
         Logger.d("切换周期类型为${newType.label}")
         var newPeriod = this.copy(type = newType)
-        val today = TimeUtils.getCurrentDate()
+        val today = TimeUtils.getToday()
         when (newType) {
             PeriodType.DAY -> {
                 newPeriod =
@@ -124,7 +338,7 @@ data class Period(
 
     val next: Period
         get() {
-            val today = TimeUtils.getCurrentDate()
+            val today = TimeUtils.getToday()
             return when (type) {
                 PeriodType.DAY -> {
                     val unit = DateTimeUnit.DAY
@@ -157,244 +371,17 @@ data class Period(
     val hasNext: Boolean
         get() =
             when (type) {
-                PeriodType.DAY -> TimeUtils.getCurrentDate() > endDate
-                PeriodType.WEEK -> TimeUtils.getCurrentDate() > endDate
-                PeriodType.MONTH -> TimeUtils.getCurrentDate() > endDate
+                PeriodType.DAY -> TimeUtils.getToday() > endDate
+                PeriodType.WEEK -> TimeUtils.getToday() > endDate
+                PeriodType.MONTH -> TimeUtils.getToday() > endDate
                 PeriodType.ALL_TIME -> false
             }
 
     fun getString(): String =
         when (type) {
-            PeriodType.DAY -> TimeUtils.getDateStringWithoutDayOfWeek(startDate)
-            PeriodType.WEEK -> {
-                val start = TimeUtils.getDateStringWithoutDayOfWeek(startDate)
-                val end = TimeUtils.getDateStringWithoutDayOfWeek(endDate)
-                "${start}至$end"
-            }
-
+            PeriodType.DAY -> TimeUtils.getDisplayDate(startDate)
+            PeriodType.WEEK -> TimeUtils.getDisplayPeriod(startDate, endDate)
             PeriodType.MONTH -> TimeUtils.getMonthString(startDate)
             PeriodType.ALL_TIME -> "全部"
         }
-}
-
-@Composable
-fun Statistics(
-    viewModel: StatisticViewModel,
-    modifier: Modifier = Modifier,
-) {
-    HomeScaffold(route = HomeRoute.STATISTICS) { contentPadding ->
-        Content(
-            viewModel,
-            contentPadding,
-            modifier = modifier,
-        )
-    }
-}
-
-@Composable
-private fun Content(
-    viewModel: StatisticViewModel,
-    contentPadding: PaddingValues,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier
-            .padding(contentPadding)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        StatisticCard(viewModel)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalKoalaPlotApi::class)
-@Composable
-fun StatisticCard(viewModel: StatisticViewModel) {
-    var selectedPeriod by remember {
-        mutableStateOf(
-            Period(
-                PeriodType.DAY,
-            ),
-        )
-    }
-    val projectsTime by viewModel.getProjectsTimeOfPeriod(selectedPeriod).collectAsState(listOf())
-    val recordsNumber by viewModel.getRecordsNumber(selectedPeriod).collectAsState(0)
-    val duration = projectsTime.sumOf { it.endTime }
-    val data = projectsTime.map { (it.endTime).toFloat() }
-    var selectedProjectIndex by remember(selectedPeriod) { mutableIntStateOf(-1) }
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        PrimaryTabRow(selectedTabIndex = selectedPeriod.type.ordinal) {
-            PeriodType.entries.forEach {
-                Tab(
-                    selected = selectedPeriod.type == it,
-                    onClick = { selectedPeriod = selectedPeriod.changeType(it) },
-                    text = { Text(it.label) },
-                )
-            }
-        }
-        if (selectedPeriod.type != PeriodType.ALL_TIME) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier =
-                    Modifier.padding(
-                        HORIZONTAL_MARGIN,
-                    ).fillMaxWidth(),
-            ) {
-                val iconSize = 24.dp
-                IconButton(
-                    onClick = {
-                        selectedPeriod = selectedPeriod.prev
-                    },
-                    modifier = Modifier.size(iconSize),
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "上一个",
-                    )
-                }
-                Text(selectedPeriod.getString())
-                IconButton(
-                    enabled = selectedPeriod.hasNext,
-                    onClick = {
-                        selectedPeriod = selectedPeriod.next
-                    },
-                    modifier = Modifier.size(iconSize),
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "下一个",
-                    )
-                }
-            }
-        }
-        Row {
-            SimpleStatisticItem("记录数", recordsNumber.toString(), modifier = Modifier.weight(1f))
-            SimpleStatisticItem("时长", TimeUtils.getDurationString(duration), modifier = Modifier.weight(1f))
-        }
-        HorizontalDivider()
-        if (projectsTime.isNotEmpty()) {
-            PieChart(
-                values = data,
-                labelConnector = {},
-                slice = { index ->
-                    val project = viewModel.projects[projectsTime[index % projectsTime.size].project]
-                    val color =
-                        Color(
-                            project?.color ?: 0,
-                        )
-                    DefaultSlice(
-                        color = color,
-                        gap = if (data.size > 1) 0.5f else 0f,
-                        clickable = true,
-                        hoverExpandFactor = 1.05f,
-                        hoverElement = {
-                            Card {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.padding(4.dp),
-                                ) {
-                                    viewModel.projects[projectsTime[index % projectsTime.size].project]?.let {
-                                        val endTime = projectsTime[index % projectsTime.size].endTime
-                                        Text(it.name, color = MaterialTheme.colorScheme.primary)
-                                        Text(
-                                            "${(endTime.toFloat() / projectsTime.sumOf { it.endTime }).toPercentage()}  ${
-                                                TimeUtils.getDurationString(
-                                                    endTime,
-                                                )
-                                            }",
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                        onClick = {
-                            if (selectedProjectIndex == index) {
-                                selectedProjectIndex = -1
-                            } else {
-                                selectedProjectIndex = index
-                            }
-                        },
-                    )
-                },
-                holeSize = 0.75F,
-                modifier = Modifier.padding(8.dp),
-                forceCenteredPie = true,
-            )
-        }
-        projectsTime.forEachIndexed { index, project ->
-            var fontWeight by remember { mutableStateOf(FontWeight.Normal) }
-            var color by remember { mutableStateOf(Color.Black) }
-            if (index == selectedProjectIndex) {
-                fontWeight = FontWeight.Bold
-                color = MaterialTheme.colorScheme.primary
-            } else {
-                fontWeight = FontWeight.Normal
-                color = MaterialTheme.colorScheme.onSurface
-            }
-            Row(
-                Modifier
-                    .clickable {
-                        if (selectedProjectIndex == index) {
-                            selectedProjectIndex = -1
-                        } else {
-                            selectedProjectIndex = index
-                        }
-                    }
-                    .padding(horizontal = HORIZONTAL_MARGIN, vertical = 6.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Circle,
-                    contentDescription = null,
-                    tint = Color(viewModel.projects[project.project]?.color ?: 0),
-                    modifier =
-                        Modifier
-                            .size(20.dp)
-                            .padding(end = 8.dp),
-                )
-                Text(
-                    viewModel.projects[project.project]?.name ?: "",
-                    fontWeight = fontWeight,
-                    color = color,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    ((project.endTime).toFloat() / projectsTime.sumOf { it.endTime }).toPercentage(),
-                    fontWeight = fontWeight,
-                    color = color,
-                    modifier = Modifier.padding(end = 16.dp),
-                )
-                Text(
-                    TimeUtils.getDurationString(project.endTime),
-                    fontWeight = fontWeight,
-                    fontFamily = FontFamily.Monospace,
-                    color = color,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SimpleStatisticItem(
-    title: String,
-    description: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            description,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp, bottom = 4.dp),
-        )
-        Text(
-            title,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 16.dp),
-        )
-    }
 }
