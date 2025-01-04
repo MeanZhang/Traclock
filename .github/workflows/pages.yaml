@@ -2,7 +2,7 @@ name: 部署文档
 
 on:
   push:
-    branches: [$default-branch]
+    branches: [main]
     paths:
       - "docs/**"
       - "package.json"
