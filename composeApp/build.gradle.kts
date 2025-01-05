@@ -34,8 +34,6 @@ kotlin {
             implementation(libs.accompanist.permissions)
             // material-components
             implementation(libs.androidx.material)
-            // Lets-Plot
-//            implementation(libs.skiko.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -66,20 +64,12 @@ kotlin {
             implementation(project(":timepicker"))
             // FileKit
             implementation(libs.filekit.compose)
-            // vico
-            implementation(libs.vico.compose)
             // Koala Plot
             implementation(libs.koalaplot.core)
-            // Lets-Plot
-//            implementation(libs.lets.plot.kotlin.kernel)
-//            implementation(libs.lets.plot.common)
-//            implementation(libs.lets.plot.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
-            // Lets-Plot
-//            implementation(libs.platf.awt)
         }
     }
 }

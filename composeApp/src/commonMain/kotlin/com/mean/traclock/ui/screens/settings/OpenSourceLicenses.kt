@@ -19,12 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.mean.traclock.utils.Utils.openUrl
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.back
 import traclock.composeapp.generated.resources.title_activity_open_source_licenses
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun OpenSourceLicenses(
     modifier: Modifier = Modifier,
@@ -94,14 +95,14 @@ private val LICENSES =
             "Apache License 2.0",
         ),
         License(
-            "Hilt",
-            "https://dagger.dev/hilt",
-            "Apache License 2.0",
-        ),
-        License(
             "Kermit",
             "https://kermit.touchlab.co/",
             "Apache License 2.0",
+        ),
+        License(
+            "Koala Plot",
+            "https://github.com/KoalaPlot/koalaplot-core",
+            "MIT License",
         ),
         License(
             "Kotlin",

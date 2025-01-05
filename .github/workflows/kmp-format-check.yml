@@ -1,4 +1,4 @@
-name: Android 格式检查
+name: KMP 格式检查
 
 on:
   push:

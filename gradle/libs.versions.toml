@@ -25,7 +25,6 @@ sqlite = "2.5.0-SNAPSHOT"
 ksp = "2.1.0-1.0.29"
 kermit = "2.0.5"
 coil = "3.0.4"
-vico = "2.0.0-beta.2"
 datastore = "1.1.1"
 accompanist = "0.36.0"
 dotenv = "4.0.0"
@@ -35,10 +34,6 @@ filekit = "0.8.7"
 # FIXME Implemented only in JetBrains fork.
 #koalaplot = "0.7.1"
 koalaplot = "0.6.4"
-lets-plot-kotlin-kernel = "4.9.3"
-lets-plot = "4.5.2"
-lets-plot-compose = "2.1.1"
-skiko = "0.8.12"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -63,16 +58,10 @@ sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sql
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "filekit" }
 koalaplot-core = { group = "io.github.koalaplot", name = "koalaplot-core", version.ref = "koalaplot" }
-lets-plot-kotlin-kernel = { group = "org.jetbrains.lets-plot", name = "lets-plot-kotlin-kernel", version.ref = "lets-plot-kotlin-kernel" }
-lets-plot-common = { group = "org.jetbrains.lets-plot", name = "lets-plot-common", version.ref = "lets-plot" }
-platf-awt = { group = "org.jetbrains.lets-plot", name = "platf-awt", version.ref = "lets-plot" }
-lets-plot-compose = { group = "org.jetbrains.lets-plot", name = "lets-plot-compose", version.ref = "lets-plot-compose" }
-skiko-android = { group = "org.jetbrains.skiko", name = "skiko-android-runtime-arm64", version.ref = "skiko" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
