@@ -426,8 +426,8 @@ private fun Chart(
     // FIXME remove after koalaplot update
     val zoomRangeLimit = if (maxTime < 5) 1 else (maxTime * 0.2).toLong()
     XYGraph(
-        xAxisModel = rememberIntLinearAxisModel(days, zoomRangeLimit = 1),
-        yAxisModel = rememberLongLinearAxisModel(0..maxTime, zoomRangeLimit = zoomRangeLimit),
+        xAxisModel = rememberIntLinearAxisModel(days),
+        yAxisModel = rememberLongLinearAxisModel(0..maxTime, minViewExtent = zoomRangeLimit),
         xAxisLabels = xLables,
         yAxisLabels = TimeUtils::getDurationString,
         modifier = modifier.height(200.dp).padding(8.dp),
@@ -515,7 +515,6 @@ data class Period(
 
     val next: Period
         get() {
-            val today = TimeUtils.getToday()
             return when (type) {
                 PeriodType.DAY -> {
                     val unit = DateTimeUnit.DAY

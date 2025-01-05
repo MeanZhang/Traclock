@@ -4,20 +4,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Looper
 import com.mean.traclock.App
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual object Utils {
     actual fun openUrl(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         App.context.startActivity(intent)
-    }
-
-    fun enforceMainLooper() {
-        if (Looper.getMainLooper() != Looper.myLooper()) {
-            throw IllegalAccessError("May only call from main thread.")
-        }
     }
 
     /**

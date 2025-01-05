@@ -2,6 +2,7 @@ package com.mean.traclock.utils
 
 import kotlin.math.round
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect object Utils {
     fun openUrl(url: String)
 }
