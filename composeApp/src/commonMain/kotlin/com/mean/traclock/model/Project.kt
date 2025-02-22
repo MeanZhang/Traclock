@@ -1,12 +1,13 @@
-package data
+package com.mean.traclock.model
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
 data class Project(
     var name: String,
-    var color: Int = 0,
+    var color: Color = Color.Unspecified,
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
+    var projectId: Long = 0,
 )

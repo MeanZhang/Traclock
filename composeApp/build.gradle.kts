@@ -12,9 +12,6 @@ plugins {
 }
 
 kotlin {
-    sourceSets.commonMain {
-        kotlin.srcDir("build/generated/ksp/metadata")
-    }
 
     androidTarget {
         compilerOptions {
@@ -22,10 +19,10 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+//    jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
+//        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -66,11 +63,13 @@ kotlin {
             implementation(libs.filekit.compose)
             // Koala Plot
             implementation(libs.koalaplot.core)
+            // vico
+            implementation(libs.vico)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-        }
+//        desktopMain.dependencies {
+//            implementation(compose.desktop.currentOs)
+//            implementation(libs.kotlinx.coroutines.swing)
+//        }
     }
 }
 
@@ -175,12 +174,5 @@ compose.desktop {
 
 
 dependencies {
-    // Room
-    add("kspCommonMainMetadata", libs.room.compiler)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
+    ksp(libs.room.compiler)
 }

@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.data.Record
+import com.mean.traclock.model.Record
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -37,9 +37,7 @@ fun RecordItem(
     record: Record,
     projectName: String,
     color: Color,
-    navToProject: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    detailView: Boolean = true,
     listState: LazyListState? = null,
     deleteRecord: (Record) -> Unit,
     startTiming: (Long) -> Unit,
@@ -54,18 +52,10 @@ fun RecordItem(
             modifier
                 .combinedClickable(
                     onClick = {
-                        if (detailView) {
-                            navToEditRecord(record.id)
-                        } else {
-                            navToProject(record.project)
-                        }
+                        navToEditRecord(record.recordId)
                     },
                     onLongClick =
-                        if (detailView) {
-                            { showMenu = true }
-                        } else {
-                            null
-                        },
+                        { showMenu = true },
                 ),
         leadingContent = {
             Icon(
@@ -93,11 +83,7 @@ fun RecordItem(
         },
         supportingContent = {
             Text(
-                if (detailView) {
-                    "$startTime - $endTime"
-                } else {
-                    TimeUtils.getDurationString(record.startTime, record.endTime)
-                },
+                "$startTime - $endTime",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -107,7 +93,7 @@ fun RecordItem(
                 text = TimeUtils.getDurationString(record.startTime, record.endTime),
             ) {
                 scope.launch {
-                    startTiming(record.project)
+                    startTiming(record.projectId)
                     listState?.animateScrollToItem(0)
                 }
             }

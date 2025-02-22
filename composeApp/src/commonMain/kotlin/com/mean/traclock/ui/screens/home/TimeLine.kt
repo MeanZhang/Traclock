@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.NoData
+import com.mean.traclock.ui.components.ProjectDurationItem
 import com.mean.traclock.ui.components.RecordItem
+import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.utils.PlatformUtils
 import com.mean.traclock.utils.TimeUtils
@@ -37,7 +39,9 @@ import traclock.composeapp.generated.resources.change_view
 import traclock.composeapp.generated.resources.is_running_description
 import traclock.composeapp.generated.resources.no_record
 import ui.components.HomeScaffold
-import ui.components.TimingCard
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -49,10 +53,9 @@ fun TimeLine(
 ) {
     val isTiming by viewModel.isTiming.collectAsState(false)
     val detailView by viewModel.detailView.collectAsState()
-    val records by viewModel.records.collectAsState(mapOf())
-    val projectsTimeOfDays by viewModel.projectsTimeOfDays.collectAsState(mapOf())
+    val records by viewModel.daysRecords.collectAsState(mapOf())
+    val projectsTimeOfDays by viewModel.daysProjectsDuration.collectAsState(mapOf())
     val timeOfDays by viewModel.timeOfDays.collectAsState(mapOf())
-    val data = if (detailView) records else projectsTimeOfDays
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     HomeScaffold(
@@ -71,7 +74,7 @@ fun TimeLine(
         modifier = modifier,
     ) { contentPadding ->
         val listState = rememberLazyListState()
-        if (data.isNotEmpty() || isTiming) {
+        if (records.isNotEmpty() || isTiming) {
             LazyColumn(
                 modifier = modifier.padding(contentPadding),
                 state = listState,
@@ -89,33 +92,62 @@ fun TimeLine(
                         )
                     }
                 }
-                data.forEach { (date, data) ->
-                    stickyHeader(key = date) {
-                        DateTitle(
-                            date = TimeUtils.getDateString(date),
-                            duration = timeOfDays[date] ?: 0L,
-                        )
-                    }
-                    items(data, key = { it.id }) { record ->
-                        RecordItem(
-                            record = record,
-                            color = Color(viewModel.projects[record.project]?.color ?: 0),
-                            detailView = detailView,
-                            listState = listState,
-                            navToProject = navToProject,
-                            navToEditRecord = navToEditRecord,
-                            deleteRecord = viewModel::deleteRecord,
-                            projectName = viewModel.projects[record.project]?.name ?: "",
-                            startTiming = {
-                                if (isTiming && !PlatformUtils.isAndroid) {
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
+                if (detailView) {
+                    records.forEach { (date, data) ->
+                        stickyHeader(key = date) {
+                            DateTitle(
+                                date = TimeUtils.getDateString(date),
+                                duration = timeOfDays[date]?.toDuration(DurationUnit.MILLISECONDS) ?: Duration.ZERO,
+                            )
+                        }
+                        items(data, key = { it.recordId }) { record ->
+                            RecordItem(
+                                record = record,
+                                color = viewModel.projects[record.projectId]?.color ?: Color.Unspecified,
+                                listState = listState,
+                                navToEditRecord = navToEditRecord,
+                                deleteRecord = viewModel::deleteRecord,
+                                projectName = viewModel.projects[record.projectId]?.name ?: "",
+                                startTiming = {
+                                    if (isTiming && !PlatformUtils.isAndroid) {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
+                                        }
+                                    } else {
+                                        viewModel.startTiming(it)
                                     }
-                                } else {
-                                    viewModel.startTiming(it)
-                                }
-                            },
-                        )
+                                },
+                            )
+                        }
+                    }
+                } else {
+                    projectsTimeOfDays.forEach { (date, data) ->
+                        stickyHeader(key = date) {
+                            DateTitle(
+                                date = TimeUtils.getDateString(date),
+                                duration = timeOfDays[date]?.toDuration(DurationUnit.MILLISECONDS) ?: Duration.ZERO,
+                            )
+                        }
+                        items(
+                            data,
+                            key = { it.let { projectDuration -> date.toString() + projectDuration.projectId } },
+                        ) { projectDuration ->
+                            ProjectDurationItem(
+                                projectDuration = projectDuration,
+                                navToProject = navToProject,
+                                projectName = viewModel.projects[projectDuration.projectId]?.name ?: "",
+                                color = viewModel.projects[projectDuration.projectId]?.color ?: Color.Unspecified,
+                                startTiming = {
+                                    if (isTiming && !PlatformUtils.isAndroid) {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
+                                        }
+                                    } else {
+                                        viewModel.startTiming(projectDuration.projectId)
+                                    }
+                                },
+                            )
+                        }
                     }
                 }
             }

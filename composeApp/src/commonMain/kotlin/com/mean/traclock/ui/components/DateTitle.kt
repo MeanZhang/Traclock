@@ -13,11 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
+import kotlin.time.Duration
 
 @Composable
 fun DateTitle(
     date: String,
-    duration: Long,
+    duration: Duration,
     modifier: Modifier = Modifier,
 ) {
     Surface(modifier = modifier) {

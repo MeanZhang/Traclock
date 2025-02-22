@@ -39,7 +39,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -169,7 +168,7 @@ fun EditRecord(
                 )
                 DateTimePicker(
                     modifier = Modifier.weight(3f),
-                    initailTimeMillis = startTime,
+                    initailTimeMillis = startTime.toEpochMilliseconds(),
                     onDateChoose = { viewModel.setStartDate(it) },
                     onTimeChoose = { viewModel.setStartTime(it) },
                 )
@@ -185,7 +184,7 @@ fun EditRecord(
                 )
                 DateTimePicker(
                     modifier = Modifier.weight(3f),
-                    initailTimeMillis = endTime,
+                    initailTimeMillis = endTime.toEpochMilliseconds(),
                     onDateChoose = { viewModel.setEndDate(it) },
                     onTimeChoose = { viewModel.setEndTime(it) },
                 )
@@ -201,6 +200,7 @@ fun EditRecord(
                                 snackbarHostState.showSnackbar(getString(Res.string.please_enter_a_project_name))
                             }
                         }
+
                         -2 -> {
                             PlatformUtils.toast(getString(Res.string.no_such_project))
                             if (!PlatformUtils.isAndroid) {
@@ -233,8 +233,8 @@ fun EditRecord(
                                     selected = projectId == it,
                                     colors =
                                         RadioButtonDefaults.colors(
-                                            selectedColor = Color(viewModel.projects[it]!!.color),
-                                            unselectedColor = Color(viewModel.projects[it]!!.color),
+                                            selectedColor = viewModel.projects[it]!!.color,
+                                            unselectedColor = viewModel.projects[it]!!.color,
                                         ),
                                     onClick = null,
                                 )

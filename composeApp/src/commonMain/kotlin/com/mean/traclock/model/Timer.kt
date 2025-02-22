@@ -1,17 +1,18 @@
-package com.mean.traclock.data
+package com.mean.traclock.model
 
 import com.mean.traclock.utils.TimeUtils
+import kotlinx.datetime.Instant
 
-class Timer(val projectId: Long, val startTime: Long = TimeUtils.now()) {
+class Timer(val projectId: Long, val startTime: Instant = TimeUtils.now()) {
     enum class State {
         STOPPED,
         RUNNING,
     }
 
-    private var _stopTime: Long? = null
+    private var _stopTime: Instant? = null
     private var _state = State.RUNNING
 
-    val stopTime: Long?
+    val stopTime: Instant?
         get() = _stopTime
 
     val state: State
@@ -27,7 +28,7 @@ class Timer(val projectId: Long, val startTime: Long = TimeUtils.now()) {
             Timer(projectId)
         }
 
-    fun stop(stopTime: Long = TimeUtils.now()) {
+    fun stop(stopTime: Instant = TimeUtils.now()) {
         _stopTime = stopTime
         _state = State.STOPPED
     }

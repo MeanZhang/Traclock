@@ -1,4 +1,4 @@
-package ui.components
+package com.mean.traclock.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -32,6 +32,7 @@ import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.stringResource
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.stop
@@ -40,18 +41,18 @@ import traclock.composeapp.generated.resources.tracking
 @Composable
 fun TimingCard(
     projectName: String,
-    startTime: Long?,
+    startTime: Instant?,
     stopTiming: suspend () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var now by remember {
-        mutableLongStateOf(System.currentTimeMillis())
+        mutableStateOf(TimeUtils.now())
     }
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         scope.launch {
             while (true) {
-                now = System.currentTimeMillis()
+                now = TimeUtils.now()
                 delay(1000)
             }
         }
@@ -88,7 +89,7 @@ fun TimingCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    TimeUtils.getDurationString(startTime ?: System.currentTimeMillis(), now),
+                    TimeUtils.getDurationString(startTime ?: TimeUtils.now(), now),
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = FontFamily.Monospace,
                 )

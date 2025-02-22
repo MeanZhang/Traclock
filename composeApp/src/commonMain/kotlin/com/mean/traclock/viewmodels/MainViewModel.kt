@@ -3,17 +3,17 @@ package com.mean.traclock.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mean.traclock.data.Record
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
+import com.mean.traclock.model.Record
 import com.mean.traclock.utils.PlatformUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.minus
+import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.getString
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.is_running_description
@@ -23,10 +23,10 @@ class MainViewModel(
     projectsRepo: ProjectsRepository,
     private val timerRepo: TimerRepository,
 ) : ViewModel() {
-    val records = recordsRepo.getRecordsOfDays()
-    val projectsTimeOfDays = recordsRepo.getProjectsTimeOfDays()
-    val timeOfDays = recordsRepo.getTimeOfDays()
-    val projectsTime = recordsRepo.getProjectsTime()
+    val daysRecords = recordsRepo.getDaysRecords()
+    val daysProjectsDuration = recordsRepo.watchDaysProjectsDuration()
+    val timeOfDays = recordsRepo.watchDaysDuration()
+    val projectsTime = recordsRepo.watchProjectsDuration()
 
     val projects = projectsRepo.projects
 
@@ -39,7 +39,7 @@ class MainViewModel(
     val timingProjectId: Long?
         get() = timerRepo.projectId
 
-    val startTime: Long?
+    val startTime: Instant?
         get() = timerRepo.startTime
 
     fun changeDetailView() {

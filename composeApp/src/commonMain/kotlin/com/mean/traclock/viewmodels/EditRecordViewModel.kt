@@ -3,10 +3,9 @@ package com.mean.traclock.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mean.traclock.data.Record
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.utils.TimeUtils
+import com.mean.traclock.model.Record
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,21 +27,21 @@ class EditRecordViewModel(
 ) : ViewModel() {
     private lateinit var record: Record
     private val _projectId: MutableStateFlow<Long?> = MutableStateFlow(null)
-    private val _startTime = MutableStateFlow(0L)
-    private val _endTime = MutableStateFlow(0L)
+    private val _startTime = MutableStateFlow(Instant.DISTANT_PAST)
+    private val _endTime = MutableStateFlow(Instant.DISTANT_PAST)
 
     val projects = projectsRepo.projects
     val projectId: StateFlow<Long?>
         get() = _projectId.asStateFlow()
-    val startTime: StateFlow<Long>
+    val startTime: StateFlow<Instant>
         get() = _startTime.asStateFlow()
-    val endTime: StateFlow<Long>
+    val endTime: StateFlow<Instant>
         get() = _endTime.asStateFlow()
 
     init {
         runBlocking(Dispatchers.IO) {
             record = recordsRepo.get(savedStateHandle.get<Long>("id")!!)
-            _projectId.value = record.project
+            _projectId.value = record.projectId
             _startTime.value = record.startTime
             _endTime.value = record.endTime
         }
@@ -53,7 +52,7 @@ class EditRecordViewModel(
             if (::record.isInitialized.not()) {
                 false
             } else {
-                _projectId.value != record.project || _startTime.value != record.startTime || _endTime.value != record.endTime
+                _projectId.value != record.projectId || _startTime.value != record.startTime || _endTime.value != record.endTime
             }
 
     suspend fun updateRecord(): Int {
@@ -62,10 +61,10 @@ class EditRecordViewModel(
                 -1 // 项目名为空
             } else {
                 if (_projectId.value in projects) {
-                    record.project = _projectId.value!!
+                    record.projectId = _projectId.value!!
                     record.startTime = startTime.value
                     record.endTime = endTime.value
-                    record.date = TimeUtils.getIntDate(record.startTime)
+                    record.date = startTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).date
                     recordsRepo.update(record)
                     1
                 } else {
@@ -95,8 +94,8 @@ class EditRecordViewModel(
         _startTime.value =
             LocalDateTime(
                 date = startDate,
-                time = Instant.fromEpochMilliseconds(_startTime.value).toLocalDateTime(TimeZone.currentSystemDefault()).time,
-            ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+                time = _startTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).time,
+            ).toInstant(TimeZone.currentSystemDefault())
     }
 
     /**
@@ -107,10 +106,10 @@ class EditRecordViewModel(
         _startTime.value =
             LocalDateTime(
                 date =
-                    Instant.fromEpochMilliseconds(_startTime.value)
+                    _startTime.value
                         .toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 time = startTime,
-            ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+            ).toInstant(TimeZone.currentSystemDefault())
     }
 
     /**
@@ -121,8 +120,8 @@ class EditRecordViewModel(
         _endTime.value =
             LocalDateTime(
                 date = endDate,
-                time = Instant.fromEpochMilliseconds(_endTime.value).toLocalDateTime(TimeZone.currentSystemDefault()).time,
-            ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+                time = _endTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).time,
+            ).toInstant(TimeZone.currentSystemDefault())
     }
 
     /**
@@ -132,8 +131,8 @@ class EditRecordViewModel(
     fun setEndTime(endTime: LocalTime) {
         _endTime.value =
             LocalDateTime(
-                date = Instant.fromEpochMilliseconds(_endTime.value).toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                date = _endTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 time = endTime,
-            ).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+            ).toInstant(TimeZone.currentSystemDefault())
     }
 }

@@ -1,20 +1,23 @@
 package com.mean.traclock.viewmodels
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mean.traclock.data.Record
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.utils.TimeUtils
+import com.mean.traclock.model.Project
+import com.mean.traclock.model.Record
 import com.mean.traclock.utils.openInputStream
 import com.mean.traclock.utils.openOutputStream
-import data.Project
 import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
@@ -37,7 +40,7 @@ class BackupRestoreViewModel(
     private val projects = projectsRepo.projects
 
     private val projectToId =
-        projects.values.associate { it.name to it.id }.toMutableMap()
+        projects.values.associate { it.name to it.projectId }.toMutableMap()
 
     val showConfirmDialog: StateFlow<Boolean>
         get() = _showConfirmDialog
@@ -84,7 +87,7 @@ class BackupRestoreViewModel(
         _showBackupDialog.value = true
         _backingUp.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            val records = recordsRepo.getRecordsList()
+            val records = recordsRepo.getAll()
             val size = projects.size + records.size
             var completed = 0
             file.openOutputStream().use { outputStream ->
@@ -96,7 +99,7 @@ class BackupRestoreViewModel(
                     }
                     for (record in records) {
                         writer.write(
-                            projects[record.project]!!.name + "," + record.startTime + "," + record.endTime + "\n",
+                            projects[record.projectId]!!.name + "," + record.startTime + "," + record.endTime + "\n",
                         )
                         setProgress(completed++.toFloat() / size)
                     }
@@ -188,7 +191,7 @@ class BackupRestoreViewModel(
         if (startTime == -1L) {
             val color =
                 try {
-                    columns[2].toInt()
+                    Color(columns[2].toInt())
                 } catch (e: Exception) {
                     setErrorMessage("第${lineIndex}行颜色格式有误：${columns[2]}")
                     return RestoreError.COLOR_ERROR
@@ -201,7 +204,7 @@ class BackupRestoreViewModel(
             }
         } else {
             // 记录
-            val date = TimeUtils.getIntDate(startTime)
+            val date = Instant.fromEpochMilliseconds(startTime).toLocalDateTime(TimeZone.currentSystemDefault()).date
             val endTime =
                 try {
                     columns[2].toLong()
@@ -209,7 +212,8 @@ class BackupRestoreViewModel(
                     setErrorMessage("第${lineIndex}行结束时间格式有误：${columns[2]}")
                     return RestoreError.END_TIME_ERROR
                 }
-            val record = Record(projectToId[projectName]!!, startTime, endTime, date)
+            val record =
+                Record(projectToId[projectName]!!, Instant.fromEpochMilliseconds(startTime), Instant.fromEpochMilliseconds(endTime), date)
             try {
                 recordsRepo.insert(record)
             } catch (e: Exception) {

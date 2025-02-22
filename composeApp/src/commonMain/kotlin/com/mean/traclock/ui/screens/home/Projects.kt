@@ -18,16 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.mean.traclock.ui.components.RecordItem
+import com.mean.traclock.ui.components.ProjectDurationItem
+import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.navigation.HomeRoute
-import com.mean.traclock.utils.PlatformUtils
 import com.mean.traclock.viewmodels.MainViewModel
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.is_running_description
 import ui.components.HomeScaffold
-import ui.components.TimingCard
 
 @Composable
 fun Projects(
@@ -59,30 +54,19 @@ fun Projects(
                     exit = shrinkVertically(),
                 ) {
                     TimingCard(
-                        projectName = viewModel.projects[viewModel.timingProjectId]!!.name ?: "",
+                        projectName = viewModel.projects[viewModel.timingProjectId]!!.name,
                         startTime = viewModel.startTime,
                         stopTiming = viewModel::stopTiming,
                     )
                 }
             }
-            items(projectsTime, key = { it.project }) { record ->
-                RecordItem(
-                    projectName = viewModel.projects[record.project]?.name ?: "",
-                    record = record,
-                    color = Color(viewModel.projects[record.project]?.color ?: 0),
-                    detailView = false,
+            items(projectsTime, key = { it.projectId }) { projectDuration ->
+                ProjectDurationItem(
+                    projectDuration = projectDuration,
                     navToProject = navToProject,
-                    navToEditRecord = {},
-                    deleteRecord = viewModel::deleteRecord,
-                    startTiming = {
-                        if (isTiming && !PlatformUtils.isAndroid) {
-                            scope.launch {
-                                snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
-                            }
-                        } else {
-                            viewModel.startTiming(it)
-                        }
-                    },
+                    projectName = viewModel.projects[projectDuration.projectId]?.name ?: "",
+                    color = viewModel.projects[projectDuration.projectId]?.color ?: Color.Transparent,
+                    startTiming = { viewModel.startTiming(projectDuration.projectId) },
                 )
             }
         }

@@ -22,6 +22,7 @@ import com.mean.traclock.R
 import com.mean.traclock.timer.TimerService
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.utils.Utils
+import kotlinx.datetime.Instant
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class NotificationRepository(
@@ -53,7 +54,7 @@ actual class NotificationRepository(
     fun build(
         projectName: String,
         isRunning: Boolean,
-        startTime: Long,
+        startTime: Instant,
     ): Notification {
         /** 点击通知时打开应用的 Intent */
         val showApp: Intent =
@@ -65,7 +66,7 @@ actual class NotificationRepository(
         val pname: String = context.packageName
         val res: Resources = context.resources
         val base: Long =
-            SystemClock.elapsedRealtime() - (TimeUtils.now() - startTime)
+            SystemClock.elapsedRealtime() - (TimeUtils.now() - startTime).inWholeMilliseconds
 
         val content = RemoteViews(pname, R.layout.chronometer_notif_content)
         content.setChronometer(R.id.chronometer, base, null, isRunning)
@@ -129,7 +130,7 @@ actual class NotificationRepository(
     actual fun notify(
         projectName: String,
         isRunning: Boolean,
-        startTime: Long,
+        startTime: Instant,
     ) {
         val notification: Notification =
             build(

@@ -1,13 +1,13 @@
 package com.mean.traclock.viewmodels
 
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mean.traclock.data.repository.ProjectsRepository
+import com.mean.traclock.model.Project
 import com.mean.traclock.ui.ProjectColor
-import data.Project
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,11 +19,11 @@ class EditProjectViewModel(
 ) : ViewModel() {
     private var project: Project? = null
     private val _name = MutableStateFlow("")
-    private val _color = MutableStateFlow(ProjectColor.entries[0].color.toArgb())
+    private val _color = MutableStateFlow(ProjectColor.entries[0].color)
 
     val name: StateFlow<String>
         get() = _name
-    val color: StateFlow<Int>
+    val color: StateFlow<Color>
         get() = _color
 
     init {
@@ -41,7 +41,7 @@ class EditProjectViewModel(
         _name.value = name
     }
 
-    fun setColor(color: Int) {
+    fun setColor(color: Color) {
         _color.value = color
     }
 

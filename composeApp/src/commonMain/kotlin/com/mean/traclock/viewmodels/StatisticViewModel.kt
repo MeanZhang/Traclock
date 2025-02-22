@@ -1,15 +1,21 @@
 package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.mean.traclock.data.Record
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
+import com.mean.traclock.model.ProjectDuration
+import com.mean.traclock.model.Record
 import com.mean.traclock.ui.screens.home.Period
 import com.mean.traclock.ui.screens.home.PeriodType
+import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class StatisticViewModel(
     private val recordsRepo: RecordsRepository,
@@ -18,38 +24,33 @@ class StatisticViewModel(
 ) : ViewModel() {
     val projects = projectsRepo.projects
 
-    val startTime: Long?
+    val startTime: Instant?
         get() = timerRepo.startTime
 
-    fun getProjectsTimeOfPeriod(period: Period): Flow<List<Record>> {
+    fun getProjectsTimeOfPeriod(period: Period): Flow<List<ProjectDuration>> {
         if (period.type == PeriodType.ALL_TIME) {
-            return recordsRepo.getProjectsTime().map { it.filter { project -> project.endTime > 0 } }
+            return recordsRepo.watchProjectsDuration()
+                .map { it.filter { projectDuration -> projectDuration.duration > Duration.ZERO } }
         }
-        return recordsRepo.getProjectsTimeOfPeriod(period.startDate, period.endDate)
+        return recordsRepo.watchProjectsDuration(period.startDate, period.endDate)
     }
 
     fun getRecordsNumber(period: Period): Flow<Int> {
         if (period.type == PeriodType.ALL_TIME) {
-            return recordsRepo.getAllRecordsNumber()
+            return recordsRepo.watchRecordsCount()
         }
-        return recordsRepo.getRecordsNumber(period.startDate, period.endDate)
+        return recordsRepo.watchRecordsCount(period.startDate, period.endDate)
     }
 
     fun getRecords(date: LocalDate): Flow<List<Record>> = recordsRepo.getRecords(date)
 
-    fun getRecords(period: Period): Flow<List<Record>> {
-        return when (period.type) {
-            PeriodType.ALL_TIME -> {
-                recordsRepo.getAllRecords()
-            }
-            PeriodType.DAY -> {
-                recordsRepo.getRecords(period.startDate)
-            }
-            else -> {
-                recordsRepo.getRecords(period.startDate, period.endDate)
-            }
+    fun watchDaysDuration(period: Period): Flow<Map<LocalDate, Duration>> =
+        recordsRepo.watchDaysDuration(period.startDate, period.endDate).map {
+            it.mapKeys { (date, _) -> TimeUtils.getDate(date) }
+                .mapValues { (_, duration) -> duration.toDuration(DurationUnit.MILLISECONDS) }
         }
-    }
 
-    fun getDurationsOfYears(): Flow<Map<Int, Long>> = recordsRepo.getDurationsOfYears()
+    fun watchMonthsDuration(year: Int): Flow<Map<Int, Duration>> = recordsRepo.watchMonthsDuration(year)
+
+    fun watchYearsDuration(): Flow<Map<Int, Duration>> = recordsRepo.watchYearsDuration()
 }

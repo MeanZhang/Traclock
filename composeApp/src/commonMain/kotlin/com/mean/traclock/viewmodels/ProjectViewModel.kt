@@ -4,11 +4,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mean.traclock.data.Record
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
-import data.Project
+import com.mean.traclock.model.Project
+import com.mean.traclock.model.Record
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +27,7 @@ class ProjectViewModel(
         runBlocking(Dispatchers.IO) {
             projectsRepo.get(savedStateHandle.get<Long>("id")!!)
         }
-    private val _projectId: MutableStateFlow<Long> = MutableStateFlow(project.id)
+    private val _projectId: MutableStateFlow<Long> = MutableStateFlow(project.projectId)
     private var _records: Flow<Map<Int, List<Record>>> = flowOf(mapOf())
     private var _timeOfDays: Flow<Map<Int, Long>> = flowOf(mapOf())
     val projectId: StateFlow<Long?>
@@ -40,12 +40,12 @@ class ProjectViewModel(
     val projectName: String
         get() = project.name
     val projectColor: Color
-        get() = Color(project.color)
+        get() = project.color
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _records = recordsRepo.getRecordsOfDays(project.id)
-            _timeOfDays = recordsRepo.getTimeOfDays(project.id)
+            _records = recordsRepo.watchProjectRecords(project.projectId)
+            _timeOfDays = recordsRepo.watchDaysDuration(project.projectId)
         }
     }
 
@@ -57,11 +57,11 @@ class ProjectViewModel(
 
     fun startTimer() {
         viewModelScope.launch {
-            timerRepo.start(project.id)
+            timerRepo.start(project.projectId)
         }
     }
 
     suspend fun deleteProject() {
-        projectsRepo.delete(project.id)
+        projectsRepo.delete(project.projectId)
     }
 }

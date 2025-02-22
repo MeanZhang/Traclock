@@ -18,9 +18,7 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlin.math.abs
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import kotlin.time.Duration
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 object TimeUtils {
@@ -113,6 +111,9 @@ object TimeUtils {
             }
         }
 
+    @JvmStatic
+    fun getCurrentYear(): Int = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.year
+
     /**
      * 将[LocalDate]转换为整数，例如 `20000101`
      */
@@ -125,32 +126,32 @@ object TimeUtils {
      * @return 以整数表示的日期，例如 `20000101`
      */
     @JvmStatic
-    fun getIntDate(timestamp: Long = now()): Int {
+    fun getIntDate(timestamp: Long = now().toEpochMilliseconds()): Int {
         val time = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault())
         return time.date.toInt()
     }
 
     /**
      * 获取日期时间字符串
-     * @param timeMillis 时间戳（毫秒）
+     * @param instant 时间戳（毫秒）
      * @return 日期时间字符串，格式为系统时区的 `yyyy/M/d H:mm:ss`
      */
     @JvmStatic
-    fun getDateTimeString(timeMillis: Long): String {
+    fun getDateTimeString(instant: Instant): String {
         val dateTimeFormat = LocalDateTime.Format { byUnicodePattern("yyyy/M/d H:mm:ss") }
-        val time = Instant.fromEpochMilliseconds(timeMillis).toLocalDateTime(TimeZone.currentSystemDefault())
+        val time = instant.toLocalDateTime(TimeZone.currentSystemDefault())
         return dateTimeFormat.format(time)
     }
 
     /**
      * 获取精确到分的时间字符串
-     * @param timestamp 时间戳（毫秒）
+     * @param instant 时间戳（毫秒）
      * @return 精确到分的时间字符串，格式为系统时区的 `HH:mm`
      */
     @JvmStatic
-    fun getTimeString(timestamp: Long): String {
+    fun getTimeString(instant: Instant): String {
         val dateTimeFormat = LocalDateTime.Format { byUnicodePattern("HH:mm") }
-        val time = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault())
+        val time = instant.toLocalDateTime(TimeZone.currentSystemDefault())
         return dateTimeFormat.format(time)
     }
 
@@ -162,9 +163,31 @@ object TimeUtils {
      */
     @JvmStatic
     fun getDurationString(
-        startTime: Long,
-        endTime: Long,
-    ): String = getDurationString(abs(startTime - endTime))
+        startTime: Instant,
+        endTime: Instant,
+    ): String = getDurationString(endTime - startTime)
+
+    /**
+     * 获取简短的时长字符串
+     */
+    @JvmStatic
+    fun getShortDurationString(
+        duration: Duration,
+        maxDuration: Duration,
+    ): String {
+        val hours = duration.inWholeHours
+        val minutes = duration.inWholeMinutes % 60
+        val seconds = duration.inWholeSeconds % 60
+        if (maxDuration.inWholeHours > 100) {
+            return "${hours}小时"
+        } else if (maxDuration.inWholeHours > 0) {
+            return "${hours}小时${minutes}分"
+        } else if (maxDuration.inWholeMinutes > 0) {
+            return "${minutes}分"
+        } else {
+            return "${seconds}秒"
+        }
+    }
 
     /**
      * 获取时长字符串
@@ -172,9 +195,8 @@ object TimeUtils {
      * @return 精确到秒的时间字符串，格式为`HH:mm:ss`
      */
     @JvmStatic
-    fun getDurationString(duration: Long): String {
-        val d = duration.toDuration(DurationUnit.MILLISECONDS)
-        return d.toComponents { hours, minutes, seconds, _ ->
+    fun getDurationString(duration: Duration): String {
+        return duration.toComponents { hours, minutes, seconds, _ ->
             "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${
                 seconds.toString().padStart(2, '0')
             }"
@@ -288,10 +310,14 @@ object TimeUtils {
      */
     @JvmStatic
     fun getDate(dateInt: Int): LocalDate {
-        val year = dateInt / 10000
-        val month = (dateInt / 100) % 100
-        val day = dateInt % 100
-        return LocalDate(year, month, day)
+        try {
+            val year = dateInt / 10000
+            val month = (dateInt / 100) % 100
+            val day = dateInt % 100
+            return LocalDate(year, month, day)
+        } catch (e: Exception) {
+            return LocalDate(2021, 1, 1)
+        }
     }
 
     /**
@@ -320,6 +346,26 @@ object TimeUtils {
     fun getLastDayOfMonth(date: LocalDate): LocalDate {
         val nextMonth = getFirstDayOfMonth(date).plus(1, DateTimeUnit.MONTH)
         return nextMonth.minus(1, DateTimeUnit.DAY)
+    }
+
+    /**
+     * 获取日期所在年的第一天
+     * @param date [LocalDate]
+     */
+    @JvmStatic
+    fun getFirstDayOfYear(date: LocalDate): LocalDate {
+        val year = date.year
+        return LocalDate(year, 1, 1)
+    }
+
+    /**
+     * 获取日期所在年的最后一天
+     * @param date [LocalDate]
+     */
+    @JvmStatic
+    fun getLastDayOfYear(date: LocalDate): LocalDate {
+        val nextYear = getFirstDayOfYear(date).plus(1, DateTimeUnit.YEAR)
+        return nextYear.minus(1, DateTimeUnit.DAY)
     }
 
     /**
@@ -372,7 +418,7 @@ object TimeUtils {
      * @return 当前时间戳（毫秒）
      */
     @JvmStatic
-    fun now(): Long = Clock.System.now().toEpochMilliseconds()
+    fun now(): Instant = Clock.System.now()
 
     /**
      * 获取给定时间所在当前时区日期的UTC日期的时间戳
@@ -413,8 +459,8 @@ object TimeUtils {
     @JvmStatic
     fun getToday(): LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
-    fun getMillisOfDay(timestamp: Long): Int {
-        val time = Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.currentSystemDefault()).time
+    fun getMillisOfDay(instant: Instant): Int {
+        val time = instant.toLocalDateTime(TimeZone.currentSystemDefault()).time
         return time.toMillisecondOfDay()
     }
 

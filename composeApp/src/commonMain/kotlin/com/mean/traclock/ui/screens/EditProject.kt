@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
@@ -76,8 +75,7 @@ fun EditProject(
     }
 
     val name by viewModel.name.collectAsState("")
-    val colorValue by viewModel.color.collectAsState()
-    val color = Color(colorValue)
+    val color by viewModel.color.collectAsState()
     val contentColor = if (color.luminance() > 0.4f) Color.Black else Color.White
 
     val state = rememberTopAppBarState()
@@ -156,7 +154,7 @@ fun EditProject(
                 )
             }
             ColorPicker(color = color) {
-                viewModel.setColor(it.toArgb())
+                viewModel.setColor(it)
             }
         }
     }

@@ -46,6 +46,9 @@ import traclock.composeapp.generated.resources.delete
 import traclock.composeapp.generated.resources.edit
 import traclock.composeapp.generated.resources.more
 import traclock.composeapp.generated.resources.no_record
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -120,7 +123,7 @@ fun Project(
                     stickyHeader {
                         DateTitle(
                             date = TimeUtils.getDateString(date),
-                            duration = time[date] ?: 0L,
+                            duration = time[date]?.toDuration(DurationUnit.MILLISECONDS) ?: Duration.ZERO,
                         )
                     }
                     items(data) {
@@ -128,7 +131,6 @@ fun Project(
                             record = it,
                             projectName = viewModel.projectName,
                             color = viewModel.projectColor,
-                            navToProject = navToProject,
                             navToEditRecord = navToEditRecord,
                             deleteRecord = viewModel::deleteRecord,
                             startTiming = { viewModel.startTimer() },

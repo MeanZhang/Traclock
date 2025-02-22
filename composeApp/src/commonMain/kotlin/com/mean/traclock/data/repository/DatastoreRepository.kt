@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
-import com.mean.traclock.data.Timer
+import com.mean.traclock.model.Timer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
 import okio.Path.Companion.toPath
 
 private lateinit var dataStore: DataStore<Preferences>
@@ -48,8 +49,8 @@ class DatastoreRepository(
         dataStore.data.map { preferences ->
             val isTiming = preferences[PreferencesKeys.IS_TIMING]
             val timingProjectId = preferences[PreferencesKeys.TIMING_PROJECT_ID]
-            val timingStartTime = preferences[PreferencesKeys.TIMING_START_TIME]
-            val timingStopTime = preferences[PreferencesKeys.TIMING_STOP_TIME]
+            val timingStartTime = preferences[PreferencesKeys.TIMING_START_TIME]?.let { Instant.fromEpochMilliseconds(it) }
+            val timingStopTime = preferences[PreferencesKeys.TIMING_STOP_TIME]?.let { Instant.fromEpochMilliseconds(it) }
             if (isTiming != null && timingProjectId != null && timingStartTime != null) {
                 Timer(
                     timingProjectId,
@@ -69,10 +70,10 @@ class DatastoreRepository(
             dataStore.edit { preferences ->
                 preferences[PreferencesKeys.IS_TIMING] = timer.isRunning
                 preferences[PreferencesKeys.TIMING_PROJECT_ID] = timer.projectId
-                preferences[PreferencesKeys.TIMING_START_TIME] = timer.startTime
+                preferences[PreferencesKeys.TIMING_START_TIME] = timer.startTime.toEpochMilliseconds()
                 val stopTime = timer.stopTime
                 if (stopTime != null) {
-                    preferences[PreferencesKeys.TIMING_STOP_TIME] = stopTime
+                    preferences[PreferencesKeys.TIMING_STOP_TIME] = stopTime.toEpochMilliseconds()
                 } else {
                     preferences.remove(PreferencesKeys.TIMING_STOP_TIME)
                 }
@@ -84,7 +85,7 @@ class DatastoreRepository(
         withContext(Dispatchers.IO) {
             dataStore.edit { preferences ->
                 preferences[PreferencesKeys.IS_TIMING] = false
-                timer.stopTime?.let { preferences[PreferencesKeys.TIMING_STOP_TIME] = it }
+                timer.stopTime?.let { preferences[PreferencesKeys.TIMING_STOP_TIME] = it.toEpochMilliseconds() }
             }
         }
     }

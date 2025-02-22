@@ -1,8 +1,8 @@
 package com.mean.traclock.data.repository
 
 import co.touchlab.kermit.Logger
-import com.mean.traclock.data.Record
-import com.mean.traclock.data.Timer
+import com.mean.traclock.model.Record
+import com.mean.traclock.model.Timer
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.datetime.Instant
 
 class TimerRepository(
     private val notificationRepo: NotificationRepository,
@@ -31,7 +32,7 @@ class TimerRepository(
         get() = timer?.projectId
 
     /** 计时器开始的时间，以毫秒为单位 */
-    val startTime: Long?
+    val startTime: Instant?
         get() = timer?.startTime
 
     init {

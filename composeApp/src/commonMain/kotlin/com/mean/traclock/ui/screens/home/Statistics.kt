@@ -27,6 +27,7 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -36,35 +37,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.mean.traclock.data.Record
+import com.mean.traclock.model.Project
+import com.mean.traclock.model.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.utils.TimeUtils
-import com.mean.traclock.utils.TimeUtils.toInt
 import com.mean.traclock.utils.toPercentage
 import com.mean.traclock.viewmodels.StatisticViewModel
-import data.Project
-import io.github.koalaplot.core.bar.DefaultVerticalBar
-import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
-import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
-import io.github.koalaplot.core.bar.VerticalBarPlot
+import com.patrykandpatrick.vico.multiplatform.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.ColumnCartesianLayerMarkerTarget
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
 import io.github.koalaplot.core.pie.DefaultSlice
 import io.github.koalaplot.core.pie.PieChart
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
-import io.github.koalaplot.core.util.generateHueColorPalette
-import io.github.koalaplot.core.xygraph.XYGraph
-import io.github.koalaplot.core.xygraph.rememberIntLinearAxisModel
-import io.github.koalaplot.core.xygraph.rememberLongLinearAxisModel
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import ui.components.HomeScaffold
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Composable
 fun Statistics(
@@ -96,8 +101,8 @@ private fun Content(
     }
     val projectsTime by viewModel.getProjectsTimeOfPeriod(selectedPeriod).collectAsState(listOf())
     val recordsNumber by viewModel.getRecordsNumber(selectedPeriod).collectAsState(0)
-    val duration = projectsTime.sumOf { it.endTime }
-    val data = projectsTime.map { (it.endTime).toFloat() }
+    val duration = projectsTime.sumOf { it.duration.inWholeMilliseconds }
+    val data = projectsTime.map { it.duration.inWholeMilliseconds.toFloat() }
     var selectedProjectIndex by remember(selectedPeriod) { mutableIntStateOf(-1) }
     val scrollableState = rememberScrollState()
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(contentPadding)) {
@@ -119,9 +124,11 @@ private fun Content(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier =
-                        Modifier.padding(
-                            HORIZONTAL_MARGIN,
-                        ).fillMaxWidth(),
+                        Modifier
+                            .padding(
+                                HORIZONTAL_MARGIN,
+                            )
+                            .fillMaxWidth(),
                 ) {
                     val iconSize = 24.dp
                     IconButton(
@@ -152,7 +159,11 @@ private fun Content(
             }
             Row {
                 SimpleStatisticItem("记录数", recordsNumber.toString(), modifier = Modifier.weight(1f))
-                SimpleStatisticItem("时长", TimeUtils.getDurationString(duration), modifier = Modifier.weight(1f))
+                SimpleStatisticItem(
+                    "时长",
+                    TimeUtils.getDurationString(duration.toDuration(DurationUnit.MILLISECONDS)),
+                    modifier = Modifier.weight(1f),
+                )
             }
             when (selectedPeriod.type) {
                 PeriodType.DAY -> {
@@ -161,17 +172,23 @@ private fun Content(
                 }
 
                 PeriodType.WEEK -> {
-                    val records by viewModel.getRecords(selectedPeriod).collectAsState(emptyList())
-                    WeekTrend(records)
+                    val daysDuration by viewModel.watchDaysDuration(selectedPeriod).collectAsState(mapOf())
+                    WeekTrend(selectedPeriod, daysDuration)
                 }
 
                 PeriodType.MONTH -> {
-                    val records by viewModel.getRecords(selectedPeriod).collectAsState(emptyList())
-                    MonthTrend(selectedPeriod, records)
+                    val daysDuration by viewModel.watchDaysDuration(selectedPeriod).collectAsState(mapOf())
+                    MonthTrend(selectedPeriod, daysDuration)
+                }
+
+                PeriodType.YEAR -> {
+                    val monthsDuration by viewModel.watchMonthsDuration(selectedPeriod.startDate.year)
+                        .collectAsState(mapOf())
+                    YearTrend(monthsDuration)
                 }
 
                 PeriodType.ALL_TIME -> {
-                    val durations by viewModel.getDurationsOfYears().collectAsState(emptyMap())
+                    val durations by viewModel.watchYearsDuration().collectAsState(emptyMap())
                     AllTimeTrend(durations)
                 }
             }
@@ -181,11 +198,8 @@ private fun Content(
                     values = data,
                     labelConnector = {},
                     slice = { index ->
-                        val project = viewModel.projects[projectsTime[index % projectsTime.size].project]
-                        val color =
-                            Color(
-                                project?.color ?: 0,
-                            )
+                        val project = viewModel.projects[projectsTime[index % projectsTime.size].projectId]
+                        val color = project?.color ?: Color.Unspecified
                         DefaultSlice(
                             color = color,
                             gap = if (data.size > 1) 0.5f else 0f,
@@ -197,13 +211,23 @@ private fun Content(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         modifier = Modifier.padding(4.dp),
                                     ) {
-                                        viewModel.projects[projectsTime[index % projectsTime.size].project]?.let {
-                                            val endTime = projectsTime[index % projectsTime.size].endTime
+                                        viewModel.projects[projectsTime[index % projectsTime.size].projectId]?.let {
+                                            val endTime =
+                                                projectsTime[index % projectsTime.size].duration.inWholeMilliseconds
                                             Text(it.name, color = MaterialTheme.colorScheme.primary)
                                             Text(
-                                                "${(endTime.toFloat() / projectsTime.sumOf { it.endTime }).toPercentage()}  ${
+                                                "${
+                                                    (
+                                                        endTime.toFloat() /
+                                                            projectsTime.sumOf {
+                                                                it.duration.toLong(
+                                                                    DurationUnit.MILLISECONDS,
+                                                                )
+                                                            }
+                                                    ).toPercentage()
+                                                }  ${
                                                     TimeUtils.getDurationString(
-                                                        endTime,
+                                                        endTime.toDuration(DurationUnit.MILLISECONDS),
                                                     )
                                                 }",
                                             )
@@ -212,11 +236,12 @@ private fun Content(
                                 }
                             },
                             onClick = {
-                                if (selectedProjectIndex == index) {
-                                    selectedProjectIndex = -1
-                                } else {
-                                    selectedProjectIndex = index
-                                }
+                                selectedProjectIndex =
+                                    if (selectedProjectIndex == index) {
+                                        -1
+                                    } else {
+                                        index
+                                    }
                             },
                         )
                     },
@@ -236,35 +261,47 @@ private fun Content(
                     color = MaterialTheme.colorScheme.onSurface
                 }
                 Row(
-                    Modifier.clickable {
-                        if (selectedProjectIndex == index) {
-                            selectedProjectIndex = -1
-                        } else {
-                            selectedProjectIndex = index
+                    Modifier
+                        .clickable {
+                            selectedProjectIndex =
+                                if (selectedProjectIndex == index) {
+                                    -1
+                                } else {
+                                    index
+                                }
                         }
-                    }.padding(horizontal = HORIZONTAL_MARGIN, vertical = 6.dp).fillMaxWidth(),
+                        .padding(horizontal = HORIZONTAL_MARGIN, vertical = 6.dp)
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Circle,
                         contentDescription = null,
-                        tint = Color(viewModel.projects[project.project]?.color ?: 0),
-                        modifier = Modifier.size(20.dp).padding(end = 8.dp),
+                        tint = viewModel.projects[project.projectId]?.color ?: Color.Unspecified,
+                        modifier =
+                            Modifier
+                                .size(20.dp)
+                                .padding(end = 8.dp),
                     )
                     Text(
-                        viewModel.projects[project.project]?.name ?: "",
+                        viewModel.projects[project.projectId]?.name ?: "",
                         fontWeight = fontWeight,
                         color = color,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        ((project.endTime).toFloat() / projectsTime.sumOf { it.endTime }).toPercentage(),
+                        (
+                            project.duration.inWholeMilliseconds
+                                .toFloat() / projectsTime.sumOf { it.duration.inWholeMilliseconds }
+                        ).toPercentage(),
                         fontWeight = fontWeight,
                         color = color,
                         modifier = Modifier.padding(end = 16.dp),
                     )
                     Text(
-                        TimeUtils.getDurationString(project.endTime),
+                        TimeUtils.getDurationString(
+                            project.duration.inWholeMilliseconds.toDuration(DurationUnit.MILLISECONDS),
+                        ),
                         fontWeight = fontWeight,
                         fontFamily = FontFamily.Monospace,
                         color = color,
@@ -287,13 +324,19 @@ private fun SimpleStatisticItem(
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp, bottom = 4.dp),
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp, bottom = 4.dp),
         )
         Text(
             title,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 4.dp, bottom = 16.dp),
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 4.dp, bottom = 16.dp),
         )
     }
 }
@@ -312,26 +355,38 @@ private fun DayTimeline(
         Row {
             if (records.isEmpty()) {
                 Spacer(
-                    modifier = Modifier.weight(1f).height(height).background(freeColor),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(height)
+                            .background(freeColor),
                 )
             } else {
                 Spacer(
                     modifier =
-                        Modifier.weight((TimeUtils.getMillisOfDay(records[0].startTime)) / totalMillis.toFloat())
+                        Modifier
+                            .weight((TimeUtils.getMillisOfDay(records[0].startTime)) / totalMillis.toFloat())
                             .height(height)
                             .background(freeColor),
                 )
                 records.forEachIndexed { index, it ->
                     Spacer(
                         modifier =
-                            Modifier.weight((it.endTime - it.startTime) / totalMillis.toFloat()).height(height)
-                                .background(Color(projects[it.project]?.color ?: 0)),
+                            Modifier
+                                .weight((it.endTime - it.startTime).inWholeMilliseconds / totalMillis.toFloat())
+                                .height(height)
+                                .background(projects[it.projectId]?.color ?: Color.Unspecified),
                     )
                     if (index < records.size - 1) {
                         if (records[index + 1].startTime > it.endTime) {
                             Spacer(
                                 modifier =
-                                    Modifier.weight((records[index + 1].startTime - it.endTime) / totalMillis.toFloat())
+                                    Modifier
+                                        .weight(
+                                            (records[index + 1].startTime - it.endTime).toLong(
+                                                DurationUnit.MILLISECONDS,
+                                            ) / totalMillis.toFloat(),
+                                        )
                                         .height(height)
                                         .background(freeColor),
                             )
@@ -340,7 +395,8 @@ private fun DayTimeline(
                 }
                 Spacer(
                     modifier =
-                        Modifier.weight((totalMillis - TimeUtils.getMillisOfDay(records.last().endTime)) / totalMillis.toFloat())
+                        Modifier
+                            .weight((totalMillis - TimeUtils.getMillisOfDay(records.last().endTime)) / totalMillis.toFloat())
                             .height(height)
                             .background(freeColor),
                 )
@@ -364,93 +420,128 @@ private fun DayTimeline(
 
 @Composable
 private fun WeekTrend(
-    records: List<Record>,
+    period: Period,
+    records: Map<LocalDate, Duration>,
     modifier: Modifier = Modifier,
 ) {
+    val days = period.getDays()
     val data =
-        records.groupBy { it.date }.mapKeys { TimeUtils.getDayOfWeek(it.key) }
-            .mapValues { (_, records) -> records.sumOf { it.endTime - it.startTime } }
-    val maxTime = data.values.maxOrNull() ?: 1
+        days.associate {
+            it.dayOfWeek.value to (records[it] ?: Duration.ZERO)
+        }
 
-    fun xLables(date: Int): String {
-        if (date < 1 || date > 7) return ""
-        return TimeUtils.CHINESE_DAY_OF_WEEK_NAMES.names[date - 1]
+    val xLables = { day: Int ->
+        if (day < 1 || day > 7) {
+            ""
+        } else {
+            TimeUtils.CHINESE_DAY_OF_WEEK_NAMES.names[day - 1]
+        }
     }
 
-    Chart(0..8, maxTime, data, ::xLables, modifier)
+    Chart(data, modifier, xLables)
 }
 
 @Composable
 private fun MonthTrend(
     period: Period,
-    records: List<Record>,
+    records: Map<LocalDate, Duration>,
     modifier: Modifier = Modifier,
 ) {
-    val data = records.groupBy { it.date }.mapValues { (_, records) -> records.sumOf { it.endTime - it.startTime } }
-    val days = period.startDate.toInt()..period.endDate.toInt()
-    val maxTime = data.values.maxOrNull() ?: 1
+    val days = period.getDays()
+    val data =
+        days.associate {
+            it.dayOfMonth to (records[it] ?: Duration.ZERO)
+        }
+    val xLables = { month: Int -> "${month}月" }
+    Chart(data, modifier, xLables)
+}
 
-    fun xLables(date: Int): String {
-        val localDate = TimeUtils.getDate(date)
-        return "${localDate.dayOfMonth}日"
-    }
-    Chart(days, maxTime, data, ::xLables, modifier)
+@Composable
+private fun YearTrend(
+    records: Map<Int, Duration>,
+    modifier: Modifier = Modifier,
+) {
+    val months = (1..12)
+    val data =
+        months.associateWith { (records[it] ?: Duration.ZERO) }
+
+    Chart(data, modifier)
 }
 
 @Composable
 private fun AllTimeTrend(
-    durations: Map<Int, Long>,
+    durations: Map<Int, Duration>,
     modifier: Modifier = Modifier,
 ) {
-    if (durations.isNotEmpty()) {
-        val days = durations.keys.last() - 2..durations.keys.first() + 1
-        val maxTime = durations.values.max()
-
-        fun xLables(year: Int): String {
-            return "${year}年"
-        }
-        Chart(days, maxTime, durations, ::xLables, modifier)
-    }
+    val currentYear = TimeUtils.getCurrentYear()
+    val years = ((durations.keys.lastOrNull() ?: currentYear) - 2)..(durations.keys.firstOrNull() ?: currentYear)
+    val data = years.associateWith { (durations[it] ?: Duration.ZERO) }
+    Chart(data, modifier)
 }
 
-@OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 private fun Chart(
-    days: IntRange,
-    maxTime: Long,
-    data: Map<Int, Long>,
-    xLables: (Int) -> String,
+    data: Map<Int, Duration>,
     modifier: Modifier = Modifier,
+    xLables: ((Int) -> String) = { it.toString() },
 ) {
-    val colors = generateHueColorPalette(data.size)
-    // FIXME remove after koalaplot update
-    val zoomRangeLimit = if (maxTime < 5) 1 else (maxTime * 0.2).toLong()
-    XYGraph(
-        xAxisModel = rememberIntLinearAxisModel(days),
-        yAxisModel = rememberLongLinearAxisModel(0..maxTime, minViewExtent = zoomRangeLimit),
-        xAxisLabels = xLables,
-        yAxisLabels = TimeUtils::getDurationString,
-        modifier = modifier.height(200.dp).padding(8.dp),
-    ) {
-        VerticalBarPlot(
-            data =
-                data.map {
-                    DefaultVerticalBarPlotEntry(
-                        x = it.key,
-                        y = DefaultVerticalBarPosition(yMin = 0, yMax = it.value),
+    val scrollState = rememberVicoScrollState()
+    val modelProducer = remember { CartesianChartModelProducer() }
+    val maxDuration = data.values.max()
+    LaunchedEffect(data) {
+        modelProducer.runTransaction {
+            columnSeries {
+                series(
+                    x = data.keys,
+                    y = data.values.map { it.inWholeMilliseconds },
+                )
+            }
+        }
+    }
+
+    val marker =
+        DefaultCartesianMarker(
+            label = rememberTextComponent(),
+            valueFormatter = { _, targets ->
+                val duration =
+                    TimeUtils.getDurationString(
+                        (targets.first() as ColumnCartesianLayerMarkerTarget).columns.first().entry.y.toDuration(
+                            DurationUnit.MILLISECONDS,
+                        ),
                     )
-                },
-            bar = {
-                DefaultVerticalBar(SolidColor(colors[it]))
+                duration
             },
         )
-    }
+
+    CartesianChartHost(
+        chart =
+            rememberCartesianChart(
+                rememberColumnCartesianLayer(),
+                startAxis =
+                    VerticalAxis.rememberStart(
+                        valueFormatter = { _, y, _ ->
+                            TimeUtils.getShortDurationString(y.toDuration(DurationUnit.MILLISECONDS), maxDuration)
+                        },
+                    ),
+                bottomAxis =
+                    HorizontalAxis.rememberBottom(
+                        valueFormatter = { _, x, _ ->
+                            xLables(x.toInt())
+                        },
+                    ),
+                marker = marker,
+            ),
+        modelProducer = modelProducer,
+        modifier = modifier,
+        scrollState = scrollState,
+    )
 }
 
 enum class PeriodType(val label: String) {
     DAY("天"),
     WEEK("周"),
     MONTH("月"),
+    YEAR("年"),
     ALL_TIME("全部"),
 }
 
@@ -484,6 +575,12 @@ data class Period(
                 newPeriod = newPeriod.copy(startDate = start, endDate = end)
             }
 
+            PeriodType.YEAR -> {
+                val start = TimeUtils.getFirstDayOfYear(if (endDate > today) today else endDate)
+                val end = TimeUtils.getLastDayOfYear(start)
+                newPeriod = newPeriod.copy(startDate = start, endDate = end)
+            }
+
             PeriodType.ALL_TIME -> {}
         }
         return newPeriod
@@ -510,6 +607,11 @@ data class Period(
                     copy(startDate = start, endDate = TimeUtils.getLastDayOfMonth(start))
                 }
 
+                PeriodType.YEAR -> {
+                    val start = startDate.minus(1, DateTimeUnit.YEAR)
+                    copy(startDate = start, endDate = TimeUtils.getLastDayOfYear(start))
+                }
+
                 PeriodType.ALL_TIME -> this
             }
 
@@ -534,6 +636,12 @@ data class Period(
                     copy(startDate = start, endDate = end)
                 }
 
+                PeriodType.YEAR -> {
+                    val start = startDate.plus(1, DateTimeUnit.YEAR)
+                    val end = TimeUtils.getLastDayOfYear(start)
+                    copy(startDate = start, endDate = end)
+                }
+
                 PeriodType.ALL_TIME -> this
             }
         }
@@ -544,6 +652,7 @@ data class Period(
                 PeriodType.DAY -> TimeUtils.getToday() > endDate
                 PeriodType.WEEK -> TimeUtils.getToday() > endDate
                 PeriodType.MONTH -> TimeUtils.getToday() > endDate
+                PeriodType.YEAR -> TimeUtils.getToday() > endDate
                 PeriodType.ALL_TIME -> false
             }
 
@@ -552,6 +661,17 @@ data class Period(
             PeriodType.DAY -> TimeUtils.getDisplayDate(startDate)
             PeriodType.WEEK -> TimeUtils.getDisplayPeriod(startDate, endDate)
             PeriodType.MONTH -> TimeUtils.getMonthString(startDate)
+            PeriodType.YEAR -> startDate.year.toString()
             PeriodType.ALL_TIME -> "全部"
         }
+
+    fun getDays(): List<LocalDate> {
+        val days = mutableListOf<LocalDate>()
+        var date = startDate
+        while (date <= endDate) {
+            days.add(date)
+            date = date.plus(1, DateTimeUnit.DAY)
+        }
+        return days
+    }
 }

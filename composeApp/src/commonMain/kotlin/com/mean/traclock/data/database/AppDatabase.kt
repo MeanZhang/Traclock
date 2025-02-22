@@ -2,14 +2,16 @@ package com.mean.traclock.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.mean.traclock.data.Record
-import data.Project
+import androidx.room.TypeConverters
+import com.mean.traclock.model.Project
+import com.mean.traclock.model.Record
 
 @Database(
     entities = [Project::class, Record::class],
     version = 1,
     exportSchema = false,
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase(), DB {
     abstract fun projectDao(): ProjectDao
 

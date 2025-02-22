@@ -5,6 +5,7 @@ import androidx.compose.ui.window.TrayState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.getString
 import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.app_name
@@ -21,7 +22,7 @@ actual class NotificationRepository {
     actual fun notify(
         projectName: String,
         isRunning: Boolean,
-        startTime: Long,
+        startTime: Instant,
     ) {
         CoroutineScope(Dispatchers.Default).launch {
             val text =
