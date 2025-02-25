@@ -68,7 +68,7 @@ fun OpenSourceLicenses(
 }
 
 private val LICENSES =
-    listOf(
+    setOf(
         License(
             "Accompanist",
             "https://github.com/google/accompanist",
@@ -93,6 +93,11 @@ private val LICENSES =
             "Dotenv Gradle",
             "https://github.com/uzzu/dotenv-gradle",
             "Apache License 2.0",
+        ),
+        License(
+            "FileKit",
+            "https://github.com/vinceglb/FileKit",
+            "MIT License",
         ),
         License(
             "Kermit",
@@ -138,16 +143,6 @@ private val LICENSES =
             "Vico",
             "https://github.com/patrykandpatrick/vico",
             "Apache License 2.0",
-        ),
-        License(
-            "FileKit",
-            "https://github.com/vinceglb/FileKit",
-            "MIT License",
-        ),
-        License(
-            "Koala Plot",
-            "https://koalaplot.github.io/",
-            "MIT License",
         ),
     ).sortedBy { it.name.lowercase() }
 
