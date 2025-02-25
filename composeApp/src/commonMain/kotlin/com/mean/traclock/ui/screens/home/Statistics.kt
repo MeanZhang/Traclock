@@ -40,7 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import co.touchlab.kermit.Logger
 import com.mean.traclock.model.Project
 import com.mean.traclock.model.Record
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
@@ -348,7 +347,6 @@ private fun DayTimeline(
     modifier: Modifier = Modifier,
 ) {
     val totalMillis = 24 * 60 * 60 * 1000
-    Logger.d("records: $records")
     val height = 24.dp
     val freeColor = MaterialTheme.colorScheme.inverseOnSurface
     Column(modifier = modifier.padding(vertical = 8.dp)) {
@@ -452,8 +450,7 @@ private fun MonthTrend(
         days.associate {
             it.dayOfMonth to (records[it] ?: Duration.ZERO)
         }
-    val xLables = { month: Int -> "${month}月" }
-    Chart(data, modifier, xLables)
+    Chart(data, modifier)
 }
 
 @Composable

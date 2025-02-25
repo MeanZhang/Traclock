@@ -19,10 +19,10 @@ kotlin {
         }
     }
 
-//    jvm("desktop")
+    jvm("desktop")
 
     sourceSets {
-//        val desktopMain by getting
+        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -66,10 +66,10 @@ kotlin {
             // vico
             implementation(libs.vico)
         }
-//        desktopMain.dependencies {
-//            implementation(compose.desktop.currentOs)
-//            implementation(libs.kotlinx.coroutines.swing)
-//        }
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
     }
 }
 
