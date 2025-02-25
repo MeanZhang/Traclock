@@ -1,12 +1,11 @@
 package com.mean.traclock.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -24,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.model.Record
+import com.mean.traclock.ui.utils.onClick
 import com.mean.traclock.utils.TimeUtils
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -31,7 +31,6 @@ import traclock.composeapp.generated.resources.Res
 import traclock.composeapp.generated.resources.delete
 import ui.components.SmallOutlinedButton
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecordItem(
     record: Record,
@@ -50,11 +49,11 @@ fun RecordItem(
     ListItem(
         modifier =
             modifier
-                .combinedClickable(
+                .onClick(
                     onClick = {
                         navToEditRecord(record.recordId)
                     },
-                    onLongClick =
+                    onSecondaryClick =
                         { showMenu = true },
                 ),
         leadingContent = {
@@ -72,7 +71,14 @@ fun RecordItem(
                 Text(projectName, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 DropdownMenu(showMenu, { showMenu = false }) {
                     DropdownMenuItem(
-                        text = { Text(stringResource(Res.string.delete)) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error,
+                            )
+                        },
+                        text = { Text(stringResource(Res.string.delete), color = MaterialTheme.colorScheme.error) },
                         onClick = {
                             showMenu = false
                             deleteRecord(record)
