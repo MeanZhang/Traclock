@@ -29,8 +29,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             // Accompanist Permissions
             implementation(libs.accompanist.permissions)
-            // material-components
-            implementation(libs.androidx.material)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
