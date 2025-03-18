@@ -25,7 +25,7 @@ class EditRecordViewModel(
     savedStateHandle: SavedStateHandle,
     private val recordsRepo: RecordsRepository,
     private val recordWithProjectRepo: RecordWithProjectRepository,
-    projectsRepo: ProjectsRepository,
+    private val projectsRepo: ProjectsRepository,
 ) : ViewModel() {
     private lateinit var recordWithProject: RecordWithProject
     private val _projectId: MutableStateFlow<Long?> = MutableStateFlow(null)
@@ -46,6 +46,7 @@ class EditRecordViewModel(
     init {
         runBlocking(Dispatchers.IO) {
             recordWithProject = recordWithProjectRepo.get(savedStateHandle.get<Long>("id")!!)
+            _projectName.value = recordWithProject.projectName
             _projectId.value = recordWithProject.projectId
             _startTime.value = recordWithProject.startTime
             _endTime.value = recordWithProject.endTime
@@ -86,6 +87,9 @@ class EditRecordViewModel(
 
     fun setProject(projectId: Long) {
         _projectId.value = projectId
+        viewModelScope.launch(Dispatchers.IO) {
+            _projectName.value = projectsRepo.get(projectId).name
+        }
     }
 
     /**

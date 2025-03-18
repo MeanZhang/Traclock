@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.mean.traclock.ui.components.ProjectDurationItem
 import com.mean.traclock.ui.components.TimingCard
@@ -31,9 +30,9 @@ fun Projects(
     modifier: Modifier = Modifier,
 ) {
     val isTiming by viewModel.isTiming.collectAsState(false)
+    val timingProjectName by viewModel.timingProjectName.collectAsState(null)
     val projectsTime by viewModel.projectsTime.collectAsState(listOf())
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     HomeScaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -53,7 +52,7 @@ fun Projects(
                     exit = shrinkVertically(),
                 ) {
                     TimingCard(
-                        projectName = viewModel.timingProjectName ?: "",
+                        projectName = timingProjectName ?: "",
                         startTime = viewModel.startTime,
                         stopTiming = viewModel::stopTiming,
                     )

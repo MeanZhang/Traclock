@@ -51,6 +51,7 @@ fun TimeLine(
     modifier: Modifier = Modifier,
 ) {
     val isTiming by viewModel.isTiming.collectAsState(false)
+    val timingProjectName by viewModel.timingProjectName.collectAsState(null)
     val detailView by viewModel.detailView.collectAsState()
     val recordsWithProject by viewModel.daysRecordsWithProject.collectAsState(mapOf())
     val daysProjectsDuration by viewModel.daysProjectsDuration.collectAsState(mapOf())
@@ -85,7 +86,7 @@ fun TimeLine(
                         exit = shrinkVertically(),
                     ) {
                         TimingCard(
-                            projectName = viewModel.timingProjectName ?: "",
+                            projectName = timingProjectName ?: "",
                             startTime = viewModel.startTime,
                             stopTiming = viewModel::stopTiming,
                         )

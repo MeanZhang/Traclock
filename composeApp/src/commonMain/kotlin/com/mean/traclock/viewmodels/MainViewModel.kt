@@ -34,8 +34,7 @@ class MainViewModel(
 
     val isTiming = timerRepo.isTiming
 
-    val timingProjectName: String?
-        get() = timerRepo.projectName
+    val timingProjectName = timerRepo.projectName
 
     val startTime: Instant?
         get() = timerRepo.startTime

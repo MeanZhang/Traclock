@@ -14,6 +14,8 @@ data class RecordWithProject(
         get() = record.startTime
     val endTime: Instant
         get() = record.endTime
+    val projectName: String
+        get() = project.name
     val color: Color
         get() = project.color
 }

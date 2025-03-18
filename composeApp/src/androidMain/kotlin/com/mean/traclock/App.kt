@@ -50,10 +50,8 @@ class App : Application() {
     }
 
     private fun initNotification() {
-        if (timerRepo.isTiming.value) {
-            CoroutineScope(Dispatchers.IO).launch {
-                timerRepo.updateNotification()
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            timerRepo.updateNotification()
         }
     }
 }
