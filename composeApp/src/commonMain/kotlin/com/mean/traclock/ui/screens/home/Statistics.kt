@@ -40,8 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mean.traclock.model.Project
-import com.mean.traclock.model.Record
+import com.mean.traclock.model.RecordWithProject
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.utils.TimeUtils
@@ -98,10 +97,10 @@ private fun Content(
             ),
         )
     }
-    val projectsTime by viewModel.getProjectsTimeOfPeriod(selectedPeriod).collectAsState(listOf())
+    val projectsDuration by viewModel.getProjectsDuration(selectedPeriod).collectAsState(listOf())
     val recordsNumber by viewModel.getRecordsNumber(selectedPeriod).collectAsState(0)
-    val duration = projectsTime.sumOf { it.duration.inWholeMilliseconds }
-    val data = projectsTime.map { it.duration.inWholeMilliseconds.toFloat() }
+    val duration = projectsDuration.sumOf { it.duration.inWholeMilliseconds }
+    val data = projectsDuration.map { it.duration.inWholeMilliseconds.toFloat() }
     var selectedProjectIndex by remember(selectedPeriod) { mutableIntStateOf(-1) }
     val scrollableState = rememberScrollState()
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(contentPadding)) {
@@ -166,8 +165,8 @@ private fun Content(
             }
             when (selectedPeriod.type) {
                 PeriodType.DAY -> {
-                    val records by viewModel.getRecords(selectedPeriod.startDate).collectAsState(emptyList())
-                    DayTimeline(records, viewModel.projects)
+                    val records by viewModel.getRecordsWithProject(selectedPeriod.startDate).collectAsState(emptyList())
+                    DayTimeline(records)
                 }
 
                 PeriodType.WEEK -> {
@@ -192,15 +191,14 @@ private fun Content(
                 }
             }
             HorizontalDivider()
-            if (projectsTime.isNotEmpty()) {
+            if (projectsDuration.isNotEmpty()) {
                 PieChart(
                     values = data,
                     labelConnector = {},
                     slice = { index ->
-                        val project = viewModel.projects[projectsTime[index % projectsTime.size].projectId]
-                        val color = project?.color ?: Color.Unspecified
+                        val projectDuration = projectsDuration[index % projectsDuration.size]
                         DefaultSlice(
-                            color = color,
+                            color = projectDuration.color,
                             gap = if (data.size > 1) 0.5f else 0f,
                             clickable = true,
                             hoverExpandFactor = 1.05f,
@@ -210,27 +208,24 @@ private fun Content(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         modifier = Modifier.padding(4.dp),
                                     ) {
-                                        viewModel.projects[projectsTime[index % projectsTime.size].projectId]?.let {
-                                            val endTime =
-                                                projectsTime[index % projectsTime.size].duration.inWholeMilliseconds
-                                            Text(it.name, color = MaterialTheme.colorScheme.primary)
-                                            Text(
-                                                "${
-                                                    (
-                                                        endTime.toFloat() /
-                                                            projectsTime.sumOf {
-                                                                it.duration.toLong(
-                                                                    DurationUnit.MILLISECONDS,
-                                                                )
-                                                            }
-                                                    ).toPercentage()
-                                                }  ${
-                                                    TimeUtils.getDurationString(
-                                                        endTime.toDuration(DurationUnit.MILLISECONDS),
-                                                    )
-                                                }",
-                                            )
-                                        }
+                                        val endTime = projectDuration.duration.inWholeMilliseconds
+                                        Text(projectDuration.name, color = MaterialTheme.colorScheme.primary)
+                                        Text(
+                                            "${
+                                                (
+                                                    endTime.toFloat() /
+                                                        projectsDuration.sumOf {
+                                                            it.duration.toLong(
+                                                                DurationUnit.MILLISECONDS,
+                                                            )
+                                                        }
+                                                ).toPercentage()
+                                            }  ${
+                                                TimeUtils.getDurationString(
+                                                    endTime.toDuration(DurationUnit.MILLISECONDS),
+                                                )
+                                            }",
+                                        )
                                     }
                                 }
                             },
@@ -249,7 +244,7 @@ private fun Content(
                     forceCenteredPie = true,
                 )
             }
-            projectsTime.forEachIndexed { index, project ->
+            projectsDuration.forEachIndexed { index, projectDuration ->
                 var fontWeight by remember { mutableStateOf(FontWeight.Normal) }
                 var color by remember { mutableStateOf(Color.Black) }
                 if (index == selectedProjectIndex) {
@@ -276,22 +271,22 @@ private fun Content(
                     Icon(
                         imageVector = Icons.Default.Circle,
                         contentDescription = null,
-                        tint = viewModel.projects[project.projectId]?.color ?: Color.Unspecified,
+                        tint = projectDuration.color,
                         modifier =
                             Modifier
                                 .size(20.dp)
                                 .padding(end = 8.dp),
                     )
                     Text(
-                        viewModel.projects[project.projectId]?.name ?: "",
+                        projectDuration.name,
                         fontWeight = fontWeight,
                         color = color,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
                         (
-                            project.duration.inWholeMilliseconds
-                                .toFloat() / projectsTime.sumOf { it.duration.inWholeMilliseconds }
+                            projectDuration.duration.inWholeMilliseconds
+                                .toFloat() / projectsDuration.sumOf { it.duration.inWholeMilliseconds }
                         ).toPercentage(),
                         fontWeight = fontWeight,
                         color = color,
@@ -299,7 +294,7 @@ private fun Content(
                     )
                     Text(
                         TimeUtils.getDurationString(
-                            project.duration.inWholeMilliseconds.toDuration(DurationUnit.MILLISECONDS),
+                            projectDuration.duration.inWholeMilliseconds.toDuration(DurationUnit.MILLISECONDS),
                         ),
                         fontWeight = fontWeight,
                         fontFamily = FontFamily.Monospace,
@@ -342,8 +337,7 @@ private fun SimpleStatisticItem(
 
 @Composable
 private fun DayTimeline(
-    records: List<Record>,
-    projects: Map<Long, Project>,
+    records: List<RecordWithProject>,
     modifier: Modifier = Modifier,
 ) {
     val totalMillis = 24 * 60 * 60 * 1000
@@ -373,7 +367,7 @@ private fun DayTimeline(
                             Modifier
                                 .weight((it.endTime - it.startTime).inWholeMilliseconds / totalMillis.toFloat())
                                 .height(height)
-                                .background(projects[it.projectId]?.color ?: Color.Unspecified),
+                                .background(it.color),
                     )
                     if (index < records.size - 1) {
                         if (records[index + 1].startTime > it.endTime) {

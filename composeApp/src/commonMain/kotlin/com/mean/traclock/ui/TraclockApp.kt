@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mean.traclock.data.repository.ProjectsRepository
+import com.mean.traclock.data.repository.RecordWithProjectRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
 import com.mean.traclock.ui.components.HomeBottomBar
@@ -43,6 +44,7 @@ import com.mean.traclock.viewmodels.StatisticViewModel
 @Composable
 fun TraclockApp(
     recordsRepo: RecordsRepository,
+    recordWithProjectRepo: RecordWithProjectRepository,
     projectsRepo: ProjectsRepository,
     timerRepo: TimerRepository,
 ) {
@@ -51,7 +53,7 @@ fun TraclockApp(
         viewModel {
             MainViewModel(
                 recordsRepo = recordsRepo,
-                projectsRepo = projectsRepo,
+                recordWithProjectRepo = recordWithProjectRepo,
                 timerRepo = timerRepo,
             )
         }
@@ -86,6 +88,7 @@ fun TraclockApp(
                             viewModel {
                                 StatisticViewModel(
                                     recordsRepo = recordsRepo,
+                                    recordWithProjectRepo = recordWithProjectRepo,
                                     projectsRepo = projectsRepo,
                                     timerRepo = timerRepo,
                                 )
@@ -168,6 +171,7 @@ fun TraclockApp(
                                         mapOf("id" to navController.currentBackStackEntry?.arguments?.getLong("id")),
                                     ),
                                 recordsRepo = recordsRepo,
+                                recordWithProjectRepo = recordWithProjectRepo,
                                 projectsRepo = projectsRepo,
                             )
                         },
@@ -176,7 +180,7 @@ fun TraclockApp(
             }
             composable(Route.BACKUP_RESTORE) {
                 BackupRestore(
-                    viewModel = viewModel { BackupRestoreViewModel(projectsRepo, recordsRepo) },
+                    viewModel = viewModel { BackupRestoreViewModel(projectsRepo, recordsRepo, recordWithProjectRepo) },
                     navBack = { navController.navigateUp() },
                 )
             }

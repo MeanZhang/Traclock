@@ -3,7 +3,7 @@ package com.mean.traclock.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mean.traclock.data.repository.ProjectsRepository
+import com.mean.traclock.data.repository.RecordWithProjectRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
 import com.mean.traclock.model.Record
@@ -20,15 +20,13 @@ import traclock.composeapp.generated.resources.is_running_description
 
 class MainViewModel(
     private val recordsRepo: RecordsRepository,
-    projectsRepo: ProjectsRepository,
+    recordWithProjectRepo: RecordWithProjectRepository,
     private val timerRepo: TimerRepository,
 ) : ViewModel() {
-    val daysRecords = recordsRepo.getDaysRecords()
+    val daysRecordsWithProject = recordWithProjectRepo.getDaysRecordsWithProject()
     val daysProjectsDuration = recordsRepo.watchDaysProjectsDuration()
     val timeOfDays = recordsRepo.watchDaysDuration()
     val projectsTime = recordsRepo.watchProjectsDuration()
-
-    val projects = projectsRepo.projects
 
     private val _detailView = MutableStateFlow(true)
     val detailView: StateFlow<Boolean>
@@ -36,8 +34,8 @@ class MainViewModel(
 
     val isTiming = timerRepo.isTiming
 
-    val timingProjectId: Long?
-        get() = timerRepo.projectId
+    val timingProjectName: String?
+        get() = timerRepo.projectName
 
     val startTime: Instant?
         get() = timerRepo.startTime

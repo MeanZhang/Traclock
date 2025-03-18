@@ -16,6 +16,7 @@ import com.mean.traclock.data.repository.DATA_STORE_FILE_NAME
 import com.mean.traclock.data.repository.DatastoreRepository
 import com.mean.traclock.data.repository.NotificationRepository
 import com.mean.traclock.data.repository.ProjectsRepository
+import com.mean.traclock.data.repository.RecordWithProjectRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
 import com.mean.traclock.data.repository.getDataStore
@@ -38,6 +39,7 @@ fun main() =
         val scope = rememberCoroutineScope()
         val database = getAppDatabase()
         val recordsRepo = RecordsRepository(database.recordDao())
+        val recordWithProjectRepo = RecordWithProjectRepository(database.recordWithProjectDao())
         val projectsRepo = ProjectsRepository(database.projectDao(), database.recordDao())
         val dataStore =
             getDataStore { (System.getProperty("user.home").toPath() / ".traclock" / DATA_STORE_FILE_NAME).toString() }
@@ -65,6 +67,7 @@ fun main() =
             MaterialTheme {
                 TraclockApp(
                     recordsRepo = recordsRepo,
+                    recordWithProjectRepo = recordWithProjectRepo,
                     projectsRepo = projectsRepo,
                     timerRepo = timerRepo,
                 )

@@ -31,23 +31,34 @@ class TimerRepository(
     val projectId: Long?
         get() = timer?.projectId
 
+    private var _projectName: String? = null
+
+    /** 当前的项目名 */
+    val projectName: String?
+        get() = _projectName
+
     /** 计时器开始的时间，以毫秒为单位 */
     val startTime: Instant?
         get() = timer?.startTime
 
     init {
         // 从 DataStore 中恢复计时器
-        runBlocking { timer = datastoreRepo.timer.first() }
+        runBlocking {
+            timer = datastoreRepo.timer.first()
+            if (timer != null) {
+                _projectName = projectsRepo.get(timer!!.projectId).name
+            }
+        }
         _isTiming.value = timer?.isRunning ?: false
         Logger.d("恢复计时器: $timer")
     }
 
     /** 更新计时通知 */
-    fun updateNotification() {
+    suspend fun updateNotification() {
         if (timer != null) {
             Logger.d("更新计时通知")
             notificationRepo.notify(
-                projectsRepo.projects[projectId]!!.name,
+                projectsRepo.get(projectId!!).name,
                 timer!!.isRunning,
                 startTime!!,
             )

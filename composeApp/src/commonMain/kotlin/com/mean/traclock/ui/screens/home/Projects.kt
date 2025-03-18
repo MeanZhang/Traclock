@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.mean.traclock.ui.components.ProjectDurationItem
 import com.mean.traclock.ui.components.TimingCard
 import com.mean.traclock.ui.navigation.HomeRoute
@@ -54,19 +53,19 @@ fun Projects(
                     exit = shrinkVertically(),
                 ) {
                     TimingCard(
-                        projectName = viewModel.projects[viewModel.timingProjectId]!!.name,
+                        projectName = viewModel.timingProjectName ?: "",
                         startTime = viewModel.startTime,
                         stopTiming = viewModel::stopTiming,
                     )
                 }
             }
-            items(projectsTime, key = { it.projectId }) { projectDuration ->
+            items(projectsTime, key = { it.project.id }) { projectDuration ->
                 ProjectDurationItem(
                     projectDuration = projectDuration,
                     navToProject = navToProject,
-                    projectName = viewModel.projects[projectDuration.projectId]?.name ?: "",
-                    color = viewModel.projects[projectDuration.projectId]?.color ?: Color.Transparent,
-                    startTiming = { viewModel.startTiming(projectDuration.projectId) },
+                    projectName = projectDuration.project.name,
+                    color = projectDuration.project.color,
+                    startTiming = { viewModel.startTiming(projectDuration.project.id) },
                 )
             }
         }

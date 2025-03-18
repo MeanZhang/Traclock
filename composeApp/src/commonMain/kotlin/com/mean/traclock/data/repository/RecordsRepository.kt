@@ -126,9 +126,7 @@ class RecordsRepository(private val recordDao: RecordDao) {
      * 获取每个项目的总时长
      * @return 所有每个的总时长
      */
-    fun watchProjectsDuration(): Flow<List<ProjectDuration>> =
-        recordDao.watchProjectsDuration()
-            .map { it.map { projectDurationEntry -> projectDurationEntry.toProjectDuration() } }
+    fun watchProjectsDuration(): Flow<List<ProjectDuration>> = recordDao.watchProjectsDuration()
 
     /**
      * 获取指定日期范围内的各项目时长
@@ -139,28 +137,15 @@ class RecordsRepository(private val recordDao: RecordDao) {
     fun watchProjectsDuration(
         startDate: LocalDate,
         endDate: LocalDate,
-    ): Flow<List<ProjectDuration>> =
-        recordDao.watchProjectsDuration(startDate.toInt(), endDate.toInt()).map {
-            it.map { projectDurationEntry -> projectDurationEntry.toProjectDuration() }
-        }
+    ): Flow<List<ProjectDuration>> = recordDao.watchProjectsDuration(startDate.toInt(), endDate.toInt())
 
     /**
      * 获取每天的各项目时长
      * @return 每天的各项目时长
      */
-    fun watchDaysProjectsDuration(): Flow<Map<Int, List<ProjectDuration>>> =
-        recordDao.watchDaysProjectsDuration().map {
-            it.mapValues { (_, value) -> value.map { projectDurationEntry -> projectDurationEntry.toProjectDuration() } }
-        }
+    fun watchDaysProjectsDuration(): Flow<Map<Int, List<ProjectDuration>>> = recordDao.watchDaysProjectsDuration()
 
     // **** 时长 ****
-
-    /**
-     * 获取指定日期的总时长
-     * @param date 日期
-     * @return 指定日期的总时长
-     */
-    fun watchDayDuration(date: LocalDate) = recordDao.watchDayDuration(date.toInt())
 
     /**
      * 获取每天的总时长

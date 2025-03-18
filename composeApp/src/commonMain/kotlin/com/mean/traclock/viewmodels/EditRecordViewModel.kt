@@ -4,8 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mean.traclock.data.repository.ProjectsRepository
+import com.mean.traclock.data.repository.RecordWithProjectRepository
 import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.model.Record
+import com.mean.traclock.model.RecordWithProject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,16 +24,20 @@ import kotlinx.datetime.toLocalDateTime
 class EditRecordViewModel(
     savedStateHandle: SavedStateHandle,
     private val recordsRepo: RecordsRepository,
+    private val recordWithProjectRepo: RecordWithProjectRepository,
     projectsRepo: ProjectsRepository,
 ) : ViewModel() {
-    private lateinit var record: Record
+    private lateinit var recordWithProject: RecordWithProject
     private val _projectId: MutableStateFlow<Long?> = MutableStateFlow(null)
+    private val _projectName: MutableStateFlow<String> = MutableStateFlow("")
     private val _startTime = MutableStateFlow(Instant.DISTANT_PAST)
     private val _endTime = MutableStateFlow(Instant.DISTANT_PAST)
 
     val projects = projectsRepo.projects
     val projectId: StateFlow<Long?>
         get() = _projectId.asStateFlow()
+    val projectName: StateFlow<String>
+        get() = _projectName.asStateFlow()
     val startTime: StateFlow<Instant>
         get() = _startTime.asStateFlow()
     val endTime: StateFlow<Instant>
@@ -40,19 +45,20 @@ class EditRecordViewModel(
 
     init {
         runBlocking(Dispatchers.IO) {
-            record = recordsRepo.get(savedStateHandle.get<Long>("id")!!)
-            _projectId.value = record.projectId
-            _startTime.value = record.startTime
-            _endTime.value = record.endTime
+            recordWithProject = recordWithProjectRepo.get(savedStateHandle.get<Long>("id")!!)
+            _projectId.value = recordWithProject.projectId
+            _startTime.value = recordWithProject.startTime
+            _endTime.value = recordWithProject.endTime
         }
     }
 
     val isModified: Boolean
         get() =
-            if (::record.isInitialized.not()) {
+            if (::recordWithProject.isInitialized.not()) {
                 false
             } else {
-                _projectId.value != record.projectId || _startTime.value != record.startTime || _endTime.value != record.endTime
+                _projectId.value != recordWithProject.projectId || _startTime.value != recordWithProject.startTime ||
+                    _endTime.value != recordWithProject.endTime
             }
 
     suspend fun updateRecord(): Int {
@@ -60,16 +66,12 @@ class EditRecordViewModel(
             return if (_projectId.value == null) {
                 -1 // 项目名为空
             } else {
-                if (_projectId.value in projects) {
-                    record.projectId = _projectId.value!!
-                    record.startTime = startTime.value
-                    record.endTime = endTime.value
-                    record.date = startTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).date
-                    recordsRepo.update(record)
-                    1
-                } else {
-                    -2 // 项目不存在
-                }
+                recordWithProject.record.projectId = _projectId.value!!
+                recordWithProject.record.startTime = startTime.value
+                recordWithProject.record.endTime = endTime.value
+                recordWithProject.record.date = startTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).date
+                recordsRepo.update(recordWithProject.record)
+                1
             }
         } else {
             return 2 // 没有变化
@@ -78,7 +80,7 @@ class EditRecordViewModel(
 
     fun deleteRecord() {
         viewModelScope.launch(Dispatchers.IO) {
-            recordsRepo.delete(record)
+            recordsRepo.delete(recordWithProject.record)
         }
     }
 

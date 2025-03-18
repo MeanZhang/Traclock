@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.MapColumn
 import androidx.room.Query
 import androidx.room.Update
-import com.mean.traclock.model.ProjectDurationEntry
+import com.mean.traclock.model.ProjectDuration
 import com.mean.traclock.model.Record
 import kotlinx.coroutines.flow.Flow
 
@@ -40,7 +40,7 @@ interface RecordDao {
      * 删除指定项目的所有记录
      * @param projectId 项目 ID
      */
-    @Query("DELETE FROM Record WHERE projectId = :projectId")
+    @Query("DELETE FROM Record WHERE project = :projectId")
     suspend fun deleteProjectAllRecords(projectId: Long)
 
     // *************
@@ -66,21 +66,21 @@ interface RecordDao {
      * @param id 记录 ID
      * @return 指定 ID 的记录
      */
-    @Query("SELECT * FROM Record WHERE recordId = :id")
+    @Query("SELECT * FROM Record WHERE record_id = :id")
     suspend fun get(id: Long): Record
 
     /**
      * 获取所有记录
      * @return 所有记录
      */
-    @Query("SELECT * FROM Record ORDER BY startTime DESC")
+    @Query("SELECT * FROM Record ORDER BY start_time DESC")
     suspend fun getAll(): List<Record>
 
     /**
      * 获取所有记录
      * @return 所有记录
      */
-    @Query("SELECT *, recordId FROM Record ORDER BY startTime DESC")
+    @Query("SELECT * FROM Record ORDER BY start_time DESC")
     fun watchAll(): Flow<List<Record>>
 
     /**
@@ -107,7 +107,7 @@ interface RecordDao {
      * @param date 日期，如`20210101`
      * @return 指定日期的记录
      */
-    @Query("SELECT *, recordId FROM Record WHERE date=:date")
+    @Query("SELECT * FROM Record WHERE date=:date")
     fun watchDayRecords(date: Int): Flow<List<Record>>
 
     /**
@@ -116,7 +116,7 @@ interface RecordDao {
      * @param endDate 结束日期，如`20210131`
      * @return 指定日期范围内的记录
      */
-    @Query("SELECT *, recordId FROM Record WHERE date>=:startDate AND date<=:endDate")
+    @Query("SELECT * FROM Record WHERE date>=:startDate AND date<=:endDate")
     fun watchPeriodRecords(
         startDate: Int,
         endDate: Int,
@@ -126,7 +126,7 @@ interface RecordDao {
      * 获取按日期分组的记录
      * @return 按日期分组的记录
      */
-    @Query("SELECT * FROM Record ORDER BY startTime DESC")
+    @Query("SELECT * FROM Record ORDER BY start_time DESC")
     fun watchDaysRecords(): Flow<
         Map<
             @MapColumn(columnName = "date")
@@ -140,7 +140,7 @@ interface RecordDao {
      * @param projectId 项目 ID
      * @return 指定项目的按日期分组的记录
      */
-    @Query("SELECT * FROM Record WHERE projectId = :projectId ORDER BY startTime DESC")
+    @Query("SELECT * FROM Record WHERE project = :projectId ORDER BY start_time DESC")
     fun watchDaysProjectRecords(
         projectId: Long,
     ): Flow<
@@ -158,14 +158,14 @@ interface RecordDao {
      * @return 所有每个的总时长
      */
     @Query(
-        """SELECT Project.projectId AS projectId,
-        SUM(endTime - startTime) AS duration
+        """SELECT Project.project_id AS project_id, Project.name AS name, Project.color AS color,
+        SUM(end_time - start_time) AS duration
         FROM Project LEFT JOIN Record
-        ON Record.projectId=Project.projectId
-        GROUP BY Project.projectId
+        ON Record.project=Project.project_id
+        GROUP BY project_id
         ORDER BY duration DESC""",
     )
-    fun watchProjectsDuration(): Flow<List<ProjectDurationEntry>>
+    fun watchProjectsDuration(): Flow<List<ProjectDuration>>
 
     /**
      * 获取指定日期范围内的各项目时长
@@ -174,35 +174,37 @@ interface RecordDao {
      * @return 指定日期范围内的各项目时长
      */
     @Query(
-        """SELECT projectId,
-        SUM(endTime - startTime) AS duration
-        FROM Record
-        WHERE date>=:startDate AND date<=:endDate AND endTime<>0
-        GROUP BY projectId
+        """SELECT Project.project_id AS project_id, Project.name AS name, Project.color AS color,
+        SUM(end_time - start_time) AS duration
+        FROM Record LEFT JOIN Project
+        ON Record.project=Project.project_id
+        WHERE date>=:startDate AND date<=:endDate AND end_time<>0
+        GROUP BY project_id
         ORDER BY duration DESC""",
     )
     fun watchProjectsDuration(
         startDate: Int,
         endDate: Int,
-    ): Flow<List<ProjectDurationEntry>>
+    ): Flow<List<ProjectDuration>>
 
     /**
      * 获取每天的各项目时长
      * @return 每天的各项目时长
      */
     @Query(
-        """SELECT projectId,
-        SUM(endTime - startTime) AS duration,
+        """SELECT Project.project_id AS project_id, Project.name AS name, Project.color AS color,
+        SUM(end_time - start_time) AS duration,
         date
-        FROM Record
-        GROUP BY projectId, date
+        FROM Record LEFT JOIN Project
+        ON Record.project=Project.project_id
+        GROUP BY project_id, date
         ORDER BY date DESC""",
     )
     fun watchDaysProjectsDuration(): Flow<
         Map<
             @MapColumn(columnName = "date")
             Int,
-            List<ProjectDurationEntry>,
+            List<ProjectDuration>,
         >,
     >
 
@@ -213,14 +215,14 @@ interface RecordDao {
      * @param date 日期，如`20210101`
      * @return 指定日期的总时长
      */
-    @Query("SELECT SUM(endTime - startTime) AS duration FROM Record WHERE date=:date")
+    @Query("SELECT SUM(end_time - start_time) AS duration FROM Record WHERE date=:date")
     fun watchDayDuration(date: Int): Flow<Long>
 
     /**
      * 获取每天的总时长
      * @return 每天的总时长
      */
-    @Query("SELECT date, SUM(endTime - startTime) AS duration FROM Record GROUP BY date")
+    @Query("SELECT date, SUM(end_time - start_time) AS duration FROM Record GROUP BY date")
     fun watchDaysDuration(): Flow<
         Map<
             @MapColumn(columnName = "date")
@@ -237,9 +239,9 @@ interface RecordDao {
      */
     @Query(
         "SELECT date," +
-            "SUM(endTime - startTime) AS duration " +
+            "SUM(end_time - start_time) AS duration " +
             "FROM Record " +
-            "WHERE projectId = :projectId " +
+            "WHERE project = :projectId " +
             "GROUP BY date",
     )
     fun watchDaysDuration(
@@ -263,7 +265,7 @@ interface RecordDao {
      */
     @Query(
         """SELECT date,
-        SUM(endTime - startTime) AS duration
+        SUM(end_time - start_time) AS duration
         FROM Record
         WHERE date>=:startDate AND date<=:endDate
         GROUP BY date ORDER BY date DESC""",
@@ -291,7 +293,7 @@ interface RecordDao {
      */
     @Query(
         """SELECT (date%10000)/100 AS month,
-        SUM(endTime - startTime) AS duration
+        SUM(end_time - start_time) AS duration
         FROM Record
         WHERE date/10000=:year
         GROUP BY month ORDER BY date DESC""",
@@ -315,7 +317,7 @@ interface RecordDao {
      * 获取每年的总时长
      * @return 每年的总时长
      */
-    @Query("SELECT date/10000 AS year, SUM(endTime - startTime) AS duration FROM Record GROUP BY year ORDER BY year DESC")
+    @Query("SELECT date/10000 AS year, SUM(end_time - start_time) AS duration FROM Record GROUP BY year ORDER BY year DESC")
     fun watchYearsDuration(): Flow<
         Map<
             @MapColumn(

@@ -20,7 +20,12 @@ class MainActivity : ComponentActivity() {
         FileKit.init(this)
         setContent {
             TraclockTheme {
-                TraclockApp(App.recordsRepo, App.projectsRepo, App.timerRepo)
+                TraclockApp(
+                    recordsRepo = App.recordsRepo,
+                    recordWithProjectRepo = App.recordWithProjectRepo,
+                    projectsRepo = App.projectsRepo,
+                    timerRepo = App.timerRepo,
+                )
             }
         }
     }

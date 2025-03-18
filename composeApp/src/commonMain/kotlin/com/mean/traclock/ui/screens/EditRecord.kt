@@ -75,6 +75,7 @@ fun EditRecord(
 ) {
     val scope = rememberCoroutineScope()
     val projectId by viewModel.projectId.collectAsState()
+    val projectName by viewModel.projectName.collectAsState()
     val startTime by viewModel.startTime.collectAsState()
     val endTime by viewModel.endTime.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
@@ -151,7 +152,7 @@ fun EditRecord(
                     modifier = Modifier.weight(3f),
                 ) {
                     Text(
-                        viewModel.projects[projectId]?.name ?: "",
+                        projectName,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -214,27 +215,29 @@ fun EditRecord(
             }
         }
         if (showProjectsSheet) {
+            val projects by viewModel.projects.collectAsState(emptyList())
+
             ModalBottomSheet(
                 onDismissRequest = { showProjectsSheet = false },
                 sheetState = sheetState,
             ) {
                 Column {
-                    viewModel.projects.keys.toList().forEach {
+                    projects.forEach {
                         ListItem(
                             headlineContent = {
                                 Text(
-                                    viewModel.projects[it]!!.name,
+                                    it.name,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                 )
                             },
                             leadingContent = {
                                 RadioButton(
-                                    selected = projectId == it,
+                                    selected = projectId == it.id,
                                     colors =
                                         RadioButtonDefaults.colors(
-                                            selectedColor = viewModel.projects[it]!!.color,
-                                            unselectedColor = viewModel.projects[it]!!.color,
+                                            selectedColor = it.color,
+                                            unselectedColor = it.color,
                                         ),
                                     onClick = null,
                                 )
@@ -242,7 +245,7 @@ fun EditRecord(
                             modifier =
                                 Modifier.clickable {
                                     scope.launch {
-                                        viewModel.setProject(it)
+                                        viewModel.setProject(it.id)
                                         delay(100)
                                         sheetState.hide()
                                     }.invokeOnCompletion {

@@ -51,7 +51,7 @@ fun RecordItem(
             modifier
                 .onClick(
                     onClick = {
-                        navToEditRecord(record.recordId)
+                        navToEditRecord(record.id)
                     },
                     onSecondaryClick =
                         { showMenu = true },

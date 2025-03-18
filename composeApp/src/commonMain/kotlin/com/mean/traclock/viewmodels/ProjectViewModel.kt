@@ -27,7 +27,7 @@ class ProjectViewModel(
         runBlocking(Dispatchers.IO) {
             projectsRepo.get(savedStateHandle.get<Long>("id")!!)
         }
-    private val _projectId: MutableStateFlow<Long> = MutableStateFlow(project.projectId)
+    private val _projectId: MutableStateFlow<Long> = MutableStateFlow(project.id)
     private var _records: Flow<Map<Int, List<Record>>> = flowOf(mapOf())
     private var _timeOfDays: Flow<Map<Int, Long>> = flowOf(mapOf())
     val projectId: StateFlow<Long?>
@@ -44,8 +44,8 @@ class ProjectViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _records = recordsRepo.watchProjectRecords(project.projectId)
-            _timeOfDays = recordsRepo.watchDaysDuration(project.projectId)
+            _records = recordsRepo.watchProjectRecords(project.id)
+            _timeOfDays = recordsRepo.watchDaysDuration(project.id)
         }
     }
 
@@ -57,11 +57,11 @@ class ProjectViewModel(
 
     fun startTimer() {
         viewModelScope.launch {
-            timerRepo.start(project.projectId)
+            timerRepo.start(project.id)
         }
     }
 
     suspend fun deleteProject() {
-        projectsRepo.delete(project.projectId)
+        projectsRepo.delete(project.id)
     }
 }

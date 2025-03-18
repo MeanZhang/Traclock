@@ -3,12 +3,13 @@ package com.mean.traclock.data.repository
 import com.mean.traclock.data.database.ProjectDao
 import com.mean.traclock.data.database.RecordDao
 import com.mean.traclock.model.Project
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import java.lang.IllegalArgumentException
 
 class ProjectsRepository(private val projectDao: ProjectDao, private val recordDao: RecordDao) {
+    private val scope = CoroutineScope(Dispatchers.IO)
     // *************
     // **** 增加 ****
     // *************
@@ -19,13 +20,11 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
      * @return 插入成功的项目的 id
      */
     suspend fun insert(project: Project): Long {
-        if (projects.any { it.value.name == project.name }) throw IllegalArgumentException("项目名${project.name}已存在")
         val id =
             withContext(Dispatchers.IO) {
                 projectDao.insert(project)
             }
-        project.projectId = id
-        _projects[id] = project
+        project.id = id
         return id
     }
 
@@ -39,7 +38,6 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
      * @return 删除成功的项目数量
      */
     suspend fun delete(projectId: Long) {
-        _projects.remove(projectId)
         withContext(Dispatchers.IO) {
             recordDao.deleteProjectAllRecords(projectId)
             projectDao.delete(projectId)
@@ -56,7 +54,6 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
      * @return 更新成功的项目数量
      */
     suspend fun update(project: Project): Int {
-        _projects[project.projectId] = project
         return withContext(Dispatchers.IO) {
             projectDao.update(project)
         }
@@ -76,12 +73,6 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
             projectDao.get(id)
         }
 
-    private val _projects: MutableMap<Long, Project> =
-        runBlocking(Dispatchers.IO) {
-            projectDao.getAll().associateBy { it.projectId }
-        }.toMutableMap()
-
-    /** 所有项目 */
-    val projects: Map<Long, Project>
-        get() = _projects
+    val projects: Flow<List<Project>>
+        get() = projectDao.watchAll()
 }

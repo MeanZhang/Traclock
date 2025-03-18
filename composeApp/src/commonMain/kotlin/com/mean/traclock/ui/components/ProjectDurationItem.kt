@@ -32,7 +32,7 @@ fun ProjectDurationItem(
 ) {
     val scope = rememberCoroutineScope()
     ListItem(
-        modifier = modifier.clickable { navToProject(projectDuration.projectId) },
+        modifier = modifier.clickable { navToProject(projectDuration.id) },
         leadingContent = {
             Icon(
                 imageVector = Icons.Default.Circle,
@@ -56,7 +56,7 @@ fun ProjectDurationItem(
                 text = TimeUtils.getDurationString(projectDuration.duration),
             ) {
                 scope.launch {
-                    startTiming(projectDuration.projectId)
+                    startTiming(projectDuration.id)
                     listState?.animateScrollToItem(0)
                 }
             }

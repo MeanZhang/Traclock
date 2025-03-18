@@ -2,10 +2,11 @@ package com.mean.traclock.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.mean.traclock.data.repository.ProjectsRepository
+import com.mean.traclock.data.repository.RecordWithProjectRepository
 import com.mean.traclock.data.repository.RecordsRepository
 import com.mean.traclock.data.repository.TimerRepository
 import com.mean.traclock.model.ProjectDuration
-import com.mean.traclock.model.Record
+import com.mean.traclock.model.RecordWithProject
 import com.mean.traclock.ui.screens.home.Period
 import com.mean.traclock.ui.screens.home.PeriodType
 import com.mean.traclock.utils.TimeUtils
@@ -19,6 +20,7 @@ import kotlin.time.toDuration
 
 class StatisticViewModel(
     private val recordsRepo: RecordsRepository,
+    private val recordWithProjectRepo: RecordWithProjectRepository,
     projectsRepo: ProjectsRepository,
     private val timerRepo: TimerRepository,
 ) : ViewModel() {
@@ -27,7 +29,7 @@ class StatisticViewModel(
     val startTime: Instant?
         get() = timerRepo.startTime
 
-    fun getProjectsTimeOfPeriod(period: Period): Flow<List<ProjectDuration>> {
+    fun getProjectsDuration(period: Period): Flow<List<ProjectDuration>> {
         if (period.type == PeriodType.ALL_TIME) {
             return recordsRepo.watchProjectsDuration()
                 .map { it.filter { projectDuration -> projectDuration.duration > Duration.ZERO } }
@@ -42,7 +44,7 @@ class StatisticViewModel(
         return recordsRepo.watchRecordsCount(period.startDate, period.endDate)
     }
 
-    fun getRecords(date: LocalDate): Flow<List<Record>> = recordsRepo.getRecords(date)
+    fun getRecordsWithProject(date: LocalDate): Flow<List<RecordWithProject>> = recordWithProjectRepo.getRecordsWithProject(date)
 
     fun watchDaysDuration(period: Period): Flow<Map<LocalDate, Duration>> =
         recordsRepo.watchDaysDuration(period.startDate, period.endDate).map {

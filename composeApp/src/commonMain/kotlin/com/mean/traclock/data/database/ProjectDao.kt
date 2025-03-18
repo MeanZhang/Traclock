@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.mean.traclock.model.Project
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProjectDao {
@@ -29,7 +30,7 @@ interface ProjectDao {
      * @param projectId 要删除的项目
      * @return 删除成功的项目数量
      */
-    @Query("DELETE FROM Project WHERE projectId = :projectId")
+    @Query("DELETE FROM Project WHERE project_id = :projectId")
     suspend fun delete(projectId: Long): Int
 
     // *************
@@ -53,7 +54,7 @@ interface ProjectDao {
      * @param id 项目 ID
      * @return 指定 ID 的项目
      */
-    @Query("SELECT * FROM Project WHERE projectId = :id")
+    @Query("SELECT * FROM Project WHERE project_id = :id")
     suspend fun get(id: Long): Project
 
     /**
@@ -62,4 +63,11 @@ interface ProjectDao {
      */
     @Query("SELECT * FROM Project")
     suspend fun getAll(): List<Project>
+
+    /**
+     * 获取所有项目
+     * @return 所有项目
+     */
+    @Query("SELECT * FROM Project")
+    fun watchAll(): Flow<List<Project>>
 }

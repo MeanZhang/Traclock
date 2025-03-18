@@ -30,7 +30,7 @@ class EditProjectViewModel(
         val id = savedStateHandle.get<String?>("id")?.toLong()
         viewModelScope.launch(Dispatchers.IO) {
             if (id != null) {
-                project = projectsRepo.projects[id]
+                project = projectsRepo.get(id)
                 _name.value = project!!.name
                 _color.value = project!!.color
             }

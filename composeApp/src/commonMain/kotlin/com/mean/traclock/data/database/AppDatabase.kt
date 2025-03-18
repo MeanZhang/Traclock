@@ -17,6 +17,8 @@ abstract class AppDatabase : RoomDatabase(), DB {
 
     abstract fun recordDao(): RecordDao
 
+    abstract fun recordWithProjectDao(): RecordWithProjectDao
+
     override fun clearAllTables() {
         super.clearAllTables()
     }
