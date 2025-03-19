@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Project(
-    @ColumnInfo(name = "name") var name: String,
-    @ColumnInfo(name = "color") var color: Color = Color.Unspecified,
-    @ColumnInfo(name = "project_id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "color") val color: Color = Color.Unspecified,
+    @ColumnInfo(name = "project_id") @PrimaryKey(autoGenerate = true) val id: Long = 0,
 )

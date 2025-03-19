@@ -31,9 +31,9 @@ import kotlinx.datetime.toLocalDateTime
     ],
 )
 data class Record(
-    @ColumnInfo(name = "project") var projectId: Long,
-    @ColumnInfo(name = "start_time") var startTime: Instant,
-    @ColumnInfo(name = "end_time") var endTime: Instant,
-    @ColumnInfo(name = "date") var date: LocalDate = startTime.toLocalDateTime(TimeZone.currentSystemDefault()).date,
-    @ColumnInfo(name = "record_id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
+    @ColumnInfo(name = "project") val projectId: Long,
+    @ColumnInfo(name = "start_time") val startTime: Instant,
+    @ColumnInfo(name = "end_time") val endTime: Instant,
+    @ColumnInfo(name = "date") val date: LocalDate = startTime.toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    @ColumnInfo(name = "record_id") @PrimaryKey(autoGenerate = true) val id: Long = 0,
 )

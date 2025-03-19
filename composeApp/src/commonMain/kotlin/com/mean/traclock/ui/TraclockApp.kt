@@ -171,7 +171,6 @@ fun TraclockApp(
                                         mapOf("id" to navController.currentBackStackEntry?.arguments?.getLong("id")),
                                     ),
                                 recordsRepo = recordsRepo,
-                                recordWithProjectRepo = recordWithProjectRepo,
                                 projectsRepo = projectsRepo,
                             )
                         },

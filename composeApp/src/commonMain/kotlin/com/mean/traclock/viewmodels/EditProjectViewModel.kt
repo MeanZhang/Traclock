@@ -46,12 +46,11 @@ class EditProjectViewModel(
     }
 
     val isModified: Boolean
-        get() =
-            if (project == null) {
-                _name.value.isNotBlank()
-            } else {
-                _name.value != project?.name || _color.value != project?.color
-            }
+        get() = if (project == null) {
+            _name.value.isNotBlank()
+        } else {
+            _name.value != project?.name || _color.value != project?.color
+        }
 
     suspend fun updateProject(): Int {
         if (project == null) {
@@ -67,13 +66,11 @@ class EditProjectViewModel(
         }
         return when {
             _name.value != project!!.name -> { // 项目名发生变化
-                val res =
-                    projectsRepo.update(
-                        project!!.apply {
-                            name = _name.value
-                            color = _color.value
-                        },
-                    )
+                val res = projectsRepo.update(
+                    project!!.copy(
+                        name = _name.value, color = _color.value
+                    ),
+                )
                 if (res > 0) {
                     Logger.d("项目更新成功")
                 }
@@ -81,7 +78,7 @@ class EditProjectViewModel(
             }
 
             _color.value != project!!.color -> { // 项目名没变，颜色变化
-                projectsRepo.update(project!!.apply { color = _color.value })
+                projectsRepo.update(project!!.copy(color = _color.value))
             }
 
             else -> {
