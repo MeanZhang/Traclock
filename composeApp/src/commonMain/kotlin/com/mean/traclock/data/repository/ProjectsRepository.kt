@@ -10,9 +10,9 @@ import kotlinx.coroutines.withContext
 
 class ProjectsRepository(private val projectDao: ProjectDao, private val recordDao: RecordDao) {
     private val scope = CoroutineScope(Dispatchers.IO)
-    // *************
+    // **************
     // **** 增加 ****
-    // *************
+    // **************
 
     /**
      * 插入一个项目（[Project]）
@@ -24,13 +24,12 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
             withContext(Dispatchers.IO) {
                 projectDao.insert(project)
             }
-        project.id = id
         return id
     }
 
-    // *************
+    // **************
     // **** 删除 ****
-    // *************
+    // **************
 
     /**
      * 删除一个项目（[Project]）
@@ -44,9 +43,9 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
         }
     }
 
-    // *************
+    // **************
     // **** 修改 ****
-    // *************
+    // **************
 
     /**
      * 更新一个项目（[Project]）
@@ -59,9 +58,9 @@ class ProjectsRepository(private val projectDao: ProjectDao, private val recordD
         }
     }
 
-    // *************
+    // **************
     // **** 查询 ****
-    // *************
+    // **************
 
     /**
      * 获取指定 ID 的项目

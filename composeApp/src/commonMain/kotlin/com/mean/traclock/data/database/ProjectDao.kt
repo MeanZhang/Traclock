@@ -21,9 +21,9 @@ interface ProjectDao {
     @Insert
     suspend fun insert(project: Project): Long
 
-    // *************
+    // **************
     // **** 删除 ****
-    // *************
+    // **************
 
     /**
      * 删除一个项目（[Project]）
@@ -33,9 +33,9 @@ interface ProjectDao {
     @Query("DELETE FROM Project WHERE project_id = :projectId")
     suspend fun delete(projectId: Long): Int
 
-    // *************
+    // **************
     // **** 修改 ****
-    // *************
+    // **************
 
     /**
      * 更新一个项目（[Project]）
@@ -45,9 +45,9 @@ interface ProjectDao {
     @Update
     suspend fun update(project: Project): Int
 
-    // *************
+    // **************
     // **** 查询 ****
-    // *************
+    // **************
 
     /**
      * 获取指定 ID 的项目

@@ -14,9 +14,9 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 class RecordsRepository(private val recordDao: RecordDao) {
-    // *************
+    // **************
     // **** 增加 ****
-    // *************
+    // **************
 
     /**
      * 增加记录
@@ -25,9 +25,9 @@ class RecordsRepository(private val recordDao: RecordDao) {
      */
     suspend fun insert(record: Record) = withContext(Dispatchers.IO) { recordDao.insert(record) }
 
-    // *************
+    // **************
     // **** 删除 ****
-    // *************
+    // **************
 
     /**
      * 删除记录
@@ -36,9 +36,9 @@ class RecordsRepository(private val recordDao: RecordDao) {
      */
     suspend fun delete(record: Record) = withContext(Dispatchers.IO) { recordDao.delete(record) }
 
-    // *************
+    // **************
     // **** 修改 ****
-    // *************
+    // **************
 
     /**
      * 更新记录
@@ -47,9 +47,9 @@ class RecordsRepository(private val recordDao: RecordDao) {
      */
     suspend fun update(record: Record) = withContext(Dispatchers.IO) { recordDao.update(record) }
 
-    // *************
+    // **************
     // **** 查询 ****
-    // *************
+    // **************
 
     // **** 记录[Record] ****
 

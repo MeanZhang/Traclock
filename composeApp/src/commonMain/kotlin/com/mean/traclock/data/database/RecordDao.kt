@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDao {
-    // *************
+    // **************
     // **** 增加 ****
-    // *************
+    // **************
 
     /**
      * 增加记录
@@ -24,9 +24,9 @@ interface RecordDao {
     @Insert
     suspend fun insert(record: Record): Long
 
-    // *************
+    // **************
     // **** 删除 ****
-    // *************
+    // **************
 
     /**
      * 删除记录
@@ -43,9 +43,9 @@ interface RecordDao {
     @Query("DELETE FROM Record WHERE project = :projectId")
     suspend fun deleteProjectAllRecords(projectId: Long)
 
-    // *************
+    // **************
     // **** 修改 ****
-    // *************
+    // **************
 
     /**
      * 更新记录
@@ -55,9 +55,9 @@ interface RecordDao {
     @Update
     suspend fun update(record: Record): Int
 
-    // *************
+    // **************
     // **** 查询 ****
-    // *************
+    // **************
 
     // **** 记录[Record] ****
 
