@@ -58,7 +58,7 @@ class EditRecordViewModel(
                 false
             } else {
                 _projectId.value != record.projectId || _startTime.value != record.startTime ||
-                        _endTime.value != record.endTime
+                    _endTime.value != record.endTime
             }
 
     suspend fun updateRecord(): Int {
@@ -66,12 +66,13 @@ class EditRecordViewModel(
             if (_projectId.value == null) {
                 -1 // 项目名为空
             } else {
-                record = record.copy(
-                    projectId = _projectId.value!!,
-                    startTime = _startTime.value,
-                    endTime = _endTime.value,
-                    date = _startTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                )
+                record =
+                    record.copy(
+                        projectId = _projectId.value!!,
+                        startTime = _startTime.value,
+                        endTime = _endTime.value,
+                        date = _startTime.value.toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    )
                 recordsRepo.update(record)
                 1
             }
