@@ -66,7 +66,7 @@ multiplatformResources {
 }
 
 android {
-    namespace = "com.mean.traclock.backup"
+    namespace = "com.mean.traclock.statistic"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     compileOptions {
