@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -7,8 +6,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -29,25 +26,35 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             // Accompanist Permissions
             implementation(libs.accompanist.permissions)
+            // Koin
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.startup)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
-            implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            // 其他模块
+            implementation(projects.core.utils)
+            implementation(projects.core.common)
+            implementation(projects.core.ui)
+            implementation(projects.core.timer)
+            implementation(projects.core.data)
+            implementation(projects.core.timepicker)
+            implementation(projects.feature.settings)
+            implementation(projects.feature.statistic)
+            // Room
+            implementation(libs.room.runtime)
             // Material Icons扩展
             implementation(compose.materialIconsExtended)
             // Navigation
-            implementation(libs.navigation)
+            implementation(libs.navigation.compose)
             // Datetime
             implementation(libs.kotlinx.datetime)
-            // Room
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
             // Coil（Compose的Image会缺角）
             implementation(libs.coil.compose)
             implementation(libs.coil.svg)
@@ -55,14 +62,14 @@ kotlin {
             implementation(libs.datastore.preferences.core)
             // Kermit日志
             implementation(libs.kermit)
-            // TimePicker
-            implementation(project(":timepicker"))
             // FileKit
-            implementation(libs.filekit.compose)
-            // Koala Plot
-            implementation(libs.koalaplot.core)
-            // vico
-            implementation(libs.vico)
+            implementation(libs.filekit.dialogs.compose)
+            // moko-resources
+            implementation(libs.moko.resources.compose)
+            // Koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel.navigation)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -146,10 +153,6 @@ android {
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
 compose.desktop {
     application {
         mainClass = "com.mean.traclock.MainKt"
@@ -168,9 +171,4 @@ compose.desktop {
             }
         }
     }
-}
-
-
-dependencies {
-    ksp(libs.room.compiler)
 }

@@ -16,11 +16,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.mean.traclock.ui.HomeRoute
+import com.mean.traclock.ui.components.HomeScaffold
 import com.mean.traclock.ui.components.ProjectDurationItem
 import com.mean.traclock.ui.components.TimingCard
-import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.viewmodels.MainViewModel
-import ui.components.HomeScaffold
 
 @Composable
 fun Projects(

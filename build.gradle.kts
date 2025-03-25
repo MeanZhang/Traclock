@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dotenv)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.aboutlibraries) apply false
 }
 
 spotless {
@@ -15,7 +16,7 @@ spotless {
 
     kotlin {
         target("**/*.kt")
-        targetExclude("${project.layout.buildDirectory}/**/*.kt", "bin/**/*.kt", "timepicker/**/*.kt")
+        targetExclude("${project.layout.buildDirectory}/**/*.kt", "bin/**/*.kt", "core/timepicker/**/*.kt")
         ktlint(ktlintVersion).setEditorConfigPath("$projectDir/.editorconfig").customRuleSets(
             listOf(
 //                "io.nlopez.compose.rules:ktlint:${libs.versions.composeRules.get()}",

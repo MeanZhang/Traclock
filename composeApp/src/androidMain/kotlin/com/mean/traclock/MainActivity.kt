@@ -7,7 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.mean.traclock.ui.TraclockApp
 import com.mean.traclock.ui.theme.TraclockTheme
-import io.github.vinceglb.filekit.core.FileKit
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.init
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,13 +21,10 @@ class MainActivity : ComponentActivity() {
         }
         FileKit.init(this)
         setContent {
-            TraclockTheme {
-                TraclockApp(
-                    recordsRepo = App.recordsRepo,
-                    recordWithProjectRepo = App.recordWithProjectRepo,
-                    projectsRepo = App.projectsRepo,
-                    timerRepo = App.timerRepo,
-                )
+            KoinContext {
+                TraclockTheme {
+                    TraclockApp()
+                }
             }
         }
     }

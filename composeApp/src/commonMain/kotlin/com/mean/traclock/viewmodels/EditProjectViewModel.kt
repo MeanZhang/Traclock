@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mean.traclock.data.repository.ProjectsRepository
 import com.mean.traclock.model.Project
-import com.mean.traclock.ui.ProjectColor
+import com.mean.traclock.ui.components.ProjectColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

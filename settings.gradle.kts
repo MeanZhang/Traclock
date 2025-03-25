@@ -31,4 +31,15 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":timepicker")
+include(":core:timepicker")
+include(":core:utils")
+include(":core:model")
+include(":core:database")
+include(":core:datastore")
+include(":core:timer")
+include(":core:data")
+include(":core:common")
+include(":core:ui")
+include(":feature:backup")
+include(":feature:statistic")
+include(":feature:settings")

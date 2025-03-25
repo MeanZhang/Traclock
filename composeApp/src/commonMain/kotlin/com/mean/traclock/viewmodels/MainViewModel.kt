@@ -3,20 +3,19 @@ package com.mean.traclock.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.mean.traclock.CommonRes
 import com.mean.traclock.data.repository.RecordWithProjectRepository
 import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.data.repository.TimerRepository
 import com.mean.traclock.model.Record
-import com.mean.traclock.utils.PlatformUtils
+import com.mean.traclock.timer.TimerRepository
+import com.mean.traclock.utils.getString
+import com.mean.traclock.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
-import org.jetbrains.compose.resources.getString
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.is_running_description
 
 class MainViewModel(
     private val recordsRepo: RecordsRepository,
@@ -54,7 +53,7 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             if (timerRepo.isTiming.value) {
                 withContext(Dispatchers.Main) {
-                    PlatformUtils.toast(getString(Res.string.is_running_description))
+                    toast(getString(CommonRes.strings.is_running_description))
                 }
             } else {
                 timerRepo.start(projectId)

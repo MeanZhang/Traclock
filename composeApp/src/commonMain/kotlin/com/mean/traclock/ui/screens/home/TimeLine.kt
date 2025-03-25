@@ -21,23 +21,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.mean.traclock.CommonRes
+import com.mean.traclock.ui.HomeRoute
 import com.mean.traclock.ui.components.DateTitle
+import com.mean.traclock.ui.components.HomeScaffold
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.ProjectDurationItem
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.ui.components.TimingCard
-import com.mean.traclock.ui.navigation.HomeRoute
-import com.mean.traclock.utils.PlatformUtils
+import com.mean.traclock.utils.Platform
 import com.mean.traclock.utils.TimeUtils
+import com.mean.traclock.utils.getString
 import com.mean.traclock.viewmodels.MainViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.stringResource
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.change_view
-import traclock.composeapp.generated.resources.is_running_description
-import traclock.composeapp.generated.resources.no_record
-import ui.components.HomeScaffold
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -67,7 +64,7 @@ fun TimeLine(
             IconButton(onClick = viewModel::changeDetailView) {
                 Icon(
                     imageVector = if (detailView) Icons.Default.ViewHeadline else Icons.Default.ViewDay,
-                    contentDescription = stringResource(Res.string.change_view),
+                    contentDescription = stringResource(CommonRes.strings.change_view),
                 )
             }
         },
@@ -109,9 +106,9 @@ fun TimeLine(
                                 deleteRecord = viewModel::deleteRecord,
                                 projectName = recordWithProject.project.name,
                                 startTiming = {
-                                    if (isTiming && !PlatformUtils.isAndroid) {
+                                    if (isTiming && !Platform.isAndroid) {
                                         scope.launch {
-                                            snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
+                                            snackbarHostState.showSnackbar(getString(CommonRes.strings.is_running_description))
                                         }
                                     } else {
                                         viewModel.startTiming(it)
@@ -138,9 +135,9 @@ fun TimeLine(
                                 projectName = projectDuration.project.name,
                                 color = projectDuration.project.color,
                                 startTiming = {
-                                    if (isTiming && !PlatformUtils.isAndroid) {
+                                    if (isTiming && !Platform.isAndroid) {
                                         scope.launch {
-                                            snackbarHostState.showSnackbar(getString(Res.string.is_running_description))
+                                            snackbarHostState.showSnackbar(getString(CommonRes.strings.is_running_description))
                                         }
                                     } else {
                                         viewModel.startTiming(projectDuration.project.id)
@@ -152,7 +149,7 @@ fun TimeLine(
                 }
             }
         } else {
-            NoData(stringResource(Res.string.no_record), modifier = modifier.padding(contentPadding))
+            NoData(stringResource(CommonRes.strings.no_record), modifier = modifier.padding(contentPadding))
         }
     }
 }

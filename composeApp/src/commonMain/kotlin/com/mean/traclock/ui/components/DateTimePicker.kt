@@ -25,17 +25,11 @@ import com.mean.timepicker.TimeInput
 import com.mean.timepicker.TimePicker
 import com.mean.timepicker.TimePickerDialog
 import com.mean.timepicker.rememberTimePickerState
+import com.mean.traclock.CommonRes
 import com.mean.traclock.utils.TimeUtils
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import org.jetbrains.compose.resources.stringResource
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.cancel
-import traclock.composeapp.generated.resources.ok
-import traclock.composeapp.generated.resources.time_picker_enter_time
-import traclock.composeapp.generated.resources.time_picker_select_time
-import traclock.composeapp.generated.resources.time_picker_switch_to_text_input
-import traclock.composeapp.generated.resources.time_picker_switch_to_touch_input
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,14 +77,14 @@ fun DateTimePicker(
                     datePickerState.selectedDateMillis?.let { onDateChoose(TimeUtils.utcMillisToLocalDate(it)) }
                     showDatePicker = false
                 }) {
-                    Text(stringResource(Res.string.ok))
+                    Text(stringResource(CommonRes.strings.ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = {
                     showDatePicker = false
                 }) {
-                    Text(stringResource(Res.string.cancel))
+                    Text(stringResource(CommonRes.strings.cancel))
                 }
             },
         ) {
@@ -103,9 +97,9 @@ fun DateTimePicker(
         TimePickerDialog(
             title =
                 if (showingPicker) {
-                    stringResource(Res.string.time_picker_select_time)
+                    stringResource(CommonRes.strings.time_picker_select_time)
                 } else {
-                    stringResource(Res.string.time_picker_enter_time)
+                    stringResource(CommonRes.strings.time_picker_enter_time)
                 },
             onCancel = { showTimePicker = false },
             onConfirm = {
@@ -124,9 +118,9 @@ fun DateTimePicker(
                         icon,
                         contentDescription =
                             if (showingPicker) {
-                                stringResource(Res.string.time_picker_switch_to_text_input)
+                                stringResource(CommonRes.strings.time_picker_switch_to_text_input)
                             } else {
-                                stringResource(Res.string.time_picker_switch_to_touch_input)
+                                stringResource(CommonRes.strings.time_picker_switch_to_touch_input)
                             },
                     )
                 }

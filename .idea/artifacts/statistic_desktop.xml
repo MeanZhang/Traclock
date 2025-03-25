@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="statistic-desktop">
+    <output-path>$PROJECT_DIR$/feature/statistic/build/libs</output-path>
+    <root id="archive" name="statistic-desktop.jar">
+      <element id="module-output" name="Traclock.feature.statistic.desktopMain" />
+    </root>
+  </artifact>
+</component>

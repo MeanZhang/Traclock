@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ui-desktop">
+    <output-path>$PROJECT_DIR$/core/ui/build/libs</output-path>
+    <root id="archive" name="ui-desktop.jar">
+      <element id="module-output" name="Traclock.core.ui.desktopMain" />
+    </root>
+  </artifact>
+</component>

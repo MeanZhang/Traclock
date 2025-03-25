@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restore_from_file">Restore From File</string>
+    <string name="settings_description_restore_from_file">Restore data from a CSV file</string>
+    <string name="backup">Backup</string>
+    <string name="failed_open_file">Failed to open file</string>
+    <string name="confirm_restore">Confirm Restore</string>
+    <string name="restore">Restore</string>
+    <string name="confirm_restore_text">Are you sure you want to restore from file? The operation is irreversible.</string>
+    <string name="backup_locally">Back up data locally</string>
+    <string name="others">Others</string>
+    <string name="restore_channel_name">Restore Data</string>
+    <string name="restore_channel_description">Restore projects and records</string>
+    <string name="restoring">Restoring</string>
+    <string name="backing_up">Backing Up</string>
+    <string name="backup_completed">Backup Completed</string>
+    <string name="restore_completed">Restore Completed</string>
+    <string name="restore_failed">Restore Failed</string>
+</resources>

@@ -31,21 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import com.mean.traclock.CommonRes
 import com.mean.traclock.ui.components.DateTitle
 import com.mean.traclock.ui.components.NoData
 import com.mean.traclock.ui.components.RecordItem
 import com.mean.traclock.utils.TimeUtils
 import com.mean.traclock.viewmodels.ProjectViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.back
-import traclock.composeapp.generated.resources.cancel
-import traclock.composeapp.generated.resources.confirm_delete_project
-import traclock.composeapp.generated.resources.delete
-import traclock.composeapp.generated.resources.edit
-import traclock.composeapp.generated.resources.more
-import traclock.composeapp.generated.resources.no_record
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -58,7 +52,7 @@ fun Project(
     navToEditProject: (Long) -> Unit,
     navToEditRecord: (Long) -> Unit,
     navBack: () -> Unit,
-    viewModel: ProjectViewModel,
+    viewModel: ProjectViewModel = koinViewModel(),
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -73,7 +67,7 @@ fun Project(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = navBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(CommonRes.strings.back))
                     }
                 },
                 title = {
@@ -85,21 +79,21 @@ fun Project(
                 },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Filled.MoreHoriz, stringResource(Res.string.more))
+                        Icon(Icons.Filled.MoreHoriz, stringResource(CommonRes.strings.more))
                     }
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.edit)) },
+                            text = { Text(stringResource(CommonRes.strings.edit)) },
                             onClick = {
                                 showMenu = false
                                 navToEditProject(projectId!!)
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.delete)) },
+                            text = { Text(stringResource(CommonRes.strings.delete)) },
                             onClick = {
                                 showMenu = false
                                 showDeleteDialog = true
@@ -139,12 +133,12 @@ fun Project(
                 }
             }
         } else {
-            NoData(stringResource(Res.string.no_record), modifier = Modifier.padding(contentPadding))
+            NoData(stringResource(CommonRes.strings.no_record), modifier = Modifier.padding(contentPadding))
         }
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
-                title = { Text(stringResource(Res.string.delete)) },
+                title = { Text(stringResource(CommonRes.strings.delete)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -156,7 +150,7 @@ fun Project(
                         },
                     ) {
                         Text(
-                            stringResource(Res.string.delete).uppercase(),
+                            stringResource(CommonRes.strings.delete).uppercase(),
                             fontWeight = FontWeight.Bold,
                         )
                     }
@@ -166,12 +160,12 @@ fun Project(
                         onClick = { showDeleteDialog = false },
                     ) {
                         Text(
-                            stringResource(Res.string.cancel).uppercase(),
+                            stringResource(CommonRes.strings.cancel).uppercase(),
                             fontWeight = FontWeight.Bold,
                         )
                     }
                 },
-                text = { Text(stringResource(Res.string.confirm_delete_project)) },
+                text = { Text(stringResource(CommonRes.strings.confirm_delete_project)) },
             )
         }
     }

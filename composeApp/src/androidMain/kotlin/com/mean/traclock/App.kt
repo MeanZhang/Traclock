@@ -1,56 +1,40 @@
 package com.mean.traclock
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
-import com.mean.traclock.data.database.getAppDatabase
-import com.mean.traclock.data.repository.DATA_STORE_FILE_NAME
-import com.mean.traclock.data.repository.DatastoreRepository
-import com.mean.traclock.data.repository.NotificationRepository
-import com.mean.traclock.data.repository.ProjectsRepository
-import com.mean.traclock.data.repository.RecordWithProjectRepository
-import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.data.repository.TimerRepository
-import com.mean.traclock.data.repository.getDataStore
+import com.mean.traclock.di.appModule
+import com.mean.traclock.di.getLogger
+import com.mean.traclock.timer.TimerRepository
+import com.mean.traclock.utils.AndroidUtils
 import com.mean.traclock.utils.initLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.koin.androidContext
+import org.koin.androix.startup.KoinStartup
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.dsl.koinConfiguration
+import org.koin.java.KoinJavaComponent.inject
 
-class App : Application() {
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
-        lateinit var projectsRepo: ProjectsRepository
-        lateinit var recordsRepo: RecordsRepository
-        lateinit var recordWithProjectRepo: RecordWithProjectRepository
-        lateinit var datastoreRepo: DatastoreRepository
-
-        @SuppressLint("StaticFieldLeak")
-        lateinit var notificationRepo: NotificationRepository
-        lateinit var timerRepo: TimerRepository
-    }
-
+@OptIn(KoinExperimentalAPI::class)
+class App : Application(), KoinStartup {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-        context = this.applicationContext
-        initRepos()
+        AndroidUtils.init(this)
         initNotification()
     }
 
-    private fun initRepos() {
-        val database = getAppDatabase(this)
-        projectsRepo = ProjectsRepository(database.projectDao(), database.recordDao())
-        recordsRepo = RecordsRepository(database.recordDao())
-        recordWithProjectRepo = RecordWithProjectRepository(database.recordWithProjectDao())
-        datastoreRepo = DatastoreRepository(getDataStore { filesDir.resolve(DATA_STORE_FILE_NAME).absolutePath })
-        notificationRepo = NotificationRepository(this)
-        timerRepo = TimerRepository(notificationRepo, projectsRepo, recordsRepo, datastoreRepo)
-    }
+    override fun onKoinStartup() =
+        koinConfiguration {
+            logger(getLogger())
+            androidContext(this@App)
+            modules(appModule)
+        }
 
     private fun initNotification() {
         CoroutineScope(Dispatchers.IO).launch {
+            val timerRepo: TimerRepository by inject(TimerRepository::class.java)
+            timerRepo.init()
             timerRepo.updateNotification()
         }
     }

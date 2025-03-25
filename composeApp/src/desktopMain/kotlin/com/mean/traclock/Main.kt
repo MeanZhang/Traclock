@@ -11,49 +11,34 @@ import androidx.compose.ui.window.Tray
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberTrayState
-import com.mean.traclock.data.database.getAppDatabase
-import com.mean.traclock.data.repository.DATA_STORE_FILE_NAME
-import com.mean.traclock.data.repository.DatastoreRepository
-import com.mean.traclock.data.repository.NotificationRepository
-import com.mean.traclock.data.repository.ProjectsRepository
-import com.mean.traclock.data.repository.RecordWithProjectRepository
-import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.data.repository.TimerRepository
-import com.mean.traclock.data.repository.getDataStore
+import com.mean.traclock.di.appModule
+import com.mean.traclock.di.getLogger
+import com.mean.traclock.timer.DesktopNotifier
+import com.mean.traclock.timer.Notifier
+import com.mean.traclock.timer.TimerRepository
 import com.mean.traclock.ui.TraclockApp
 import com.mean.traclock.utils.initLogger
+import dev.icerock.moko.resources.compose.painterResource
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
-import okio.Path.Companion.toPath
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.app_name
-import traclock.composeapp.generated.resources.exit
-import traclock.composeapp.generated.resources.logo
-import traclock.composeapp.generated.resources.start
-import traclock.composeapp.generated.resources.stop
+import org.koin.compose.KoinContext
+import org.koin.core.context.startKoin
+import org.koin.java.KoinJavaComponent.inject
 
 fun main() =
     application {
-        initLogger()
+        remember { initLogger() }
+        remember {
+            startKoin {
+                logger(getLogger())
+                modules(appModule)
+            }
+        }
         val scope = rememberCoroutineScope()
-        val database = getAppDatabase()
-        val recordsRepo = RecordsRepository(database.recordDao())
-        val recordWithProjectRepo = RecordWithProjectRepository(database.recordWithProjectDao())
-        val projectsRepo = ProjectsRepository(database.projectDao(), database.recordDao())
-        val dataStore =
-            getDataStore { (System.getProperty("user.home").toPath() / ".traclock" / DATA_STORE_FILE_NAME).toString() }
-        val datastoreRepo = DatastoreRepository(dataStore)
         val trayState = rememberTrayState()
-        val notificationRepo = NotificationRepository()
-        notificationRepo.init(trayState)
-        val timerRepo =
-            TimerRepository(
-                notificationRepo = notificationRepo,
-                projectsRepo = projectsRepo,
-                recordsRepo = recordsRepo,
-                datastoreRepo = datastoreRepo,
-            )
+        val notifier: DesktopNotifier by inject(Notifier::class.java)
+        notifier.init(trayState)
+        val timerRepo: TimerRepository by inject(TimerRepository::class.java)
 
         var isVisible by remember { mutableStateOf(true) }
         val isTiming by timerRepo.isTiming.collectAsState()
@@ -61,35 +46,32 @@ fun main() =
         Window(
             onCloseRequest = { isVisible = false },
             visible = isVisible,
-            title = stringResource(Res.string.app_name),
-            icon = painterResource(Res.drawable.logo),
+            title = stringResource(CommonRes.strings.app_name),
+            icon = painterResource(CommonRes.images.ic_logo),
         ) {
-            MaterialTheme {
-                TraclockApp(
-                    recordsRepo = recordsRepo,
-                    recordWithProjectRepo = recordWithProjectRepo,
-                    projectsRepo = projectsRepo,
-                    timerRepo = timerRepo,
-                )
+            KoinContext {
+                MaterialTheme {
+                    TraclockApp()
+                }
             }
         }
         Tray(
             state = trayState,
-            icon = painterResource(Res.drawable.logo),
-            tooltip = stringResource(Res.string.app_name),
+            icon = painterResource(CommonRes.images.ic_logo),
+            tooltip = stringResource(CommonRes.strings.app_name),
             onAction = { isVisible = true },
             menu = {
                 Item(
-                    text = stringResource(Res.string.start),
+                    text = stringResource(CommonRes.strings.start),
                     enabled = !isTiming,
                     onClick = { scope.launch { timerRepo.start() } },
                 )
                 Item(
-                    stringResource(Res.string.stop),
+                    stringResource(CommonRes.strings.stop),
                     enabled = isTiming,
                     onClick = { scope.launch { timerRepo.stop() } },
                 )
-                Item(stringResource(Res.string.exit), onClick = ::exitApplication)
+                Item(stringResource(CommonRes.strings.exit), onClick = ::exitApplication)
             },
         )
     }

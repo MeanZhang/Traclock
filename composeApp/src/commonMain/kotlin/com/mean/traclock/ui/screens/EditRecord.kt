@@ -43,34 +43,22 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mean.traclock.CommonRes
 import com.mean.traclock.ui.components.DateTimePicker
-import com.mean.traclock.utils.PlatformUtils
+import com.mean.traclock.utils.Platform
+import com.mean.traclock.utils.getString
+import com.mean.traclock.utils.toast
 import com.mean.traclock.viewmodels.EditRecordViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
-import org.jetbrains.compose.resources.stringResource
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.back
-import traclock.composeapp.generated.resources.delete
-import traclock.composeapp.generated.resources.discard
-import traclock.composeapp.generated.resources.discard_changes
-import traclock.composeapp.generated.resources.discard_text
-import traclock.composeapp.generated.resources.edit_record
-import traclock.composeapp.generated.resources.end
-import traclock.composeapp.generated.resources.keep_editing
-import traclock.composeapp.generated.resources.more
-import traclock.composeapp.generated.resources.no_such_project
-import traclock.composeapp.generated.resources.please_enter_a_project_name
-import traclock.composeapp.generated.resources.project
-import traclock.composeapp.generated.resources.save
-import traclock.composeapp.generated.resources.start
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditRecord(
     modifier: Modifier = Modifier,
-    viewModel: EditRecordViewModel,
+    viewModel: EditRecordViewModel = koinViewModel(),
     navBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -103,20 +91,20 @@ fun EditRecord(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = { back() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(CommonRes.strings.back))
                     }
                 },
-                title = { Text(stringResource(Res.string.edit_record)) },
+                title = { Text(stringResource(CommonRes.strings.edit_record)) },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Filled.MoreHoriz, stringResource(Res.string.more))
+                        Icon(Icons.Filled.MoreHoriz, stringResource(CommonRes.strings.more))
                     }
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(Res.string.delete)) },
+                            text = { Text(stringResource(CommonRes.strings.delete)) },
                             onClick = {
                                 viewModel.deleteRecord()
                                 navBack()
@@ -143,7 +131,7 @@ fun EditRecord(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    stringResource(Res.string.project),
+                    stringResource(CommonRes.strings.project),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f),
                 )
@@ -163,7 +151,7 @@ fun EditRecord(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    stringResource(Res.string.start),
+                    stringResource(CommonRes.strings.start),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f),
                 )
@@ -179,7 +167,7 @@ fun EditRecord(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    stringResource(Res.string.end),
+                    stringResource(CommonRes.strings.end),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f),
                 )
@@ -196,22 +184,22 @@ fun EditRecord(
                         2 -> navBack()
                         1 -> navBack()
                         -1 -> {
-                            PlatformUtils.toast(getString(Res.string.please_enter_a_project_name))
-                            if (!PlatformUtils.isAndroid) {
-                                snackbarHostState.showSnackbar(getString(Res.string.please_enter_a_project_name))
+                            toast(getString(CommonRes.strings.please_enter_a_project_name))
+                            if (!Platform.isAndroid) {
+                                snackbarHostState.showSnackbar(getString(CommonRes.strings.please_enter_a_project_name))
                             }
                         }
 
                         -2 -> {
-                            PlatformUtils.toast(getString(Res.string.no_such_project))
-                            if (!PlatformUtils.isAndroid) {
-                                snackbarHostState.showSnackbar(getString(Res.string.no_such_project))
+                            toast(getString(CommonRes.strings.no_such_project))
+                            if (!Platform.isAndroid) {
+                                snackbarHostState.showSnackbar(getString(CommonRes.strings.no_such_project))
                             }
                         }
                     }
                 }
             }) {
-                Text(stringResource(Res.string.save))
+                Text(stringResource(CommonRes.strings.save))
             }
         }
         if (showProjectsSheet) {
@@ -263,7 +251,7 @@ fun EditRecord(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(stringResource(Res.string.discard_changes)) },
+            title = { Text(stringResource(CommonRes.strings.discard_changes)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -271,7 +259,7 @@ fun EditRecord(
                     },
                 ) {
                     Text(
-                        stringResource(Res.string.keep_editing),
+                        stringResource(CommonRes.strings.keep_editing),
                         fontWeight = FontWeight.Bold,
                     )
                 }
@@ -284,12 +272,12 @@ fun EditRecord(
                     },
                 ) {
                     Text(
-                        stringResource(Res.string.discard),
+                        stringResource(CommonRes.strings.discard),
                         fontWeight = FontWeight.Bold,
                     )
                 }
             },
-            text = { Text(stringResource(Res.string.discard_text)) },
+            text = { Text(stringResource(CommonRes.strings.discard_text)) },
         )
     }
 }

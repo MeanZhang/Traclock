@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,65 +13,40 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.mean.traclock.data.repository.ProjectsRepository
-import com.mean.traclock.data.repository.RecordWithProjectRepository
-import com.mean.traclock.data.repository.RecordsRepository
-import com.mean.traclock.data.repository.TimerRepository
+import com.mean.traclock.settings.ui.settingsScreen
+import com.mean.traclock.statistic.Statistics
 import com.mean.traclock.ui.components.HomeBottomBar
-import com.mean.traclock.ui.navigation.HomeRoute
 import com.mean.traclock.ui.navigation.Route
 import com.mean.traclock.ui.screens.EditProject
 import com.mean.traclock.ui.screens.EditRecord
 import com.mean.traclock.ui.screens.Project
 import com.mean.traclock.ui.screens.home.Projects
-import com.mean.traclock.ui.screens.home.Settings
-import com.mean.traclock.ui.screens.home.Statistics
 import com.mean.traclock.ui.screens.home.TimeLine
-import com.mean.traclock.ui.screens.settings.About
-import com.mean.traclock.ui.screens.settings.BackupRestore
-import com.mean.traclock.ui.screens.settings.Feedback
-import com.mean.traclock.ui.screens.settings.OpenSourceLicenses
 import com.mean.traclock.ui.utils.ApplyForNotificationPermission
-import com.mean.traclock.viewmodels.BackupRestoreViewModel
-import com.mean.traclock.viewmodels.EditProjectViewModel
-import com.mean.traclock.viewmodels.EditRecordViewModel
 import com.mean.traclock.viewmodels.MainViewModel
-import com.mean.traclock.viewmodels.ProjectViewModel
-import com.mean.traclock.viewmodels.StatisticViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun TraclockApp(
-    recordsRepo: RecordsRepository,
-    recordWithProjectRepo: RecordWithProjectRepository,
-    projectsRepo: ProjectsRepository,
-    timerRepo: TimerRepository,
-) {
+fun TraclockApp() {
     ApplyForNotificationPermission()
-    val viewModel =
-        viewModel {
-            MainViewModel(
-                recordsRepo = recordsRepo,
-                recordWithProjectRepo = recordWithProjectRepo,
-                timerRepo = timerRepo,
-            )
-        }
+    val viewModel: MainViewModel = koinViewModel()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination?.route ?: HomeRoute.TIMELINE.route
+    val currentDestination = navBackStackEntry?.destination?.route ?: HomeRoute.TIMELINE.name
     Column(modifier = Modifier.fillMaxSize()) {
         NavHost(navController, Route.HOME, modifier = Modifier.weight(1f)) {
             navigation(
-                startDestination = HomeRoute.TIMELINE.route,
+                startDestination = HomeRoute.TIMELINE.name,
                 route = Route.HOME,
             ) {
-                composable(HomeRoute.TIMELINE.route) {
+                composable(HomeRoute.TIMELINE.name) {
                     TimeLine(
                         viewModel = viewModel,
                         navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                         navToEditRecord = { navController.navigate("${Route.EDIT_RECORD}/$it") },
                     )
                 }
-                composable(HomeRoute.PROJECTS.route) {
+                composable(HomeRoute.PROJECTS.name) {
                     Projects(
                         viewModel = viewModel,
                         navToProject = { navController.navigate("${Route.PROJECT}/$it") },
@@ -81,28 +54,8 @@ fun TraclockApp(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
-                composable(HomeRoute.STATISTICS.route) {
-                    Statistics(
-                        modifier = Modifier.fillMaxSize(),
-                        viewModel =
-                            viewModel {
-                                StatisticViewModel(
-                                    recordsRepo = recordsRepo,
-                                    recordWithProjectRepo = recordWithProjectRepo,
-                                    projectsRepo = projectsRepo,
-                                    timerRepo = timerRepo,
-                                )
-                            },
-                    )
-                }
-                composable(HomeRoute.SETTINGS.route) {
-                    Settings(
-                        navToBackupRestore = { navController.navigate(Route.BACKUP_RESTORE) },
-                        navToFeddback = { navController.navigate(Route.FEEDBACK) },
-                        navToAbout = { navController.navigate(Route.ABOUT) },
-                        navTo = { navController.navigate(it.route) },
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                composable(HomeRoute.STATISTICS.name) {
+                    Statistics(modifier = Modifier.fillMaxSize())
                 }
             }
             composable(
@@ -113,18 +66,6 @@ fun TraclockApp(
                     ),
             ) {
                 Project(
-                    viewModel =
-                        viewModel {
-                            ProjectViewModel(
-                                savedStateHandle =
-                                    SavedStateHandle(
-                                        mapOf("id" to navController.currentBackStackEntry?.arguments?.getLong("id")),
-                                    ),
-                                projectsRepo = projectsRepo,
-                                recordsRepo = recordsRepo,
-                                timerRepo = timerRepo,
-                            )
-                        },
                     navToProject = { navController.navigate("${Route.PROJECT}/$it") },
                     navBack = { navController.navigateUp() },
                     navToEditProject = { id -> navController.navigate("${Route.EDIT_PROJECT}?id=$id") },
@@ -143,16 +84,6 @@ fun TraclockApp(
             ) {
                 EditProject(
                     navBack = { navController.navigateUp() },
-                    viewModel =
-                        viewModel {
-                            EditProjectViewModel(
-                                projectsRepo = projectsRepo,
-                                savedStateHandle =
-                                    SavedStateHandle(
-                                        mapOf("id" to navController.currentBackStackEntry?.arguments?.getString("id")),
-                                    ),
-                            )
-                        },
                 )
             }
             composable(
@@ -163,44 +94,16 @@ fun TraclockApp(
                     ),
             ) {
                 EditRecord(
-                    viewModel =
-                        viewModel {
-                            EditRecordViewModel(
-                                savedStateHandle =
-                                    SavedStateHandle(
-                                        mapOf("id" to navController.currentBackStackEntry?.arguments?.getLong("id")),
-                                    ),
-                                recordsRepo = recordsRepo,
-                                projectsRepo = projectsRepo,
-                            )
-                        },
                     navBack = { navController.navigateUp() },
                 )
             }
-            composable(Route.BACKUP_RESTORE) {
-                BackupRestore(
-                    viewModel = viewModel { BackupRestoreViewModel(projectsRepo, recordsRepo, recordWithProjectRepo) },
-                    navBack = { navController.navigateUp() },
-                )
-            }
-            composable(Route.FEEDBACK) {
-                Feedback(navBack = { navController.navigateUp() })
-            }
-            composable(Route.ABOUT) {
-                About(
-                    navBack = { navController.navigateUp() },
-                    navToOpenSourceLicenses = { navController.navigate(Route.OPEN_SOURCE_LICENSES) },
-                )
-            }
-            composable(Route.OPEN_SOURCE_LICENSES) {
-                OpenSourceLicenses(navBack = { navController.navigateUp() })
-            }
+            settingsScreen(navController)
         }
 
         HomeBottomBar(
             currentRoute = currentDestination,
             navTo = {
-                navController.navigate(it.route) {
+                navController.navigate(it.name) {
                     navController.graph.findStartDestination().route?.let { route ->
                         popUpTo(route) {
                             saveState = true

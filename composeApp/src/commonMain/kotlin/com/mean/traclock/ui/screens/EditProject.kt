@@ -41,25 +41,21 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mean.traclock.CommonRes
 import com.mean.traclock.ui.components.ColorPicker
-import com.mean.traclock.utils.PlatformUtils
+import com.mean.traclock.utils.Platform
+import com.mean.traclock.utils.toast
 import com.mean.traclock.viewmodels.EditProjectViewModel
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
-import traclock.composeapp.generated.resources.Res
-import traclock.composeapp.generated.resources.back
-import traclock.composeapp.generated.resources.discard
-import traclock.composeapp.generated.resources.discard_changes
-import traclock.composeapp.generated.resources.discard_text
-import traclock.composeapp.generated.resources.keep_editing
-import traclock.composeapp.generated.resources.save
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProject(
     navBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: EditProjectViewModel,
+    viewModel: EditProjectViewModel = koinViewModel(),
 ) {
     val scope = rememberCoroutineScope()
     var showDialog by remember {
@@ -89,7 +85,7 @@ fun EditProject(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = { back() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(CommonRes.strings.back))
                     }
                 },
                 title = {},
@@ -106,14 +102,14 @@ fun EditProject(
                                 if (viewModel.updateProject() != -1) {
                                     navBack()
                                 } else {
-                                    PlatformUtils.toast("项目已存在")
-                                    if (!PlatformUtils.isAndroid) {
+                                    toast("项目已存在")
+                                    if (!Platform.isAndroid) {
                                         snackbarHostState.showSnackbar("项目已存在")
                                     }
                                 }
                             }
                         }) {
-                            Icon(Icons.Filled.Check, stringResource(Res.string.save))
+                            Icon(Icons.Filled.Check, stringResource(CommonRes.strings.save))
                         }
                     }
                 },
@@ -161,13 +157,13 @@ fun EditProject(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(stringResource(Res.string.discard_changes)) },
+            title = { Text(stringResource(CommonRes.strings.discard_changes)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
                 }) {
                     Text(
-                        stringResource(Res.string.keep_editing),
+                        stringResource(CommonRes.strings.keep_editing),
                         fontWeight = FontWeight.Bold,
                     )
                 }
@@ -178,12 +174,12 @@ fun EditProject(
                     navBack()
                 }) {
                     Text(
-                        stringResource(Res.string.discard),
+                        stringResource(CommonRes.strings.discard),
                         fontWeight = FontWeight.Bold,
                     )
                 }
             },
-            text = { Text(stringResource(Res.string.discard_text)) },
+            text = { Text(stringResource(CommonRes.strings.discard_text)) },
         )
     }
 }

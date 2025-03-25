@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
-import com.mean.traclock.ui.ProjectColor
 
 @Composable
 fun ColorPicker(
@@ -46,4 +45,17 @@ fun ColorPicker(
             )
         }
     }
+}
+
+internal enum class ProjectColor(val color: Color) {
+    Blue(Color.Blue),
+    Brown(Color(0xFF795548)),
+    Green(Color.Green),
+    Indigo(Color(0xFF3F51B5)),
+    Orange(Color(0xFFE65100)),
+    Pink(Color(0xFFE91E63)),
+    Purple(Color(0xFF6200EE)),
+    Red(Color.Red),
+    Teal(Color(0xFF03DAC6)),
+    Yellow(Color.Yellow),
 }
