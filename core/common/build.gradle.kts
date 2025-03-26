@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.moko.resources)
 }
 
@@ -15,7 +17,9 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
+            api(compose.components.resources)
             api(libs.moko.resources)
+            api(libs.moko.resources.compose)
         }
     }
 }
@@ -33,4 +37,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.mean.traclock"
+    generateResClass = always
 }

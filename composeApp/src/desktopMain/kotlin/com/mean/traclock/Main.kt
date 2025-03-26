@@ -18,9 +18,9 @@ import com.mean.traclock.timer.Notifier
 import com.mean.traclock.timer.TimerRepository
 import com.mean.traclock.ui.TraclockApp
 import com.mean.traclock.utils.initLogger
-import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinContext
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.inject
@@ -47,7 +47,7 @@ fun main() =
             onCloseRequest = { isVisible = false },
             visible = isVisible,
             title = stringResource(CommonRes.strings.app_name),
-            icon = painterResource(CommonRes.images.ic_logo),
+            icon = painterResource(Res.drawable.ic_logo),
         ) {
             KoinContext {
                 MaterialTheme {
@@ -57,7 +57,7 @@ fun main() =
         }
         Tray(
             state = trayState,
-            icon = painterResource(CommonRes.images.ic_logo),
+            icon = painterResource(Res.drawable.ic_logo),
             tooltip = stringResource(CommonRes.strings.app_name),
             onAction = { isVisible = true },
             menu = {

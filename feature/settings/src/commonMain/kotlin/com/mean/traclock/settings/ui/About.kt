@@ -39,15 +39,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mean.traclock.CommonRes
+import com.mean.traclock.Res
+import com.mean.traclock.avatar
 import com.mean.traclock.ui.components.SettingGroupTitle
 import com.mean.traclock.ui.components.SettingItem
 import com.mean.traclock.utils.getString
 import com.mean.traclock.utils.openUrl
-import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 internal fun About(
     navBack: () -> Unit,
@@ -80,8 +83,21 @@ internal fun About(
                 .padding(it)
                 .padding(WindowInsets.navigationBars.asPaddingValues()),
         ) {
+//            Image(
+//                // TODO moko-resources SVG颜色显示错误
+//                painter = painterResource(CommonRes.images.ic_logo),
+//                contentDescription = stringResource(CommonRes.strings.app_name),
+//                modifier =
+//                    Modifier
+//                        .align(Alignment.CenterHorizontally)
+//                        .padding(vertical = 24.dp)
+//                        .size(64.dp)
+//                        .fillMaxWidth(),
+//                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
+//            )
+            // TODO 桌面端无法加载SVG
             AsyncImage(
-                model = CommonRes.images.ic_logo,
+                model = Res.getUri("drawable/ic_logo.svg"),
                 contentDescription = stringResource(CommonRes.strings.app_name),
                 modifier =
                     Modifier
@@ -103,7 +119,7 @@ internal fun About(
                 supportingContent = { Text(stringResource(CommonRes.strings.developer_introduction)) },
                 leadingContent = {
                     Image(
-                        painter = painterResource(CommonRes.images.avatar),
+                        painter = painterResource(Res.drawable.avatar),
                         contentDescription = "开发者头像",
                         modifier =
                             Modifier

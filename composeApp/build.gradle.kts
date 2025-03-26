@@ -64,8 +64,6 @@ kotlin {
             implementation(libs.kermit)
             // FileKit
             implementation(libs.filekit.dialogs.compose)
-            // moko-resources
-            implementation(libs.moko.resources.compose)
             // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
