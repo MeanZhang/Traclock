@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="settings-desktop">
     <output-path>$PROJECT_DIR$/feature/settings/build/libs</output-path>
-    <root id="archive" name="settings-desktop.jar">
-      <element id="module-output" name="Traclock.feature.settings.desktopMain" />
-    </root>
+    <root id="archive" name="settings-desktop.jar" />
   </artifact>
 </component>

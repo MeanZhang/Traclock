@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="timer-desktop">
     <output-path>$PROJECT_DIR$/core/timer/build/libs</output-path>
-    <root id="archive" name="timer-desktop.jar">
-      <element id="module-output" name="Traclock.core.timer.desktopMain" />
-    </root>
+    <root id="archive" name="timer-desktop.jar" />
   </artifact>
 </component>

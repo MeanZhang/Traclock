@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/common/Traclock.core.common.desktopMain.iml" filepath="$PROJECT_DIR$/.idea/modules/core/common/Traclock.core.common.desktopMain.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/common/Traclock.core.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/common/Traclock.core.common.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/ui/Traclock.core.ui.desktopMain.iml" filepath="$PROJECT_DIR$/.idea/modules/core/ui/Traclock.core.ui.desktopMain.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/ui/Traclock.core.ui.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/ui/Traclock.core.ui.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature/backup/Traclock.feature.backup.desktopMain.iml" filepath="$PROJECT_DIR$/.idea/modules/feature/backup/Traclock.feature.backup.desktopMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature/backup/Traclock.feature.backup.main.iml" filepath="$PROJECT_DIR$/.idea/modules/feature/backup/Traclock.feature.backup.main.iml" />
     </modules>

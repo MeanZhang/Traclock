@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="database-desktop">
     <output-path>$PROJECT_DIR$/core/database/build/libs</output-path>
-    <root id="archive" name="database-desktop.jar">
-      <element id="module-output" name="Traclock.core.database.desktopMain" />
-    </root>
+    <root id="archive" name="database-desktop.jar" />
   </artifact>
 </component>
