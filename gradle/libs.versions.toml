@@ -16,7 +16,7 @@ junit = "4.13.2"
 kotlin = "2.1.10"
 kotlinx-coroutines = "1.10.1"
 # 自定义
-navigation = "2.7.0-alpha07"
+navigation = "2.9.10-alpha01"
 kotlinx-datetime = "0.6.2"
 room = "2.7.0-rc02"
 sqlite = "2.5.0-SNAPSHOT"
