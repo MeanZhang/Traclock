@@ -14,7 +14,7 @@ androidx-test-junit = "1.2.1"
 compose-plugin = "1.8.0-beta01"
 junit = "4.13.2"
 kotlin = "2.1.10"
-kotlinx-coroutines = "1.10.1"
+kotlinx-coroutines = "1.10.2"
 # 自定义
 navigation = "2.9.10-alpha01"
 kotlinx-datetime = "0.6.2"
