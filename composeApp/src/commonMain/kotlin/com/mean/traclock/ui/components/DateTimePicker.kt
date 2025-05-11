@@ -1,7 +1,7 @@
 package com.mean.traclock.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Keyboard
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -110,7 +110,7 @@ fun DateTimePicker(
                 IconButton(onClick = { showingPicker = !showingPicker }) {
                     val icon =
                         if (showingPicker) {
-                            Icons.Outlined.Keyboard
+                            Icons.Default.Keyboard
                         } else {
                             Icons.Outlined.Schedule
                         }

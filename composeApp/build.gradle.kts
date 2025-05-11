@@ -49,8 +49,9 @@ kotlin {
             implementation(projects.feature.statistic)
             // Room
             implementation(libs.room.runtime)
-            // Material Icons扩展
-            implementation(compose.materialIconsExtended)
+            // Material Icons
+            implementation(libs.material.icons.core)
+            implementation(libs.material.icons.extended)
             // Navigation
             implementation(libs.navigation.compose)
             // Datetime

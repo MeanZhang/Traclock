@@ -43,6 +43,8 @@ kotlin {
             // moko-resources
             implementation((libs.moko.resources))
             implementation(libs.moko.resources.compose)
+            // Material Icons
+            implementation(libs.material.icons.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
