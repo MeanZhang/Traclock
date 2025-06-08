@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -23,13 +22,13 @@ class ProjectViewModel(
     private val recordsRepo: RecordsRepository,
     private val timerRepo: TimerRepository,
 ) : ViewModel() {
-    val project: Project =
+    private val project: Project =
         runBlocking(Dispatchers.IO) {
             projectsRepo.get(savedStateHandle.get<Long>("id")!!)
         }
     private val _projectId: MutableStateFlow<Long> = MutableStateFlow(project.id)
-    private var _records: Flow<Map<Int, List<Record>>> = flowOf(mapOf())
-    private var _timeOfDays: Flow<Map<Int, Long>> = flowOf(mapOf())
+    private var _records: Flow<Map<Int, List<Record>>> = recordsRepo.watchProjectRecords(project.id)
+    private var _timeOfDays: Flow<Map<Int, Long>> = recordsRepo.watchDaysDuration(project.id)
     val projectId: StateFlow<Long?>
         get() = _projectId
     val records: Flow<Map<Int, List<Record>>>
@@ -41,13 +40,6 @@ class ProjectViewModel(
         get() = project.name
     val projectColor: Color
         get() = project.color
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            _records = recordsRepo.watchProjectRecords(project.id)
-            _timeOfDays = recordsRepo.watchDaysDuration(project.id)
-        }
-    }
 
     fun deleteRecord(record: Record) {
         viewModelScope.launch {
