@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.Card
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -115,7 +116,7 @@ private fun Content(
             }
         }
         Column(
-            modifier = Modifier.verticalScroll(scrollableState),
+            modifier = Modifier.verticalScroll(scrollableState).padding(horizontal = HORIZONTAL_MARGIN),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (selectedPeriod.type != PeriodType.ALL_TIME) {
@@ -125,7 +126,7 @@ private fun Content(
                     modifier =
                         Modifier
                             .padding(
-                                HORIZONTAL_MARGIN,
+                                vertical = HORIZONTAL_MARGIN,
                             )
                             .fillMaxWidth(),
                 ) {
@@ -191,7 +192,7 @@ private fun Content(
                     AllTimeTrend(durations)
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(thickness = 0.5F.dp, color = DividerDefaults.color.copy(alpha = 0.5F))
             if (projectsDuration.isNotEmpty()) {
                 PieChart(
                     values = data,
@@ -298,7 +299,7 @@ private fun Content(
                             projectDuration.duration.inWholeMilliseconds.toDuration(DurationUnit.MILLISECONDS),
                         ),
                         fontWeight = fontWeight,
-                        fontFamily = FontFamily.Monospace,
+                        //fontFamily = FontFamily.Monospace,
                         color = color,
                     )
                 }
@@ -370,6 +371,7 @@ private fun DayTimeline(
                                 .height(height)
                                 .background(it.color),
                     )
+                    //TODO 这些东西需要分离Composable然后异步计算
                     if (index < records.size - 1) {
                         if (records[index + 1].startTime > it.endTime) {
                             Spacer(
@@ -395,6 +397,7 @@ private fun DayTimeline(
                 )
             }
         }
+        Spacer(modifier = Modifier.size(4.dp))
         Row {
             val color = MaterialTheme.colorScheme.outline
             val style = MaterialTheme.typography.bodySmall
