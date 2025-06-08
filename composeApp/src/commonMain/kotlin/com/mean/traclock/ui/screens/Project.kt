@@ -126,8 +126,7 @@ fun Project(
                             projectName = viewModel.projectName,
                             color = viewModel.projectColor,
                             navToEditRecord = navToEditRecord,
-                            deleteRecord = viewModel::deleteRecord,
-                            startTiming = { viewModel.startTimer() },
+                            deleteRecord = viewModel::deleteRecord
                         )
                     }
                 }
