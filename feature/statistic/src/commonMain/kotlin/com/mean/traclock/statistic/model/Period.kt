@@ -16,28 +16,23 @@ data class Period(
         val today = TimeUtils.getToday()
         when (newType) {
             PeriodType.DAY -> {
-                newPeriod =
-                    if (endDate > today) {
-                        newPeriod.copy(startDate = today, endDate = today)
-                    } else {
-                        newPeriod.copy(startDate = endDate, endDate = endDate)
-                    }
+                newPeriod = newPeriod.copy(startDate = today, endDate = today)
             }
 
             PeriodType.WEEK -> {
-                val start = TimeUtils.getMonday(if (endDate > today) today else endDate)
+                val start = TimeUtils.getMonday(today)
                 val end = start.plus(6, DateTimeUnit.DAY)
                 newPeriod = newPeriod.copy(startDate = start, endDate = end)
             }
 
             PeriodType.MONTH -> {
-                val start = TimeUtils.getFirstDayOfMonth(if (endDate > today) today else endDate)
+                val start = TimeUtils.getFirstDayOfMonth(today)
                 val end = TimeUtils.getLastDayOfMonth(start)
                 newPeriod = newPeriod.copy(startDate = start, endDate = end)
             }
 
             PeriodType.YEAR -> {
-                val start = TimeUtils.getFirstDayOfYear(if (endDate > today) today else endDate)
+                val start = TimeUtils.getFirstDayOfYear(today)
                 val end = TimeUtils.getLastDayOfYear(start)
                 newPeriod = newPeriod.copy(startDate = start, endDate = end)
             }
@@ -117,14 +112,47 @@ data class Period(
                 PeriodType.ALL_TIME -> false
             }
 
-    fun getString(): String =
-        when (type) {
+    /**
+     * 计算时间戳所在范围
+     */
+    fun range(time: Long) = when (type) {
+        PeriodType.DAY -> {
+            TimeUtils.utcMillisToLocalDate(time).let { copy(startDate = it, endDate = it) }
+        }
+
+        PeriodType.WEEK -> {
+            val currentDate = TimeUtils.utcMillisToLocalDate(time)
+            val unit = DateTimeUnit.DAY
+            val start = currentDate.minus(currentDate.dayOfWeek.value - 1, unit)
+            val end = currentDate.plus(7 - currentDate.dayOfWeek.value, unit)
+            copy(startDate = start, endDate = end)
+        }
+
+        PeriodType.MONTH -> {
+            val currentDate = TimeUtils.utcMillisToLocalDate(time)
+            val start = currentDate.minus(currentDate.dayOfMonth - 1, DateTimeUnit.DAY)
+            val end = TimeUtils.getLastDayOfMonth(currentDate)
+            copy(startDate = start, endDate = end)
+        }
+
+        else -> this
+    }
+
+
+    fun getString(allTimeHasRange: Boolean = false): String {
+        return when (type) {
             PeriodType.DAY -> TimeUtils.getDisplayDate(startDate)
-            PeriodType.WEEK -> TimeUtils.getDisplayPeriod(startDate, endDate)
+            PeriodType.WEEK ->TimeUtils.getDisplayPeriod(startDate, endDate)
             PeriodType.MONTH -> TimeUtils.getMonthString(startDate)
             PeriodType.YEAR -> startDate.year.toString()
-            PeriodType.ALL_TIME -> "全部"
+            PeriodType.ALL_TIME ->
+                if (allTimeHasRange)
+                    TimeUtils.getAllTimeDateString(startDate) +
+                            " - " +
+                            TimeUtils.getAllTimeDateString(endDate)
+                else "全时段"
         }
+    }
 
     fun getDays(): List<LocalDate> {
         val days = mutableListOf<LocalDate>()

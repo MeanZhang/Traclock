@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.Card
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import com.mean.traclock.model.RecordWithProject
 import com.mean.traclock.statistic.model.Period
 import com.mean.traclock.statistic.model.PeriodType
@@ -63,6 +65,8 @@ import io.github.koalaplot.core.pie.DefaultSlice
 import io.github.koalaplot.core.pie.PieChart
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.koin.compose.viewmodel.koinViewModel
@@ -99,18 +103,27 @@ private fun Content(
             ),
         )
     }
-    val projectsDuration by viewModel.getProjectsDuration(selectedPeriod).collectAsState(listOf())
+    var allTimeHasRange by remember { mutableStateOf(false) }
+    val projectsDuration by viewModel.getProjectsDuration(selectedPeriod, !allTimeHasRange)
+        .collectAsState(listOf())
     val recordsNumber by viewModel.getRecordsNumber(selectedPeriod).collectAsState(0)
     val duration = projectsDuration.sumOf { it.duration.inWholeMilliseconds }
     val data = projectsDuration.map { it.duration.inWholeMilliseconds.toFloat() }
     var selectedProjectIndex by remember(selectedPeriod) { mutableIntStateOf(-1) }
     val scrollableState = rememberScrollState()
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(contentPadding)) {
+    var isShowDate by remember { mutableStateOf(false) }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(contentPadding)
+    ) {
         PrimaryTabRow(selectedTabIndex = selectedPeriod.type.ordinal) {
             PeriodType.entries.forEach {
                 Tab(
                     selected = selectedPeriod.type == it,
-                    onClick = { selectedPeriod = selectedPeriod.changeType(it) },
+                    onClick = {
+                        allTimeHasRange = false
+                        selectedPeriod = selectedPeriod.changeType(it)
+                    },
                     text = { Text(it.label) },
                 )
             }
@@ -128,7 +141,10 @@ private fun Content(
                             .padding(
                                 vertical = HORIZONTAL_MARGIN,
                             )
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .clickable {
+                                isShowDate = true
+                            },
                 ) {
                     val iconSize = 24.dp
                     IconButton(
@@ -155,6 +171,22 @@ private fun Content(
                             contentDescription = "下一个",
                         )
                     }
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier =
+                        Modifier
+                            .padding(
+                                top = HORIZONTAL_MARGIN,
+                            )
+                            .fillMaxWidth()
+                            .clickable {
+                                isShowDate = true
+                            },
+                ) {
+                    Text(selectedPeriod.getString(allTimeHasRange))
                 }
             }
             Row {
@@ -189,7 +221,7 @@ private fun Content(
 
                 PeriodType.ALL_TIME -> {
                     val durations by viewModel.watchYearsDuration().collectAsState(emptyMap())
-                    AllTimeTrend(durations)
+                    AllTimeTrend(durations, period = if (allTimeHasRange) selectedPeriod else null)
                 }
             }
             HorizontalDivider(thickness = 0.5F.dp, color = DividerDefaults.color.copy(alpha = 0.5F))
@@ -305,6 +337,36 @@ private fun Content(
                 }
             }
         }
+    }
+
+    if (isShowDate) {
+        when (selectedPeriod.type) {
+            PeriodType.DAY, PeriodType.WEEK, PeriodType.MONTH -> DayDatePickerModal(
+                selectedPeriod.startDate,
+                onDateSelected = { time ->
+                    selectedPeriod = selectedPeriod.range(time)
+                },
+                onDismiss = {
+                    isShowDate = false
+                })
+
+            PeriodType.ALL_TIME -> DateRangePickerModal(
+                selectedPeriod,
+                onDateRangeSelected = { d1, d2 ->
+                    allTimeHasRange = true
+                    selectedPeriod = selectedPeriod.copy(
+                        startDate = TimeUtils.utcMillisToLocalDate(d1),
+                        endDate = TimeUtils.utcMillisToLocalDate(d2)
+                    )
+                },
+                onDismiss = {
+                    isShowDate = false
+                }
+            )
+
+            else -> isShowDate = false
+        }
+
     }
 }
 
@@ -467,9 +529,20 @@ private fun YearTrend(
 private fun AllTimeTrend(
     durations: Map<Int, Duration>,
     modifier: Modifier = Modifier,
+    period: Period? = null,
 ) {
+    period?.let {
+        val displayYears = (period.startDate.year..period.endDate.year).toMutableList()
+        if (displayYears.isEmpty())
+            return
+        //TODO 这里得到的时长还无法细致切分该年的
+        val data = displayYears.associateWith { (durations[it] ?: Duration.ZERO) }
+        Chart(data, modifier)
+        return
+    }
     val currentYear = TimeUtils.getCurrentYear()
-    val years = ((durations.keys.lastOrNull() ?: currentYear) - 2)..(durations.keys.firstOrNull() ?: currentYear)
+    val years = ((durations.keys.lastOrNull() ?: currentYear) - 2)..(durations.keys.firstOrNull()
+        ?: currentYear)
     val data = years.associateWith { (durations[it] ?: Duration.ZERO) }
     Chart(data, modifier)
 }

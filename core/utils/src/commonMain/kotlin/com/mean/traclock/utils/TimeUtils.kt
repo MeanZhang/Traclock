@@ -126,6 +126,32 @@ object TimeUtils {
             }
         }
 
+    /**
+     * 日期格式，例如 `2021年12月`
+     */
+    @JvmStatic
+    private val ALL_TIME_DATE_FORMAT =
+        LocalDate.Format {
+            when (Locale.getDefault().language) {
+                "zh" -> {
+                    year(padding = Padding.NONE)
+                    char('年')
+                    monthNumber(padding = Padding.NONE)
+                    char('月')
+                    dayOfMonth(padding = Padding.NONE)
+                    char('日')
+                }
+
+                else -> {
+                    dayOfMonth()
+                    char(' ')
+                    monthName(MonthNames.ENGLISH_ABBREVIATED)
+                    char(' ')
+                    year(padding = Padding.NONE)
+                }
+            }
+        }
+
     @JvmStatic
     fun getCurrentYear(): Int = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.year
 
@@ -364,6 +390,15 @@ object TimeUtils {
     }
 
     /**
+     * 获取日期所在周的最后一天
+     * @param date [LocalDate]
+     */
+    @JvmStatic
+    fun getLastDayOfWeek(date: LocalDate): LocalDate {
+        return LocalDate(date.year, date.month, date.dayOfMonth - date.dayOfWeek.value)
+    }
+
+    /**
      * 获取日期所在年的第一天
      * @param date [LocalDate]
      */
@@ -414,6 +449,11 @@ object TimeUtils {
     @JvmStatic
     fun getMonthString(date: LocalDate): String {
         return MONTH_FORMAT.format(date)
+    }
+
+    @JvmStatic
+    fun getAllTimeDateString(date: LocalDate): String {
+        return ALL_TIME_DATE_FORMAT.format(date)
     }
 
     /**

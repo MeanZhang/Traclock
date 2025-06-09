@@ -23,8 +23,8 @@ class StatisticViewModel(
 ) : ViewModel() {
     val projects = projectsRepo.projects
 
-    fun getProjectsDuration(period: Period): Flow<List<ProjectDuration>> {
-        if (period.type == PeriodType.ALL_TIME) {
+    fun getProjectsDuration(period: Period, allTime: Boolean = true): Flow<List<ProjectDuration>> {
+        if (allTime && period.type == PeriodType.ALL_TIME) {
             return recordsRepo.watchProjectsDuration()
                 .map { it.filter { projectDuration -> projectDuration.duration > Duration.Companion.ZERO } }
         }
