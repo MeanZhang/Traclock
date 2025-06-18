@@ -93,7 +93,7 @@ fun TimeLine(
                     recordsWithProject.forEach { (date, data) ->
                         stickyHeader(key = date) {
                             DateTitle(
-                                date = TimeUtils.getDateString(date),
+                                date = TimeUtils.getDisplayDate(date),
                                 duration = timeOfDays[date]?.toDuration(DurationUnit.MILLISECONDS) ?: Duration.ZERO,
                             )
                         }
@@ -121,7 +121,7 @@ fun TimeLine(
                     daysProjectsDuration.forEach { (date, data) ->
                         stickyHeader(key = date) {
                             DateTitle(
-                                date = TimeUtils.getDateString(date),
+                                date = TimeUtils.getDisplayDate(date),
                                 duration = timeOfDays[date]?.toDuration(DurationUnit.MILLISECONDS) ?: Duration.ZERO,
                             )
                         }

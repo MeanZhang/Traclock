@@ -255,16 +255,11 @@ object TimeUtils {
         return date.format(LocalDate.Format { byUnicodePattern("yyyy-MM-dd") })
     }
 
-    /**
-     * 获取日期字符串
-     * @param dateInt 以整数表示的日期，例如20211231
-     * @return 日期字符串，格式为系统时区的日期
-     */
     @JvmStatic
-    fun getDateString(dateInt: Int): String = getDateString(getDate(dateInt))
+    fun getDisplayDate(dateInt: Int): String = getDisplayDate(getDate(dateInt))
 
     /**
-     * 获取用于显示的日期字符串，例如`今天`或`12月31日星期五`或`2021年12月31日星期五`
+     * 获取用于显示的日期字符串，例如`今天`或`12月31日 星期五`或`2021年12月31日 星期五`
      * @param date [LocalDate]
      * @return 日期字符串
      */
@@ -284,6 +279,7 @@ object TimeUtils {
                 char('月')
                 dayOfMonth(padding = Padding.NONE)
                 char('日')
+                char(' ')
                 dayOfWeek(CHINESE_DAY_OF_WEEK_NAMES)
             }
         return format.format(date)
@@ -416,34 +412,6 @@ object TimeUtils {
     fun getLastDayOfYear(date: LocalDate): LocalDate {
         val nextYear = getFirstDayOfYear(date).plus(1, DateTimeUnit.YEAR)
         return nextYear.minus(1, DateTimeUnit.DAY)
-    }
-
-    /**
-     * 获取日期字符串
-     * @param date [LocalDate]
-     * @return 日期字符串，格式为系统时区的日期
-     */
-    @JvmStatic
-    fun getDateString(date: LocalDate): String {
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        if (date.compareTo(today) == 0) {
-            return if (Locale.getDefault().language == "zh") "今天" else "Today"
-        }
-        return DATE_FORMAT.format(date)
-    }
-
-    /**
-     * 获取不带星期几的日期字符串
-     * @param date [LocalDate]
-     * @return 日期字符串，格式为系统时区的日期
-     */
-    @JvmStatic
-    fun getDateStringWithoutDayOfWeek(date: LocalDate): String {
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        if (date.compareTo(today) == 0) {
-            return if (Locale.getDefault().language == "zh") "今天" else "Today"
-        }
-        return DATE_FORMAT_WITHOUT_DAY_OF_WEEK.format(date)
     }
 
     @JvmStatic
