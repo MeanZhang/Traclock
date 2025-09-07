@@ -40,7 +40,7 @@ jobs:
       - name: 生成文档
         run: yarn docs:build --base /Traclock/
       - name: 上传产物
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./docs/.vitepress/dist
 
