@@ -17,7 +17,7 @@ kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
 # 自定义
 navigation = "2.9.10-alpha01"
-kotlinx-datetime = "0.6.2"
+kotlinx-datetime = "0.7.1-0.6.x-compat"
 room = "2.7.1"
 sqlite = "2.5.1"
 ksp = "2.2.20-2.0.4"
