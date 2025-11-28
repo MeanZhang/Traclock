@@ -33,7 +33,7 @@ koalaplot = "0.8.0"
 vico = "2.2.0"
 moko = "0.25.1"
 koin = "4.1.1"
-aboutlibraries = "12.2.4"
+aboutlibraries = "13.1.0"
 material-icons-core = "1.7.3"
 
 [libraries]
