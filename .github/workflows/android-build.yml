@@ -35,7 +35,7 @@ jobs:
 
 
       - name: 上传 APK
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: APK
           path: composeApp/build/outputs/apk/release
