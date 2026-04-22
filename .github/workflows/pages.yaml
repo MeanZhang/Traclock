@@ -34,7 +34,7 @@ jobs:
           node-version: "20"
           cache: yarn
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: 安装依赖
         run: yarn
       - name: 生成文档
