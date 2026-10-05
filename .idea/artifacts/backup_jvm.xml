@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="backup-jvm">
+    <output-path>$PROJECT_DIR$/feature/backup/build/libs</output-path>
+    <root id="archive" name="backup-jvm.jar">
+      <element id="module-output" name="Traclock.feature.backup.jvmMain" />
+    </root>
+  </artifact>
+</component>

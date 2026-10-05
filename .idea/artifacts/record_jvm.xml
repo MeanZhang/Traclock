@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="record-jvm">
+    <output-path>$PROJECT_DIR$/feature/record/build/libs</output-path>
+    <root id="archive" name="record-jvm.jar">
+      <element id="module-output" name="Traclock.feature.record.jvmMain" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="timer-jvm">
+    <output-path>$PROJECT_DIR$/core/timer/build/libs</output-path>
+    <root id="archive" name="timer-jvm.jar">
+      <element id="module-output" name="Traclock.core.timer.jvmMain" />
+    </root>
+  </artifact>
+</component>

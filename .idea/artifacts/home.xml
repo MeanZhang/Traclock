@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="home">
+    <output-path>$PROJECT_DIR$/feature/home/build/libs</output-path>
+    <root id="archive" name="home.jar">
+      <element id="module-output" name="Traclock.feature.home.androidMain" />
+    </root>
+  </artifact>
+</component>

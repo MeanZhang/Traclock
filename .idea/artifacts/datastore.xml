@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="datastore">
+    <output-path>$PROJECT_DIR$/core/datastore/build/libs</output-path>
+    <root id="archive" name="datastore.jar">
+      <element id="module-output" name="Traclock.core.datastore.androidMain" />
+    </root>
+  </artifact>
+</component>

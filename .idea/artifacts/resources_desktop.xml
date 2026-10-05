@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="resources-desktop">
+    <output-path>$PROJECT_DIR$/core/resources/build/libs</output-path>
+    <root id="archive" name="resources-desktop.jar">
+      <element id="module-output" name="Traclock.core.resources.jvmMain" />
+    </root>
+  </artifact>
+</component>

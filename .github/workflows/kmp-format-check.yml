@@ -1,0 +1,38 @@
+name: KMP 格式检查
+
+on:
+  push:
+    branches: [main, dev]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "package.json"
+      - "yarn.lock"
+      - ".gitignore"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "package.json"
+      - "yarn.lock"
+      - ".gitignore"
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - name: 设置 JDK 17
+        uses: actions/setup-java@v6
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: 格式检查
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ vars.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: chmod +x gradlew && ./gradlew spotlessCheck

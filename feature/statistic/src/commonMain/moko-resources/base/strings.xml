@@ -1,0 +1,19 @@
+<resources>
+    <string name="restore_from_file">从文件恢复</string>
+    <string name="settings_description_restore_from_file">从CSV文件中恢复数据</string>
+    <string name="backup">备份</string>
+    <string name="failed_open_file">文件打开失败</string>
+    <string name="confirm_restore">确认恢复</string>
+    <string name="restore">恢复</string>
+    <string name="confirm_restore_text">您确定要恢复吗？此操作不可逆。</string>
+    <string name="backup_locally">将数据备份到本地</string>
+    <string name="restore_channel_name">恢复数据</string>
+    <string name="restore_channel_description">恢复项目和记录</string>
+    <string name="restoring">正在恢复</string>
+    <string name="backing_up">正在备份</string>
+    <string name="backup_completed">备份完成</string>
+    <string name="restore_completed">恢复完成</string>
+    <string name="restore_no_data">无备份数据</string>
+    <string name="restore_select_file">选择要恢复的文件</string>
+    <string name="restore_failed">恢复失败</string>
+</resources>
