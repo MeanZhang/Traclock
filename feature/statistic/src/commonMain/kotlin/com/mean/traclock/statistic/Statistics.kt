@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,28 +39,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mean.traclock.designsystem.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.model.RecordWithProject
 import com.mean.traclock.statistic.model.Period
 import com.mean.traclock.statistic.model.PeriodType
-import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.traclock.ui.HomeRoute
 import com.mean.traclock.ui.components.HomeScaffold
 import com.mean.traclock.utils.TimeUtils
-import com.patrykandpatrick.vico.multiplatform.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.multiplatform.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.multiplatform.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.multiplatform.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.multiplatform.cartesian.layer.rememberColumnCartesianLayer
-import com.patrykandpatrick.vico.multiplatform.cartesian.marker.ColumnCartesianLayerMarkerTarget
-import com.patrykandpatrick.vico.multiplatform.cartesian.marker.DefaultCartesianMarker
-import com.patrykandpatrick.vico.multiplatform.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.multiplatform.cartesian.rememberVicoScrollState
-import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
-import io.github.koalaplot.core.pie.DefaultSlice
-import io.github.koalaplot.core.pie.PieChart
-import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.marker.ColumnCartesianLayerMarkerTarget
+import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.pie.PieChart
+import com.patrykandpatrick.vico.compose.pie.PieChartHost
+import com.patrykandpatrick.vico.compose.pie.PieSize
+import com.patrykandpatrick.vico.compose.pie.data.PieChartModelProducer
+import com.patrykandpatrick.vico.compose.pie.data.pieModel
+import com.patrykandpatrick.vico.compose.pie.rememberPieChart
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.koin.compose.viewmodel.koinViewModel
@@ -84,7 +89,7 @@ fun Statistics(
     }
 }
 
-@OptIn(ExperimentalKoalaPlotApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
     viewModel: StatisticViewModel,
@@ -104,6 +109,14 @@ private fun Content(
     val data = projectsDuration.map { it.duration.inWholeMilliseconds.toFloat() }
     var selectedProjectIndex by remember(selectedPeriod) { mutableIntStateOf(-1) }
     val scrollableState = rememberScrollState()
+    val pieModelProducer = remember { PieChartModelProducer() }
+    LaunchedEffect(projectsDuration) {
+        if (data.isNotEmpty()) {
+            pieModelProducer.runTransaction {
+                pieModel { series(data) }
+            }
+        }
+    }
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(contentPadding)) {
         PrimaryTabRow(selectedTabIndex = selectedPeriod.type.ordinal) {
             PeriodType.entries.forEach {
@@ -193,56 +206,21 @@ private fun Content(
             }
             HorizontalDivider()
             if (projectsDuration.isNotEmpty()) {
-                PieChart(
-                    values = data,
-                    labelConnector = {},
-                    slice = { index ->
-                        val projectDuration = projectsDuration[index % projectsDuration.size]
-                        DefaultSlice(
-                            color = projectDuration.color,
-                            gap = if (data.size > 1) 0.5f else 0f,
-                            clickable = true,
-                            hoverExpandFactor = 1.05f,
-                            hoverElement = {
-                                Card {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        modifier = Modifier.padding(4.dp),
-                                    ) {
-                                        val endTime = projectDuration.duration.inWholeMilliseconds
-                                        Text(projectDuration.name, color = MaterialTheme.colorScheme.primary)
-                                        Text(
-                                            "${
-                                                (
-                                                    endTime.toFloat() /
-                                                        projectsDuration.sumOf {
-                                                            it.duration.toLong(
-                                                                DurationUnit.MILLISECONDS,
-                                                            )
-                                                        }
-                                                ).toPercentage()
-                                            }  ${
-                                                TimeUtils.getDurationString(
-                                                    endTime.toDuration(DurationUnit.MILLISECONDS),
-                                                )
-                                            }",
-                                        )
-                                    }
-                                }
-                            },
-                            onClick = {
-                                selectedProjectIndex =
-                                    if (selectedProjectIndex == index) {
-                                        -1
-                                    } else {
-                                        index
-                                    }
-                            },
-                        )
-                    },
-                    holeSize = 0.75F,
-                    modifier = Modifier.padding(8.dp),
-                    forceCenteredPie = true,
+                PieChartHost(
+                    chart =
+                        rememberPieChart(
+                            sliceProvider =
+                                PieChart.SliceProvider.series(
+                                    projectsDuration.map { PieChart.Slice(fill = Fill(it.color)) },
+                                ),
+                            spacing = 2.dp,
+                            innerSize = PieSize.Inner.fixed(96.dp),
+                        ),
+                    modelProducer = pieModelProducer,
+                    modifier =
+                        Modifier
+                            .height(200.dp)
+                            .padding(8.dp),
                 )
             }
             projectsDuration.forEachIndexed { index, projectDuration ->
@@ -420,7 +398,7 @@ private fun WeekTrend(
     val days = period.getDays()
     val data =
         days.associate {
-            it.dayOfWeek.value to (records[it] ?: Duration.ZERO)
+            it.dayOfWeek.isoDayNumber to (records[it] ?: Duration.ZERO)
         }
 
     val xLables = { day: Int ->
@@ -482,7 +460,7 @@ private fun Chart(
     val maxDuration = data.values.max()
     LaunchedEffect(data) {
         modelProducer.runTransaction {
-            columnSeries {
+            columnModel {
                 series(
                     x = data.keys,
                     y = data.values.map { it.inWholeMilliseconds },
@@ -492,17 +470,16 @@ private fun Chart(
     }
 
     val marker =
-        DefaultCartesianMarker(
+        rememberDefaultCartesianMarker(
             label = rememberTextComponent(),
-            valueFormatter = { _, targets ->
-                val duration =
+            valueFormatter =
+                DefaultCartesianMarker.ValueFormatter { _, targets ->
                     TimeUtils.getDurationString(
                         (targets.first() as ColumnCartesianLayerMarkerTarget).columns.first().entry.y.toDuration(
                             DurationUnit.MILLISECONDS,
                         ),
                     )
-                duration
-            },
+                },
         )
 
     CartesianChartHost(
