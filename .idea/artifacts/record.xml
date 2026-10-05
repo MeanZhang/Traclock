@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="record">
+    <output-path>$PROJECT_DIR$/feature/record/build/libs</output-path>
+    <root id="archive" name="record.jar">
+      <element id="module-output" name="Traclock.feature.record.androidMain" />
+    </root>
+  </artifact>
+</component>

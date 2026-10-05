@@ -26,7 +26,7 @@ class StatisticViewModel(
     fun getProjectsDuration(period: Period): Flow<List<ProjectDuration>> {
         if (period.type == PeriodType.ALL_TIME) {
             return recordsRepo.watchProjectsDuration()
-                .map { it.filter { projectDuration -> projectDuration.duration > Duration.Companion.ZERO } }
+                .map { it.filter { projectDuration -> projectDuration.duration > Duration.ZERO } }
         }
         return recordsRepo.watchProjectsDuration(period.startDate, period.endDate)
     }

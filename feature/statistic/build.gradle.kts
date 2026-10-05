@@ -3,57 +3,63 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.moko.resources)
 }
 
 kotlin {
-    jvm("desktop")
-    androidTarget {
+    jvm()
+    android {
+        namespace = "com.mean.traclock.statistic"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget = JvmTarget.JVM_17
         }
     }
     sourceSets {
-        val desktopMain by getting
+        val jvmMain by getting
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.uiToolingPreview)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
             // 其他模块
-            implementation(projects.core.common)
+            implementation(projects.core.resources)
             implementation(projects.core.model)
             implementation(projects.core.data)
             implementation(projects.core.utils)
             implementation(projects.core.ui)
+            implementation(projects.core.designsystem)
+            // Navigation
+            implementation(libs.navigation3.runtime)
             // Datetime
             implementation(libs.kotlinx.datetime)
             // Koin
             implementation(libs.koin.core)
-            implementation(libs.koin.compose.viewmodel.navigation)
+            implementation(libs.koin.compose.viewmodel)
             // Kermit
             implementation(libs.kermit)
             // moko-resources
             implementation((libs.moko.resources))
             implementation(libs.moko.resources.compose)
-            // Koala Plot
-            implementation(libs.koalaplot.core)
             // vico
-            implementation(libs.vico)
+            implementation(libs.vico.compose)
+            implementation(libs.vico.compose.m3)
             // Material Icons扩展
-            implementation(compose.materialIconsExtended)
+            implementation(libs.material.icons.extended)
         }
-        desktopMain.dependencies {
+        jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.coroutinesSwing)
         }
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
         }
     }
@@ -65,12 +71,4 @@ multiplatformResources {
     resourcesVisibility.set(MRVisibility.Internal)
 }
 
-android {
-    namespace = "com.mean.traclock.statistic"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}

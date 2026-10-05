@@ -7,6 +7,10 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mean.traclock.CommonRes
+import com.mean.traclock.projects
+import com.mean.traclock.settings
+import com.mean.traclock.statistics
+import com.mean.traclock.timeline
 import dev.icerock.moko.resources.StringResource
 
 enum class HomeRoute(

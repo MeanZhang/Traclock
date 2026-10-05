@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -20,13 +19,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.mean.traclock.CommonRes
+import com.mean.traclock.back
 import com.mean.traclock.settings.Res
+import com.mean.traclock.settings.aboutlibraries_json
+import com.mean.traclock.title_activity_open_source_licenses
 import com.mean.traclock.utils.openUrl
 import com.mikepenz.aboutlibraries.Libs
 import dev.icerock.moko.resources.compose.readTextAsState
 import dev.icerock.moko.resources.compose.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun OpenSourceLicenses(
     modifier: Modifier = Modifier,

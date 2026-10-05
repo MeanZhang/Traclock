@@ -282,13 +282,13 @@ class BackupRestoreViewModel(
                 return RestoreError.END_TIME_ERROR
             }
         val date =
-            Instant.Companion.fromEpochMilliseconds(startTime)
-                .toLocalDateTime(TimeZone.Companion.currentSystemDefault()).date
+            Instant.fromEpochMilliseconds(startTime)
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date
         val record =
             Record(
                 projectId,
-                Instant.Companion.fromEpochMilliseconds(startTime),
-                Instant.Companion.fromEpochMilliseconds(endTime),
+                Instant.fromEpochMilliseconds(startTime),
+                Instant.fromEpochMilliseconds(endTime),
                 date,
             )
         try {

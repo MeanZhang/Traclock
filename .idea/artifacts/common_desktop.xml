@@ -2,7 +2,7 @@
   <artifact type="jar" name="common-desktop">
     <output-path>$PROJECT_DIR$/core/common/build/libs</output-path>
     <root id="archive" name="common-desktop.jar">
-      <element id="module-output" name="Traclock.core.common.desktopMain" />
+      <element id="module-output" name="Traclock.core.common.jvmMain" />
     </root>
   </artifact>
 </component>

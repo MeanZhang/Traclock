@@ -18,10 +18,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.mean.traclock.CommonRes
-import com.mean.traclock.common.getString
+import com.mean.traclock.default_label
+import com.mean.traclock.ic_logo
 import com.mean.traclock.notifications.R
-import kotlinx.datetime.Clock.System
+import com.mean.traclock.resources.getString
+import com.mean.traclock.start
+import com.mean.traclock.stop
+import com.mean.traclock.stopped
+import com.mean.traclock.tracking
 import kotlinx.datetime.Instant
+import kotlin.time.Clock.System
 
 class AndroidNotifier(
     private val context: Context,

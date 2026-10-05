@@ -23,8 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.CommonRes
+import com.mean.traclock.delete
+import com.mean.traclock.designsystem.utils.onClick
 import com.mean.traclock.model.Record
-import com.mean.traclock.ui.utils.onClick
 import com.mean.traclock.utils.TimeUtils
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch

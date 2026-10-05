@@ -16,18 +16,18 @@ import dev.icerock.moko.resources.compose.stringResource
 @Composable
 fun HomeBottomBar(
     modifier: Modifier = Modifier,
-    currentRoute: String?,
+    currentRoute: HomeRoute?,
     navTo: (HomeRoute) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = HomeRoute.entries.map { it.name }.contains(currentRoute),
+        visible = currentRoute != null,
         enter = expandVertically(),
         exit = shrinkVertically(),
     ) {
         NavigationBar(modifier = modifier.fillMaxWidth()) {
             HomeRoute.entries.forEach { destination ->
                 NavigationBarItem(
-                    selected = currentRoute == destination.name,
+                    selected = currentRoute == destination,
                     onClick = {
                         navTo(destination)
                     },

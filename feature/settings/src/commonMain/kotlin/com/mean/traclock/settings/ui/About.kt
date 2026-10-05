@@ -37,14 +37,23 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.mean.traclock.CommonRes
 import com.mean.traclock.Res
+import com.mean.traclock.about
+import com.mean.traclock.app_name
 import com.mean.traclock.avatar
-import com.mean.traclock.ui.components.SettingGroupTitle
-import com.mean.traclock.ui.components.SettingItem
+import com.mean.traclock.back
+import com.mean.traclock.designsystem.components.SettingGroupTitle
+import com.mean.traclock.designsystem.components.SettingItem
+import com.mean.traclock.developer
+import com.mean.traclock.developer_introduction
+import com.mean.traclock.github_page
+import com.mean.traclock.ic_logo
+import com.mean.traclock.others
+import com.mean.traclock.title_activity_open_source_licenses
 import com.mean.traclock.utils.getString
 import com.mean.traclock.utils.openUrl
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -83,21 +92,9 @@ internal fun About(
                 .padding(it)
                 .padding(WindowInsets.navigationBars.asPaddingValues()),
         ) {
-//            Image(
-//                // TODO moko-resources SVG颜色显示错误
-//                painter = painterResource(CommonRes.images.ic_logo),
-//                contentDescription = stringResource(CommonRes.strings.app_name),
-//                modifier =
-//                    Modifier
-//                        .align(Alignment.CenterHorizontally)
-//                        .padding(vertical = 24.dp)
-//                        .size(64.dp)
-//                        .fillMaxWidth(),
-//                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
-//            )
-            // TODO 桌面端无法加载SVG
-            AsyncImage(
-                model = Res.getUri("drawable/ic_logo.svg"),
+            Image(
+                // TODO moko-resources SVG颜色显示错误
+                painter = painterResource(CommonRes.images.ic_logo),
                 contentDescription = stringResource(CommonRes.strings.app_name),
                 modifier =
                     Modifier

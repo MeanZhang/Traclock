@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="resources-jvm">
+    <output-path>$PROJECT_DIR$/core/resources/build/libs</output-path>
+    <root id="archive" name="resources-jvm.jar">
+      <element id="module-output" name="Traclock.core.resources.jvmMain" />
+    </root>
+  </artifact>
+</component>

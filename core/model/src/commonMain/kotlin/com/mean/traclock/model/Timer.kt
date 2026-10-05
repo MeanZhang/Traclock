@@ -1,7 +1,7 @@
 package com.mean.traclock.model
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.time.Clock
 
 class Timer(val projectId: Long, val startTime: Instant = Clock.System.now()) {
     enum class State {

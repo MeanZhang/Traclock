@@ -2,7 +2,7 @@
   <artifact type="jar" name="backup-desktop">
     <output-path>$PROJECT_DIR$/feature/backup/build/libs</output-path>
     <root id="archive" name="backup-desktop.jar">
-      <element id="module-output" name="Traclock.feature.backup.desktopMain" />
+      <element id="module-output" name="Traclock.feature.backup.jvmMain" />
     </root>
   </artifact>
 </component>

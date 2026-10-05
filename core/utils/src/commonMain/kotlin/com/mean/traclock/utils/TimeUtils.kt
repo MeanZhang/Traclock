@@ -1,6 +1,5 @@
 package com.mean.traclock.utils
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -14,10 +13,12 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.format.char
+import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import java.util.Locale
+import kotlin.time.Clock
 import kotlin.time.Duration
 
 /**
@@ -337,7 +338,7 @@ object TimeUtils {
      */
     @JvmStatic
     fun getMonday(date: LocalDate): LocalDate {
-        val dayOfWeek = date.dayOfWeek.value
+        val dayOfWeek = date.dayOfWeek.isoDayNumber
         val monday = date.minus(dayOfWeek - 1, DateTimeUnit.DAY)
         return monday
     }
@@ -447,7 +448,7 @@ object TimeUtils {
         return time.toMillisecondOfDay()
     }
 
-    fun getDayOfWeek(date: LocalDate): Int = date.dayOfWeek.value
+    fun getDayOfWeek(date: LocalDate): Int = date.dayOfWeek.isoDayNumber
 
-    fun getDayOfWeek(date: Int): Int = getDate(date).dayOfWeek.value
+    fun getDayOfWeek(date: Int): Int = getDate(date).dayOfWeek.isoDayNumber
 }

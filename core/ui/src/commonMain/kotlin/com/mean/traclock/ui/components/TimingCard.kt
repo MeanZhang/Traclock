@@ -29,7 +29,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.CommonRes
-import com.mean.traclock.ui.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.designsystem.Constants.HORIZONTAL_MARGIN
+import com.mean.traclock.stop
+import com.mean.traclock.tracking
 import com.mean.traclock.utils.TimeUtils
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.delay

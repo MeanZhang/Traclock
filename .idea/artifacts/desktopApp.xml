@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="desktopApp">
+    <output-path>$PROJECT_DIR$/desktopApp/build/libs</output-path>
+    <root id="archive" name="desktopApp.jar">
+      <element id="module-output" name="Traclock.desktopApp.main" />
+    </root>
+  </artifact>
+</component>

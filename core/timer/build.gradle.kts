@@ -2,22 +2,31 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    jvm("desktop")
-    androidTarget {
+    jvm()
+    android {
+        namespace = "com.mean.traclock.notifications"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        androidResources {
+            enable = true
+        }
+
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget = JvmTarget.JVM_17
         }
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.ui)
-            implementation(projects.core.common)
+            implementation(libs.compose.ui)
+            implementation(projects.core.resources)
+            implementation(projects.core.model)
             implementation(projects.core.data)
             //DateTime
             implementation(libs.kotlinx.datetime)
@@ -36,17 +45,4 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.mean.traclock.notifications"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-}

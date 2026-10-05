@@ -20,8 +20,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.mean.traclock.CommonRes
-import com.mean.traclock.ui.components.SettingGroupTitle
-import com.mean.traclock.ui.components.SettingItem
+import com.mean.traclock.back
+import com.mean.traclock.designsystem.components.SettingGroupTitle
+import com.mean.traclock.designsystem.components.SettingItem
+import com.mean.traclock.doc_url
+import com.mean.traclock.feedback
+import com.mean.traclock.feedback_url
+import com.mean.traclock.help
+import com.mean.traclock.title_activity_feedback
 import com.mean.traclock.utils.getString
 import com.mean.traclock.utils.openUrl
 import dev.icerock.moko.resources.compose.stringResource

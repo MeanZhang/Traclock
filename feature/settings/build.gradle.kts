@@ -3,56 +3,61 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.moko.resources)
     alias(libs.plugins.aboutlibraries)
 }
 
 kotlin {
-    jvm("desktop")
-    androidTarget {
+    jvm()
+    android {
+        namespace = "com.mean.traclock.settings"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget = JvmTarget.JVM_17
         }
     }
     sourceSets {
-        val desktopMain by getting
+        val jvmMain by getting
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.uiToolingPreview)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
             // 其他模块
-            implementation(projects.core.common)
+            implementation(projects.core.resources)
             implementation(projects.core.model)
             implementation(projects.core.utils)
             implementation(projects.core.ui)
+            implementation(projects.core.designsystem)
             implementation(projects.feature.backup)
             // moko-resources
             implementation((libs.moko.resources))
             implementation(libs.moko.resources.compose)
             // Material Icons扩展
-            implementation(compose.materialIconsExtended)
+            implementation(libs.material.icons.extended)
             // Coil（Compose的Image会缺角）
             implementation(libs.coil.compose)
             implementation(libs.coil.svg)
             // Navigation
-            implementation(libs.navigation.compose)
+            implementation(libs.navigation3.runtime)
             // Koin
             implementation(libs.koin.core)
             // AboutLibraries
             implementation(libs.aboutlibraries.core)
         }
-        desktopMain.dependencies {
+        jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.coroutinesSwing)
         }
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
         }
     }
@@ -62,18 +67,4 @@ multiplatformResources {
     resourcesPackage.set("com.mean.traclock.settings")
     resourcesClassName.set("Res")
     resourcesVisibility.set(MRVisibility.Internal)
-}
-
-android {
-    namespace = "com.mean.traclock.settings"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-aboutLibraries {
-    duplicationMode = com.mikepenz.aboutlibraries.plugin.DuplicateMode.MERGE
 }

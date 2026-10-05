@@ -2,7 +2,7 @@
   <artifact type="jar" name="utils-desktop">
     <output-path>$PROJECT_DIR$/core/utils/build/libs</output-path>
     <root id="archive" name="utils-desktop.jar">
-      <element id="module-output" name="Traclock.core.utils.desktopMain" />
+      <element id="module-output" name="Traclock.core.utils.jvmMain" />
     </root>
   </artifact>
 </component>

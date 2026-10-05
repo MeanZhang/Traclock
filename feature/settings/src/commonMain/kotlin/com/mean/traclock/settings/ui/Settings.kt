@@ -17,10 +17,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.mean.traclock.CommonRes
+import com.mean.traclock.designsystem.components.SettingGroupTitle
+import com.mean.traclock.designsystem.components.SettingItem
+import com.mean.traclock.normal
+import com.mean.traclock.others
+import com.mean.traclock.settings_description_about
+import com.mean.traclock.settings_description_backup_restore
+import com.mean.traclock.settings_description_feedback
+import com.mean.traclock.title_activity_about
+import com.mean.traclock.title_activity_backup_restore
+import com.mean.traclock.title_activity_feedback
 import com.mean.traclock.ui.HomeRoute
 import com.mean.traclock.ui.components.HomeTopBar
-import com.mean.traclock.ui.components.SettingGroupTitle
-import com.mean.traclock.ui.components.SettingItem
 import dev.icerock.moko.resources.compose.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +37,6 @@ internal fun Settings(
     navToBackupRestore: () -> Unit,
     navToFeddback: () -> Unit,
     navToAbout: () -> Unit,
-    navTo: (HomeRoute) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberTopAppBarState()

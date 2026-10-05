@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="designsystem">
+    <output-path>$PROJECT_DIR$/core/designsystem/build/libs</output-path>
+    <root id="archive" name="designsystem.jar">
+      <element id="module-output" name="Traclock.core.designsystem.androidMain" />
+    </root>
+  </artifact>
+</component>

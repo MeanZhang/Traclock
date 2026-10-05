@@ -21,21 +21,26 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.mean.traclock.CommonRes
+import com.mean.traclock.back
 import com.mean.traclock.backup.model.RestoreState
-import com.mean.traclock.ui.components.SettingGroupTitle
-import com.mean.traclock.ui.components.SettingItem
+import com.mean.traclock.cancel
+import com.mean.traclock.designsystem.components.SettingGroupTitle
+import com.mean.traclock.designsystem.components.SettingItem
+import com.mean.traclock.ok
+import com.mean.traclock.title_activity_backup_restore
 import com.mean.traclock.utils.TimeUtils
 import dev.icerock.moko.resources.compose.stringResource
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,17 +60,11 @@ fun BackupRestore(
     val progress by viewModel.progress.collectAsState()
     val message by viewModel.message.collectAsState()
 
-    val backupLauncher =
-        rememberFileSaverLauncher {
-            it?.let {
-                viewModel.backup(it)
-            }
-        }
+    val scope = rememberCoroutineScope()
     val restoreLauncher =
         rememberFilePickerLauncher(
             type = FileKitType.File("csv"),
             mode = FileKitMode.Single,
-            title = stringResource(Res.strings.restore_select_file),
         ) {
             it?.let {
                 viewModel.setRestoreFile(it)
@@ -94,10 +93,14 @@ fun BackupRestore(
                 title = stringResource(Res.strings.backup),
                 description = stringResource(Res.strings.backup_locally),
                 onClick = {
-                    backupLauncher.launch(
-                        suggestedName = "traclock_backup_" + TimeUtils.getDateTimeStringWithoutSeperator(),
-                        extension = "csv",
-                    )
+                    scope.launch {
+                        val file =
+                            openFileSaver(
+                                "traclock_backup_" + TimeUtils.getDateTimeStringWithoutSeperator(),
+                                "csv",
+                            )
+                        file?.let { viewModel.backup(it) }
+                    }
                 },
             )
 
