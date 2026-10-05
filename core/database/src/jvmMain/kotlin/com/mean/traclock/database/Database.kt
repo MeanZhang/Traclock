@@ -1,7 +1,7 @@
 package com.mean.traclock.database
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 import java.io.File
 
 internal fun getDatabaseBuilder(): RoomDatabase.Builder<TraclockDatabase> {

@@ -1,10 +1,10 @@
 package com.mean.traclock.database
 
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
-import androidx.room.TypeConverters
+import androidx.room3.ColumnTypeConverters
+import androidx.room3.ConstructedBy
+import androidx.room3.Database
+import androidx.room3.RoomDatabase
+import androidx.room3.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.mean.traclock.database.dao.ProjectDao
 import com.mean.traclock.database.dao.RecordDao
@@ -20,7 +20,7 @@ internal const val DB_FILE_NAME = "database.db"
     version = 1,
     exportSchema = true,
 )
-@TypeConverters(Converters::class)
+@ColumnTypeConverters(Converters::class)
 @ConstructedBy(TraclockDatabaseConstructor::class)
 abstract class TraclockDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao

@@ -2,7 +2,7 @@ package com.mean.traclock.database
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.room.TypeConverter
+import androidx.room3.ColumnTypeConverter
 import com.mean.traclock.utils.toInt
 import com.mean.traclock.utils.toLocalDate
 import kotlinx.datetime.Instant
@@ -12,42 +12,42 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 internal class Converters {
-    @TypeConverter
+    @ColumnTypeConverter
     fun colorToInt(color: Color): Int {
         return color.toArgb()
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun intToColor(value: Int): Color {
         return Color(value)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun instantToLong(instant: Instant): Long {
         return instant.toEpochMilliseconds()
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun longToInstant(value: Long): Instant {
         return Instant.fromEpochMilliseconds(value)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun localDateToInt(localDate: LocalDate): Int {
         return localDate.toInt()
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun intToLocalDate(value: Int): LocalDate {
         return value.toLocalDate()
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun longToDuration(value: Long): Duration {
         return value.toDuration(DurationUnit.MILLISECONDS)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun durationToLong(duration: Duration): Long {
         return duration.inWholeMilliseconds
     }

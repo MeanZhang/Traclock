@@ -1,7 +1,7 @@
 package com.mean.traclock.database.model
 
 import androidx.compose.ui.graphics.Color
-import androidx.room.Embedded
+import androidx.room3.Embedded
 import com.mean.traclock.model.RecordWithProject
 import kotlinx.datetime.Instant
 
