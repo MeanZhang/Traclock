@@ -13,7 +13,7 @@ composeMultiplatform = "1.12.1"
 junit = "4.13.2"
 kotlin = "2.4.20"
 kotlinx-coroutines = "1.11.0"
-material3 = "1.12.0-alpha03"
+material3 = "1.13.0-alpha01"
 # 自定义
 navigation3 = "1.2.0-beta01"
 kotlinx-datetime = "0.8.0"
