@@ -41,7 +41,7 @@ jobs:
           path: androidApp/build/outputs/apk/release
 
       - name: 发送 APK 到企业微信
-        uses: MeanZhang/wecom-group-robot@v1.2
+        uses: MeanZhang/wecom-group-robot@v1.3
         with:
           key: ${{ secrets.WEWORK_BOT_KEY }}
           msgtype: "file"
