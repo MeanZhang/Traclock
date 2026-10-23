@@ -31,7 +31,7 @@ filekit = "0.16.0"
 vico = "3.3.1"
 moko = "0.27.1"
 koin = "4.2.2"
-aboutlibraries = "15.2.0"
+aboutlibraries = "15.3.0"
 material-icons-core = "1.7.3"
 
 [libraries]
